@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CPU & BIOS/UEFI Knowledge Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+  <h1>CPU & BIOS/UEFI Knowledge Quiz</h1>
+  <div class="topic-buttons">
+    <button class="topic-btn" onclick="startQuiz('cpuBasics')">CPU Basics</button>
+    <button class="topic-btn" onclick="startQuiz('biosUefi')">BIOS vs UEFI</button>
+    <button class="topic-btn" onclick="startQuiz('cpuArch')">CPU Architecture</button>
+    <button class="topic-btn" onclick="startQuiz('cmosBattery')">CMOS Battery</button>
+    <button class="topic-btn" onclick="startQuiz('accessingBiosUefi')">Accessing BIOS/UEFI</button>
+    <button class="topic-btn" onclick="startQuiz('biosUefiFeatures')">BIOS/UEFI Features </button>
+    <button class="topic-btn" onclick="startQuiz('secureBootTpm')">Secure Boot & TPM</button>
+    <button class="topic-btn" onclick="startQuiz('cpuIssues')">Common CPU Issues</button>
+    <button class="topic-btn" onclick="startQuiz('diagnosingCPUProblems')">Diagnosing CPU Problems</button>
+    <button class="topic-btn" onclick="startQuiz('bootIssuesOverview')">Boot Issues Overview</button>
+    <button class="topic-btn" onclick="startQuiz('advancedTroubleshootingTools')">Advanced Troubleshooting Tools</button>
+    <button class="topic-btn" onclick="startQuiz('resettingBios')">Resetting BIOS</button>
+  </div>
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionButtons"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+</body>
+</html>
+
+  <script>
+    const quizData = {
+cpuBasics: [
+        {
+          question: "What is the main function of the CPU?",
+          options: ["Store data", "Display output", "Process instructions", "Manage power"],
+          answer: 2
+        },
+        {
+          question: "What does CPU stand for?",
+          options: ["Central Processing Unit", "Central Power Unit", "Control Processing Unit", "Computer Processor Utility"],
+          answer: 0
+        },
+        {
+          question: "Which part of the CPU performs calculations?",
+          options: ["CU", "RAM", "ALU", "Cache"],
+          answer: 2
+        },
+        {
+          question: "What is the correct order of the instruction cycle?",
+          options: ["Fetch, Decode, Execute", "Decode, Fetch, Execute", "Execute, Fetch, Decode", "Fetch, Execute, Decode"],
+          answer: 0
+        },
+        {
+          question: "Which unit controls the execution of instructions?",
+          options: ["ALU", "Control Unit", "Cache", "RAM"],
+          answer: 1
+        },
+        {
+          question: "The instruction cycle is part of:",
+          options: ["BIOS", "CPU operation", "RAM storage", "GPU rendering"],
+          answer: 1
+        },
+        {
+          question: "What happens during the 'fetch' phase?",
+          options: ["Instruction is executed", "Instruction is decoded", "Instruction is retrieved from memory", "Data is displayed"],
+          answer: 2
+        },
+        {
+          question: "CU in CPU stands for?",
+          options: ["Core Unit", "Control Unit", "Compute Unit", "Central Unit"],
+          answer: 1
+        },
+        {
+          question: "ALU performs:",
+          options: ["Control flow", "Logical and arithmetic operations", "Data storage", "Graphics processing"],
+          answer: 1
+        },
+        {
+          question: "Which component is not part of the CPU?",
+          options: ["Cache", "RAM", "Control Unit", "ALU"],
+          answer: 1
+        }
+      ],
+biosUefi: [
+        {
+          question: "What does BIOS stand for?",
+          options: ["Basic Input Output System", "Binary Integrated Output Setup", "Basic Internal Operating Structure", "Boot Integrated Operating Setup"],
+          answer: 0
+        },
+        {
+          question: "UEFI is the modern replacement for:",
+          options: ["CMOS", "BIOS", "ALU", "CPU"],
+          answer: 1
+        },
+        {
+          question: "Which is a graphical and mouse-supported firmware interface?",
+          options: ["BIOS", "UEFI", "CMOS", "DOS"],
+          answer: 1
+        },
+        {
+          question: "Which firmware interface supports secure boot?",
+          options: ["BIOS", "UEFI", "Both", "None"],
+          answer: 1
+        },
+        {
+          question: "BIOS uses which mode to run?",
+          options: ["32-bit", "64-bit", "16-bit", "8-bit"],
+          answer: 2
+        },
+        {
+          question: "UEFI supports drives larger than:",
+          options: ["1TB", "2.2TB", "4TB", "5TB"],
+          answer: 1
+        },
+        {
+          question: "Where is BIOS stored?",
+          options: ["Hard disk", "SSD", "ROM", "RAM"],
+          answer: 2
+        },
+        {
+          question: "What does POST stand for?",
+          options: ["Power On Self Test", "Processor Operation Software Test", "Performance Output Setup Tool", "Peripheral Overclock Setup Tool"],
+          answer: 0
+        },
+        {
+          question: "BIOS/UEFI can configure:",
+          options: ["RAM frequency", "Date/Time", "Boot order", "All of the above"],
+          answer: 3
+        },
+        {
+          question: "Which is faster to boot?",
+          options: ["BIOS", "UEFI", "CMOS", "None"],
+          answer: 1
+        }
+      ],
+cpuArch: [
+        {
+          question: "What does x86 refer to?",
+          options: ["64-bit architecture", "32-bit architecture", "RISC", "CISC"],
+          answer: 1
+        },
+        {
+          question: "What does x64 refer to?",
+          options: ["8-bit architecture", "16-bit architecture", "32-bit architecture", "64-bit architecture"],
+          answer: 3
+        },
+        {
+          question: "RISC architecture focuses on:",
+          options: ["Many complex instructions", "Reduced instructions", "Slow operations", "Caching"],
+          answer: 1
+        },
+        {
+          question: "CISC stands for:",
+          options: ["Common Instruction Set Computer", "Complex Instruction Set Computer", "Calculated Instruction Set Computer", "Controlled Instruction Set Computer"],
+          answer: 1
+        },
+        {
+          question: "Which is a benefit of RISC?",
+          options: ["Faster execution per instruction", "More complex hardware", "Lower efficiency", "More energy consumption"],
+          answer: 0
+        },
+        {
+          question: "Instruction Set is:",
+          options: ["List of programs", "Set of operating systems", "Commands a CPU can execute", "User interface menu"],
+          answer: 2
+        },
+        {
+          question: "Which CPU type supports more RAM?",
+          options: ["x86", "x64", "RISC", "CISC"],
+          answer: 1
+        },
+        {
+          question: "Which is more power efficient?",
+          options: ["RISC", "CISC", "x86", "x64"],
+          answer: 0
+        },
+        {
+          question: "Which is often used in mobile devices?",
+          options: ["x64", "CISC", "RISC", "x86"],
+          answer: 2
+        },
+        {
+          question: "Intel and AMD CPUs are usually:",
+          options: ["RISC", "CISC", "Hybrid", "None"],
+          answer: 1
+        }
+      ],
+biosUefiFeatures: [
+  {
+    question: "What does POST stand for in BIOS/UEFI?",
+    options: ["Power On Self Test", "Peripheral Output Setup Tool", "Processor Operating Software Test", "Pre-Operating System Task"],
+    answer: 0
+  },
+  {
+    question: "What is the primary purpose of POST?",
+    options: ["Load operating system", "Test hardware components before boot", "Install updates", "Check antivirus"],
+    answer: 1
+  },
+  {
+    question: "Where can you change the boot order?",
+    options: ["Task Manager", "BIOS/UEFI Settings", "Control Panel", "CMD"],
+    answer: 1
+  },
+  {
+    question: "BIOS/UEFI allows changing the system's:",
+    options: ["Font settings", "Internet speed", "Date and Time", "Monitor brightness"],
+    answer: 2
+  },
+  {
+    question: "Which of these can be configured using BIOS/UEFI?",
+    options: ["RAM frequency", "CPU clock settings", "Fan speed", "All of the above"],
+    answer: 3
+  },
+  {
+    question: "The first device BIOS/UEFI tries to boot from is determined by:",
+    options: ["Operating system", "Internet settings", "Boot priority list", "RAM"],
+    answer: 2
+  },
+  {
+    question: "What happens if POST fails?",
+    options: ["System boots normally", "Operating system reinstalls", "System beeps or shows error message", "Nothing happens"],
+    answer: 2
+  },
+  {
+    question: "Which component stores BIOS settings like boot order?",
+    options: ["Hard Disk", "RAM", "NVRAM or CMOS", "GPU"],
+    answer: 2
+  },
+  {
+    question: "You access BIOS/UEFI setup by pressing a key during:",
+    options: ["OS login", "Shutdown", "Startup", "Sleep mode"],
+    answer: 2
+  },
+  {
+    question: "Which option is NOT available in BIOS/UEFI?",
+    options: ["Adjusting screen resolution", "Setting boot device order", "Changing system clock", "Configuring CPU settings"],
+    answer: 0
+  }
+],
+cmosBattery: [
+  {
+    question: "What is the primary function of the CMOS battery?",
+    options: [
+      "Power the hard drive",
+      "Store BIOS settings and keep system clock running",
+      "Charge the motherboard",
+      "Cool the CPU"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which settings are lost when the CMOS battery fails?",
+    options: [
+      "User documents",
+      "BIOS/UEFI settings and system time",
+      "Windows login password",
+      "Installed software"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is a common sign that the CMOS battery is dead?",
+    options: [
+      "Computer won’t turn on at all",
+      "System time resets to default after every reboot",
+      "Loud fan noises",
+      "Blue screen errors"
+    ],
+    answer: 1
+  },
+  {
+    question: "Where is the CMOS battery usually located?",
+    options: [
+      "On the monitor",
+      "Inside the hard drive",
+      "On the motherboard",
+      "Next to the CPU cooler"
+    ],
+    answer: 2
+  },
+  {
+    question: "What type of battery is commonly used as a CMOS battery?",
+    options: [
+      "AA",
+      "CR2032 coin cell",
+      "9V rectangular",
+      "Rechargeable lithium"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following is **NOT** affected by a dead CMOS battery?",
+    options: [
+      "Boot device priority",
+      "System time",
+      "Wi-Fi speed",
+      "BIOS password"
+    ],
+    answer: 2
+  },
+  {
+    question: "How often does the CMOS battery typically need replacement?",
+    options: [
+      "Every 6 months",
+      "Every 2–5 years",
+      "Every 1 month",
+      "Only when computer is off"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the recommended step before replacing a CMOS battery?",
+    options: [
+      "Unplug power and discharge static",
+      "Format the hard disk",
+      "Update BIOS",
+      "Change operating system"
+    ],
+    answer: 0
+  },
+  {
+    question: "Can a computer work without a CMOS battery?",
+    options: [
+      "Yes, but BIOS settings reset after shutdown",
+      "No, it won’t start at all",
+      "Only in Safe Mode",
+      "Only when plugged in"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which component relies on CMOS to store its configuration?",
+    options: [
+      "RAM",
+      "Operating system",
+      "BIOS/UEFI firmware",
+      "Display driver"
+    ],
+    answer: 2
+  }
+],
+accessingBiosUefi: [
+  {
+    question: "What key is commonly used to access BIOS/UEFI on most systems?",
+    options: [
+      "F12",
+      "Esc",
+      "Del or F2",
+      "F5"
+    ],
+    answer: 2
+  },
+  {
+    question: "When should you press the BIOS access key?",
+    options: [
+      "After Windows starts loading",
+      "While shutting down",
+      "Immediately after powering on",
+      "While using applications"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which brand commonly uses the F10 key to enter BIOS?",
+    options: [
+      "Dell",
+      "HP",
+      "Lenovo",
+      "Asus"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does UEFI offer that BIOS typically does not?",
+    options: [
+      "Mouse support and GUI",
+      "Access to hard drive",
+      "Control over RAM speed",
+      "Overclocking features"
+    ],
+    answer: 0
+  },
+  {
+    question: "What setting allows you to change the order of devices used to boot the system?",
+    options: [
+      "Startup Settings",
+      "BIOS Password",
+      "Boot Order/Priority",
+      "UEFI Shell"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the 'Advanced' tab in BIOS typically used for?",
+    options: [
+      "Changing date/time",
+      "Accessing boot menu",
+      "Adjusting CPU, SATA, virtualization settings",
+      "Resetting BIOS"
+    ],
+    answer: 2
+  },
+  {
+    question: "How do you navigate BIOS if there’s no mouse support?",
+    options: [
+      "Use touchscreen",
+      "Use keyboard arrow keys and Enter",
+      "Use voice commands",
+      "Plug in a game controller"
+    ],
+    answer: 1
+  },
+  {
+    question: "How can you access UEFI settings from Windows 10/11?",
+    options: [
+      "Through Control Panel",
+      "Press F1 on desktop",
+      "Restart with Shift + Restart > Troubleshoot > UEFI Firmware Settings",
+      "Double-click BIOS icon"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the purpose of Secure Boot in UEFI?",
+    options: [
+      "Speed up startup",
+      "Install unsigned software",
+      "Prevent unauthorized bootloaders and malware",
+      "Enable overclocking"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which UEFI feature allows you to update BIOS from within the BIOS interface?",
+    options: [
+      "EZ Flash or Q-Flash",
+      "Fast Boot",
+      "XMP Profile",
+      "POST Logger"
+    ],
+    answer: 0
+  }
+],
+secureBootTpm: [
+  {
+    question: "What is the main function of Secure Boot?",
+    options: [
+      "Improve boot time",
+      "Prevent malware during boot",
+      "Support dual-booting",
+      "Enable BIOS setup"
+    ],
+    answer: 1
+  },
+  {
+    question: "Secure Boot is a feature of which system firmware?",
+    options: [
+      "BIOS",
+      "Legacy Boot",
+      "UEFI",
+      "CMOS"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does TPM stand for?",
+    options: [
+      "Trusted Processor Module",
+      "Trusted Platform Module",
+      "Technology Platform Management",
+      "Temporary Power Management"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which version of TPM is required for Windows 11?",
+    options: [
+      "TPM 1.0",
+      "TPM 1.2",
+      "TPM 2.0",
+      "TPM 3.0"
+    ],
+    answer: 2
+  },
+  {
+    question: "Where is the TPM typically located?",
+    options: [
+      "On the CPU die",
+      "Inside the RAM",
+      "As a chip on the motherboard",
+      "On the hard drive"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a primary use of TPM in modern systems?",
+    options: [
+      "Overclocking",
+      "Encrypting storage (e.g., BitLocker)",
+      "Speeding up boot",
+      "Storing games"
+    ],
+    answer: 1
+  },
+  {
+    question: "How does Secure Boot verify integrity during startup?",
+    options: [
+      "By checking boot order",
+      "By hashing BIOS settings",
+      "By verifying digital signatures of bootloaders",
+      "By comparing system temperatures"
+    ],
+    answer: 2
+  },
+  {
+    question: "Can you disable Secure Boot?",
+    options: [
+      "No, it's mandatory",
+      "Yes, via UEFI firmware settings",
+      "Only in Windows",
+      "By unplugging CMOS battery"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which OS typically requires Secure Boot to be enabled?",
+    options: [
+      "Windows 10 in legacy mode",
+      "Windows 11",
+      "Linux Mint",
+      "DOS"
+    ],
+    answer: 1
+  },
+  {
+    question: "TPM is used in which type of authentication?",
+    options: [
+      "Facial recognition",
+      "Biometric scanning",
+      "Hardware-based security",
+      "Software activation"
+    ],
+    answer: 2
+  }
+],
+cpuIssues: [
+  {
+    question: "Which of the following is a symptom of an overheating CPU?",
+    options: [
+      "Blue screen errors",
+      "Screen flickering",
+      "Printer not responding",
+      "Slow internet"
+    ],
+    answer: 0
+  },
+  {
+    question: "A computer shutting down unexpectedly can be a sign of:",
+    options: [
+      "Low disk space",
+      "Faulty RAM",
+      "CPU overheating or failure",
+      "Old monitor"
+    ],
+    answer: 2
+  },
+  {
+    question: "What should you check if your CPU is overheating?",
+    options: [
+      "Power supply wattage",
+      "Fan and heat sink function",
+      "Graphics card driver",
+      "Hard disk partitions"
+    ],
+    answer: 1
+  },
+  {
+    question: "Thermal paste is used to:",
+    options: [
+      "Cool the power supply",
+      "Stick the CPU to the motherboard",
+      "Improve heat transfer between CPU and cooler",
+      "Prevent short circuits"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a common cause of high CPU usage?",
+    options: [
+      "Loose cables",
+      "Multiple antivirus programs running",
+      "Low screen resolution",
+      "Outdated keyboard drivers"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which tool in Windows can help identify CPU usage?",
+    options: [
+      "Disk Cleanup",
+      "Device Manager",
+      "Task Manager",
+      "Paint"
+    ],
+    answer: 2
+  },
+  {
+    question: "If the CPU is not seated properly, what is a likely symptom?",
+    options: [
+      "Monitor resolution error",
+      "No display or system won’t boot",
+      "Wi-Fi disconnection",
+      "Keyboard lag"
+    ],
+    answer: 1
+  },
+  {
+    question: "A constant high CPU temperature may lead to:",
+    options: [
+      "Longer battery life",
+      "Improved performance",
+      "System damage or shutdowns",
+      "Better graphics"
+    ],
+    answer: 2
+  },
+  {
+    question: "To fix a CPU fan error, you should:",
+    options: [
+      "Replace your RAM",
+      "Clean or replace the CPU fan",
+      "Update Windows",
+      "Format the hard drive"
+    ],
+    answer: 1
+  },
+  {
+    question: "A computer freezing frequently might be due to:",
+    options: [
+      "A faulty CPU or cooling issue",
+      "Weak Wi-Fi signal",
+      "Low volume level",
+      "Disconnected mouse"
+    ],
+    answer: 0
+  }
+],
+diagnosingCPUProblems: [
+  {
+    question: "What is the first step in diagnosing a suspected CPU problem?",
+    options: [
+      "Replace the CPU",
+      "Reinstall Windows",
+      "Check if the system powers on and displays POST",
+      "Remove the motherboard"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does POST stand for?",
+    options: [
+      "Power-On Self-Test",
+      "Performance Optimization Standard Test",
+      "Processor Overclock Speed Test",
+      "Post Operating System Test"
+    ],
+    answer: 0
+  },
+  {
+    question: "A failed POST accompanied by beep codes could indicate:",
+    options: [
+      "Hard drive error",
+      "Graphics card overheating",
+      "CPU or motherboard issue",
+      "Printer problem"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which component is tested first during the POST?",
+    options: [
+      "Hard drive",
+      "RAM",
+      "CPU",
+      "Network card"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which tool allows monitoring of CPU temperature and health?",
+    options: [
+      "Paint",
+      "CPU-Z or BIOS hardware monitor",
+      "Notepad",
+      "Disk Defragmenter"
+    ],
+    answer: 1
+  },
+  {
+    question: "A system that turns on but does not display anything could have:",
+    options: [
+      "A faulty CPU or GPU",
+      "Loose mouse cable",
+      "Low battery",
+      "Wrong screen resolution"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which of these may help confirm CPU failure?",
+    options: [
+      "Running antivirus",
+      "Using a multimeter",
+      "Testing CPU in another working motherboard",
+      "Removing the CMOS battery"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which error may appear if a CPU has failed?",
+    options: [
+      "No boot device available",
+      "CPU fan error or no CPU detected",
+      "Missing DLL file",
+      "Wrong printer selected"
+    ],
+    answer: 1
+  },
+  {
+    question: "When diagnosing CPU problems, what should you inspect physically?",
+    options: [
+      "Keyboard cable",
+      "Printer ink",
+      "Bent CPU pins or dust buildup",
+      "Speakers"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which step helps rule out other hardware before blaming the CPU?",
+    options: [
+      "Testing RAM, power supply, and GPU individually",
+      "Removing stickers",
+      "Upgrading to Windows 11",
+      "Installing more games"
+    ],
+    answer: 0
+  }
+],
+bootIssuesOverview: [
+  {
+    question: "What is the primary purpose of the boot process?",
+    options: [
+      "To check for viruses",
+      "To load the operating system into memory",
+      "To test the monitor",
+      "To run installed programs"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of these is a common symptom of boot issues?",
+    options: [
+      "Fast system startup",
+      "No display or error messages like 'No boot device found'",
+      "High FPS in games",
+      "Printer not working"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which component's failure often leads to 'No Boot Device' error?",
+    options: [
+      "Monitor",
+      "Hard Drive or SSD",
+      "Keyboard",
+      "Router"
+    ],
+    answer: 1
+  },
+  {
+    question: "A misconfigured boot order in BIOS/UEFI can cause:",
+    options: [
+      "Long battery life",
+      "Faster internet",
+      "Boot failure or OS not loading",
+      "Improved graphics"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does 'NTLDR is missing' error indicate?",
+    options: [
+      "Monitor cable unplugged",
+      "Network error",
+      "Bootloader file for Windows is missing or corrupted",
+      "Mouse battery low"
+    ],
+    answer: 2
+  },
+  {
+    question: "Safe Mode is useful for:",
+    options: [
+      "Gaming",
+      "Watching movies",
+      "Troubleshooting startup issues",
+      "Printing documents"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does the 'Blue Screen of Death' (BSOD) often indicate?",
+    options: [
+      "Successful boot",
+      "Hardware or driver failure",
+      "Low volume",
+      "Running out of disk space"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which utility helps repair boot-related issues in Windows?",
+    options: [
+      "Disk Cleanup",
+      "Command Prompt with Bootrec commands",
+      "Task Scheduler",
+      "Paint"
+    ],
+    answer: 1
+  },
+  {
+    question: "What can cause a 'Reboot and select proper boot device' error?",
+    options: [
+      "Loose SATA cables or incorrect boot order",
+      "Low RAM",
+      "Bright screen",
+      "Overclocked GPU"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which option allows you to load a backup OS when the main one fails?",
+    options: [
+      "Dual boot setup",
+      "Night mode",
+      "Airplane mode",
+      "Task manager"
+    ],
+    answer: 0
+  }
+],
+advancedTroubleshootingTools: [
+  {
+    question: "Which tool is commonly used in Windows for diagnosing startup problems?",
+    options: [
+      "Task Manager",
+      "MSConfig (System Configuration)",
+      "Paint",
+      "Notepad"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the function of the Windows Recovery Environment (WinRE)?",
+    options: [
+      "Play music",
+      "Provide tools to diagnose and recover from serious errors",
+      "Edit videos",
+      "Speed up games"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which command is used in the Command Prompt to fix boot records?",
+    options: [
+      "bootfix",
+      "fixmbr",
+      "bootrec",
+      "bootstart"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does the SFC tool do?",
+    options: [
+      "Deletes system files",
+      "Scans and repairs corrupted system files",
+      "Formats hard drives",
+      "Optimizes RAM"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the function of 'Event Viewer' in troubleshooting?",
+    options: [
+      "Shows system logs and errors",
+      "Manages passwords",
+      "Downloads updates",
+      "Edits BIOS"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which utility allows rollback to a previous stable configuration?",
+    options: [
+      "Disk Cleanup",
+      "System Restore",
+      "Task Manager",
+      "Control Panel"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is a common use of the 'Memory Diagnostic Tool'?",
+    options: [
+      "Check WiFi speed",
+      "Test for RAM errors",
+      "Defragment the disk",
+      "Update software"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which tool can be used to test hard drive health?",
+    options: [
+      "Disk Defragmenter",
+      "CHKDSK",
+      "Windows Media Player",
+      "Device Manager"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which tool can disable startup programs for troubleshooting?",
+    options: [
+      "Task Manager",
+      "MS Paint",
+      "Snipping Tool",
+      "Photos"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which environment allows advanced command-line recovery?",
+    options: [
+      "Control Panel",
+      "Safe Mode",
+      "Command Prompt in Recovery Mode",
+      "Windows Media Player"
+    ],
+    answer: 2
+  }
+],
+resettingBios: [
+  {
+    question: "What is the main reason for resetting the BIOS?",
+    options: [
+      "To update the operating system",
+      "To revert to default hardware configuration",
+      "To delete all files",
+      "To install new software"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following is NOT a method to reset the BIOS?",
+    options: [
+      "Using the BIOS menu option",
+      "Removing the CMOS battery",
+      "Formatting the hard drive",
+      "Using a motherboard jumper"
+    ],
+    answer: 2
+  },
+  {
+    question: "What happens when the CMOS battery is removed?",
+    options: [
+      "The screen brightness increases",
+      "The BIOS settings reset to default",
+      "The RAM gets formatted",
+      "The system runs faster"
+    ],
+    answer: 1
+  },
+  {
+    question: "What tool is used to reset BIOS on the motherboard?",
+    options: [
+      "Thermal paste",
+      "Power cable",
+      "Clear CMOS jumper",
+      "USB cable"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which option in BIOS typically resets to factory defaults?",
+    options: [
+      "Load Optimized Defaults",
+      "Overclock Mode",
+      "Secure Boot",
+      "Fast Boot"
+    ],
+    answer: 0
+  },
+  {
+    question: "When might a BIOS reset be necessary?",
+    options: [
+      "When changing desktop wallpaper",
+      "After major hardware changes or boot failures",
+      "When updating antivirus",
+      "When uninstalling a game"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the risk of resetting BIOS settings?",
+    options: [
+      "Loss of internet access",
+      "Resetting hardware configurations incorrectly",
+      "Battery drain",
+      "Screen flicker"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which component stores BIOS settings?",
+    options: [
+      "Hard drive",
+      "RAM",
+      "CMOS chip",
+      "Graphics card"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does the BIOS reset NOT affect?",
+    options: [
+      "Hardware configuration",
+      "Boot order",
+      "Operating system and files",
+      "Date and time"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which button may appear in BIOS to reset all settings?",
+    options: [
+      "Reboot",
+      "Save and Exit",
+      "Load Defaults",
+      "Shutdown"
+    ],
+    answer: 2
+  }
+],
+
+    };
+
+    let currentTopic = "";
+    let currentQuestion = 0;
+
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('feedback').innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      if (selected === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.innerText = "❌ Incorrect.";
+        feedback.style.color = "red";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = '<h2>🎉 You have completed the quiz!</h2>';
+      }
+    }
+  </script>
+</body>
+</html>
