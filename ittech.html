@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Power Supply & Cooling Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+<h1>IT Specialist Role & Troubleshooting</h1>
+  <div class="topic-buttons">
+        <button class="topic-btn" onclick="startQuiz('displayTechnologies')">🖥️ Display Technologies</button>
+    <button class="topic-btn" onclick="startQuiz('peripheralDevices')">🖱️ Peripheral Devices</button>
+    <button class="topic-btn" onclick="startQuiz('cablesConnectors')">🔌 Cables & Connectors</button>
+  </div>
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionButtons"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+  <script>
+    const quizData = {
+cablesConnectors:[
+  {
+    question: "Which cable type is used to connect internal storage devices like HDDs and SSDs?",
+    options: [
+      "HDMI",
+      "SATA",
+      "VGA",
+      "RJ-45"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does PATA stand for?",
+    options: [
+      "Parallel ATA",
+      "Peripheral Attached Terminal Adapter",
+      "Primary Access Transfer Adapter",
+      "Plug and Transfer Array"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which connector is most commonly used for wired Ethernet networks?",
+    options: [
+      "USB-C",
+      "RJ-45",
+      "Thunderbolt",
+      "DisplayPort"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following provides the highest video quality?",
+    options: [
+      "VGA",
+      "DVI",
+      "HDMI",
+      "Composite"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which cable is used to connect a PC to a monitor using analog signals?",
+    options: [
+      "HDMI",
+      "VGA",
+      "RJ-11",
+      "eSATA"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the maximum speed of SATA III?",
+    options: [
+      "1.5 Gbps",
+      "3 Gbps",
+      "6 Gbps",
+      "12 Gbps"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a characteristic of coaxial cable?",
+    options: [
+      "Used for SATA data transfer",
+      "Carries analog video only",
+      "Used in cable internet connections",
+      "Requires a USB controller"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which connector type has 9 pins and is used for serial communication?",
+    options: [
+      "USB-A",
+      "DB-9",
+      "RJ-11",
+      "Thunderbolt"
+    ],
+    answer: 1
+  },
+  {
+    question: "What type of connector is typically used to connect telephone lines?",
+    options: [
+      "RJ-45",
+      "RJ-11",
+      "SATA",
+      "HDMI"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which cable type supports both video and audio transmission?",
+    options: [
+      "VGA",
+      "DVI",
+      "HDMI",
+      "DisplayPort"
+    ],
+    answer: 2
+  }
+],
+peripheralDevices:[
+{
+question: "What is a peripheral device?",
+options: [
+"A component inside the CPU",
+"Any hardware that connects to and works with the computer externally",
+"A type of virus",
+"Software for system monitoring"
+],
+answer: 1
+},
+{
+question: "Which of the following is an example of an input peripheral?",
+options: [
+"Monitor",
+"Printer",
+"Mouse",
+"Speaker"
+],
+answer: 2
+},
+{
+question: "Which device is classified as an output peripheral?",
+options: [
+"Keyboard",
+"Scanner",
+"Microphone",
+"Projector"
+],
+answer: 3
+},
+{
+question: "What type of peripheral is a printer?",
+options: [
+"Input",
+"Output",
+"Storage",
+"Processing"
+],
+answer: 1
+},
+{
+question: "Which of the following is both an input and output peripheral?",
+options: [
+"Webcam",
+"Touchscreen",
+"Keyboard",
+"Joystick"
+],
+answer: 1
+},
+{
+question: "Which peripheral is primarily used for audio input?",
+options: [
+"Speaker",
+"Headphones",
+"Microphone",
+"Webcam"
+],
+answer: 2
+},
+{
+question: "Which device can be used to store data externally?",
+options: [
+"Monitor",
+"USB flash drive",
+"Joystick",
+"Mouse"
+],
+answer: 1
+},
+{
+question: "What is the role of a scanner as a peripheral?",
+options: [
+"To scan networks",
+"To monitor hardware",
+"To convert physical documents into digital format",
+"To check for malware"
+],
+answer: 2
+},
+{
+question: "Which interface is commonly used to connect external peripherals?",
+options: [
+"SATA",
+"PCIe",
+"USB",
+"BIOS"
+],
+answer: 2
+},
+{
+question: "What category of peripheral is a webcam?",
+options: [
+"Input",
+"Output",
+"Storage",
+"Control"
+],
+answer: 0
+}
+],
+displayTechnologies:[
+{
+question: "What type of display uses liquid crystals and requires a backlight?",
+options: ["OLED", "CRT", "LCD", "Plasma"],
+answer: "LCD"
+},
+{
+question: "Which display technology provides the deepest blacks and best contrast ratio?",
+options: ["LED", "OLED", "LCD", "TN Panel"],
+answer: "OLED"
+},
+{
+question: "What does OLED stand for?",
+options: ["Organic Light Emitting Diode", "Optical Light Enhanced Display", "Overhead Light Emission Device", "Organic LCD"],
+answer: "Organic Light Emitting Diode"
+},
+{
+question: "Which type of panel offers the fastest response times but poor color reproduction?",
+options: ["IPS", "OLED", "TN", "VA"],
+answer: "TN"
+},
+{
+question: "What is the primary advantage of IPS panels?",
+options: ["Low cost", "Fast response", "Wide viewing angles", "High refresh rate"],
+answer: "Wide viewing angles"
+},
+{
+question: "Which of the following is an analog video interface?",
+options: ["HDMI", "DisplayPort", "VGA", "DVI-D"],
+answer: "VGA"
+},
+{
+question: "What connector is commonly used for 4K resolution video and audio?",
+options: ["VGA", "DVI", "HDMI", "S-Video"],
+answer: "HDMI"
+},
+{
+question: "Which display type is bulky and uses electron beams?",
+options: ["LCD", "LED", "CRT", "OLED"],
+answer: "CRT"
+},
+{
+question: "Which standard supports daisy-chaining multiple monitors?",
+options: ["HDMI", "DisplayPort", "DVI", "VGA"],
+answer: "DisplayPort"
+},
+{
+question: "What does 'refresh rate' refer to in a monitor?",
+options: ["Pixels per inch", "Number of colors", "Updates per second", "Power usage"],
+answer: "Updates per second"
+}
+],
+};
+let currentTopic = "";
+    let currentQuestion = 0;
+
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('feedback').innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      if (selected === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.innerText = "❌ Incorrect.";
+        feedback.style.color = "red";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = '<h2>🎉 You have completed the quiz!</h2>';
+      }
+    }
+  </script>
+</body>
+</html>
