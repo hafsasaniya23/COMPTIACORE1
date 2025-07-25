@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Power Supply & Cooling Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+<h1>Power Supply & Cooling Systems Quiz</h1>
+  <div class="topic-buttons">
+    <button class="topic-btn" onclick="startQuiz('powerSupplyUnits')">Power Supply Unit (PSU)</button>
+    <button class="topic-btn" onclick="startQuiz('psuFormFactors')">PSU Form Factors</button>
+    <button class="topic-btn" onclick="startQuiz('redundantPSU')">Redundant Power Supplies (RPS)</button>
+    <button class="topic-btn" onclick="startQuiz('coolingBasics')">Cooling Basics</button>
+    <button class="topic-btn" onclick="startQuiz('airCooling')">Air Cooling</button>
+    <button class="topic-btn" onclick="startQuiz('liquidCooling')">Liquid Cooling</button>
+    <button class="topic-btn" onclick="startQuiz('powerSupplyHardwareQuiz')">Power Supply & Hardware</button>
+    <button class="topic-btn" onclick="startQuiz('Voltage')">⚙️ Voltage & Connectors and ❄️ Cooling & Thermal Management and 🧪 Performance & Certification</button>
+  </div>
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionButtons"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+  <script>
+    const quizData = {
+powerSupplyUnits:[
+  {
+    question: "What is the primary function of a PSU in a computer?",
+    options: [
+      "Store data",
+      "Display graphics",
+      "Convert AC to DC power",
+      "Cool the CPU"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which unit is used to measure the power output of a PSU?",
+    options: [
+      "Volts",
+      "Amps",
+      "Ohms",
+      "Watts"
+    ],
+    answer: 3
+  },
+  {
+    question: "Which PSU connector powers the motherboard?",
+    options: [
+      "SATA connector",
+      "24-pin ATX connector",
+      "4-pin Molex connector",
+      "6-pin PCIe connector"
+    ],
+    answer: 1
+  },
+  {
+    question: "What type of current does a PSU supply to computer components?",
+    options: [
+      "AC (Alternating Current)",
+      "DC (Direct Current)",
+      "Static Current",
+      "Rotating Current"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following is a sign of a failing PSU?",
+    options: [
+      "Fast boot times",
+      "Consistent fan noise",
+      "Random shutdowns and restarts",
+      "Increased storage capacity"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which color wire typically carries +12V in a PSU?",
+    options: [
+      "Black",
+      "Yellow",
+      "Red",
+      "Blue"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does 'modular PSU' mean?",
+    options: [
+      "All cables are permanently attached",
+      "The PSU has interchangeable fans",
+      "Only required cables can be connected",
+      "It comes with built-in RAM"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which connector is used for SATA drives?",
+    options: [
+      "20-pin ATX",
+      "4-pin Molex",
+      "15-pin SATA power",
+      "6-pin PCIe"
+    ],
+    answer: 2
+  },
+  {
+    question: "What happens if a PSU wattage is too low for the system?",
+    options: [
+      "The system becomes faster",
+      "The system may shut down or fail to boot",
+      "Graphics improve",
+      "Hard drives spin faster"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which feature helps prevent PSU damage from power surges?",
+    options: [
+      "Cooling fan",
+      "Surge protection circuit",
+      "Dust filter",
+      "Power LED"
+    ],
+    answer: 1
+  }
+],
+psuFormFactors: [
+  {
+    question: "Which PSU form factor is the most commonly used in standard desktop computers?",
+    options: [
+      "Mini-ITX",
+      "Micro-ATX",
+      "ATX",
+      "Nano-ITX"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a key benefit of a modular power supply?",
+    options: [
+      "Lower power consumption",
+      "Increased noise",
+      "Better airflow and cable management",
+      "Hardwired cables"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following PSU types has all cables permanently attached?",
+    options: [
+      "Fully modular",
+      "Semi-modular",
+      "Non-modular",
+      "Custom loop"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does the 80 PLUS Gold certification indicate?",
+    options: [
+      "80% power efficiency",
+      "90% efficiency at 50% load",
+      "Gold-plated connectors",
+      "High gaming performance"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which PSU form factor is the smallest among the following?",
+    options: [
+      "ATX",
+      "Micro-ATX",
+      "Mini-ITX",
+      "Full Tower"
+    ],
+    answer: 2
+  },
+  {
+    question: "A semi-modular PSU typically has which of the following?",
+    options: [
+      "No cables",
+      "All cables modular",
+      "Some fixed and some removable cables",
+      "Only SATA cables"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the primary function of a PSU in a computer?",
+    options: [
+      "Cool the CPU",
+      "Provide network connectivity",
+      "Convert AC power to DC power",
+      "Manage RAM speed"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which component would benefit most from an efficient PSU?",
+    options: [
+      "Speakers",
+      "Motherboard and CPU",
+      "Mouse",
+      "Case fans"
+    ],
+    answer: 1
+  },
+  {
+    question: "80 PLUS Platinum PSUs are more efficient than which of the following?",
+    options: [
+      "80 PLUS Bronze",
+      "80 PLUS Titanium",
+      "80 PLUS Gold",
+      "Both A and C"
+    ],
+    answer: 3
+  },
+  {
+    question: "What does an 80 PLUS certification mainly ensure?",
+    options: [
+      "Modular cables",
+      "Better cooling performance",
+      "Power efficiency at specific loads",
+      "Compatibility with all motherboards"
+    ],
+    answer: 2
+  }
+],
+redundantPSU: [
+  {
+    question: "What is the main benefit of a redundant power supply?",
+    options: [
+      "More power to overclock the CPU",
+      "Backup power source in case the primary PSU fails",
+      "Increased gaming performance",
+      "Less noise from fans"
+    ],
+    answer: 1
+  },
+  {
+    question: "In which environment are redundant power supplies most commonly used?",
+    options: [
+      "Home gaming setups",
+      "Portable laptops",
+      "Enterprise servers and data centers",
+      "Smartphones"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following best describes a hot-swappable redundant power supply?",
+    options: [
+      "Can be installed without opening the computer case",
+      "Can be removed and replaced while the system is running",
+      "Requires a shutdown before replacement",
+      "Uses liquid cooling for better performance"
+    ],
+    answer: 1
+  },
+  {
+    question: "What typically happens when the primary PSU in an RPS setup fails?",
+    options: [
+      "The system shuts down immediately",
+      "The secondary PSU takes over without interruption",
+      "The motherboard disables the CPU",
+      "Data is lost"
+    ],
+    answer: 1
+  },
+  {
+    question: "Redundant PSUs are used to increase which of the following?",
+    options: [
+      "Gaming graphics quality",
+      "System performance speed",
+      "System uptime and availability",
+      "Fan noise levels"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which component works in conjunction with RPS to alert administrators of a power failure?",
+    options: [
+      "Sound card",
+      "BIOS settings",
+      "System monitoring software or BMC (Baseboard Management Controller)",
+      "RAM module"
+    ],
+    answer: 2
+  },
+  {
+    question: "How does a redundant power supply help prevent downtime?",
+    options: [
+      "It cools down the CPU faster",
+      "It filters internet traffic",
+      "It automatically supplies power if the main PSU fails",
+      "It stores backup files"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is NOT a feature of redundant power supplies?",
+    options: [
+      "Load balancing",
+      "Overclocking support",
+      "Hot-swappable modules",
+      "Increased fault tolerance"
+    ],
+    answer: 1
+  },
+  {
+    question: "Why might a small business avoid using redundant PSUs?",
+    options: [
+      "They are too powerful for home computers",
+      "They generate too much heat",
+      "They increase system complexity and cost",
+      "They reduce data security"
+    ],
+    answer: 2
+  },
+  {
+    question: "How many PSUs are typically found in a redundant PSU setup?",
+    options: [
+      "1",
+      "2 or more",
+      "5",
+      "Unlimited"
+    ],
+    answer: 1
+  }
+],
+coolingBasics: [
+  {
+    question: "Why is cooling essential in a computer system?",
+    options: [
+      "To improve sound quality",
+      "To prevent overheating and hardware damage",
+      "To reduce software errors",
+      "To speed up internet connection"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which component typically generates the most heat inside a computer?",
+    options: [
+      "RAM",
+      "Motherboard",
+      "CPU",
+      "Case fan"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the term used when a CPU reduces performance due to high temperatures?",
+    options: [
+      "Thermal throttling",
+      "Clock boosting",
+      "Overvolting",
+      "Power cycling"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which measurement is used to assess how effective a cooling solution is?",
+    options: [
+      "Watts per Hertz",
+      "Temperature in Fahrenheit only",
+      "Thermal Design Power (TDP)",
+      "Power Supply Efficiency"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the role of thermal paste in a cooling setup?",
+    options: [
+      "It increases fan speed",
+      "It prevents overheating by reflecting heat",
+      "It fills microscopic gaps between the CPU and heat sink for better heat transfer",
+      "It keeps dust away from components"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is a **passive cooling** method?",
+    options: [
+      "Liquid cooling system",
+      "Fan with speed controller",
+      "Heat sink with no fan",
+      "Radiator with pump"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does a fan curve control?",
+    options: [
+      "The voltage to the motherboard",
+      "The rotation speed of cooling fans based on temperature",
+      "The brightness of the display",
+      "The audio levels of the system"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is meant by ‘exhaust fan’ in cooling?",
+    options: [
+      "Fan that draws air into the case",
+      "Fan used to cool down the GPU",
+      "Fan that pushes hot air out of the case",
+      "Fan that cools the power supply"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which term best describes a balance of airflow in a PC case?",
+    options: [
+      "Thermal boost",
+      "Fan sync",
+      "Positive or negative air pressure",
+      "Reverse polarity"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which software feature often helps manage CPU cooling automatically?",
+    options: [
+      "Disk defragmenter",
+      "Task Scheduler",
+      "BIOS/UEFI fan control",
+      "Device Manager"
+    ],
+    answer: 2
+  }
+],
+
+airCooling: [
+  {
+    question: "What is the primary function of a CPU fan?",
+    options: [
+      "To blow air on the GPU",
+      "To draw power from the PSU",
+      "To cool down the CPU by moving air",
+      "To prevent power surges"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the role of a heat sink in air cooling?",
+    options: [
+      "Converts heat into electricity",
+      "Draws heat away from components and disperses it via fins",
+      "Controls the fan speed",
+      "Blocks dust from entering the CPU"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is thermal paste used for in air cooling?",
+    options: [
+      "Reduces fan noise",
+      "Cleans dust from the CPU",
+      "Improves heat transfer between the CPU and heat sink",
+      "Lubricates fan bearings"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is **NOT** an air cooling component?",
+    options: [
+      "Fan",
+      "Heat sink",
+      "Thermal paste",
+      "Radiator"
+    ],
+    answer: 3
+  },
+  {
+    question: "Where is thermal paste applied during air cooler installation?",
+    options: [
+      "On the fan blades",
+      "Between the heat sink and the CPU surface",
+      "On the power supply unit",
+      "On the CPU socket pins"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which is a key **advantage** of air cooling over liquid cooling?",
+    options: [
+      "Quieter operation",
+      "No maintenance required",
+      "Lower risk of leakage",
+      "Faster installation of OS"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following affects the performance of an air cooler?",
+    options: [
+      "Color of the fan",
+      "Type of SSD used",
+      "Orientation and placement of the fan and heat sink",
+      "Monitor refresh rate"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is meant by **active air cooling**?",
+    options: [
+      "Cooling using only heat sinks",
+      "Cooling with fans or other moving parts",
+      "Using only airflow from the power supply",
+      "Cooling using liquid and fans together"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which component commonly uses passive cooling?",
+    options: [
+      "Power supply",
+      "CPU",
+      "Northbridge chip or VRMs",
+      "Monitor"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the function of a case fan?",
+    options: [
+      "To provide power to CPU",
+      "To control screen resolution",
+      "To move air in or out of the case for overall airflow",
+      "To manage keyboard backlight"
+    ],
+    answer: 2
+  }
+],
+liquidCooling: [
+  {
+    question: "What are the main components of a liquid cooling system?",
+    options: [
+      "CPU, GPU, SSD",
+      "Fan, heat sink, thermal paste",
+      "Pump, radiator, coolant, water block, tubing",
+      "Thermal paste, radiator, fan"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the function of the **pump** in a liquid cooling setup?",
+    options: [
+      "Cools the radiator",
+      "Pushes air through fans",
+      "Circulates the coolant through the loop",
+      "Connects tubing to the PSU"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does an AIO stand for in the context of cooling?",
+    options: [
+      "Advanced Input Output",
+      "All-In-One cooling system",
+      "Air Integrated Output",
+      "Automated Internal Overclock"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following is an **advantage of liquid cooling**?",
+    options: [
+      "No risk of leaks",
+      "Completely silent operation",
+      "Superior thermal performance over air cooling",
+      "Requires no electricity"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a common disadvantage of **custom loop** liquid cooling systems?",
+    options: [
+      "Hard to install RAM",
+      "Low performance",
+      "High noise levels",
+      "More expensive and requires maintenance"
+    ],
+    answer: 3
+  },
+  {
+    question: "What is the **primary purpose** of the radiator in a liquid cooling system?",
+    options: [
+      "Generates electricity for fans",
+      "Absorbs coolant",
+      "Dissipates heat from the coolant using fans",
+      "Converts air to liquid"
+    ],
+    answer: 2
+  },
+  {
+    question: "In a custom loop system, what connects the components together?",
+    options: [
+      "Cables",
+      "Silicone pads",
+      "Plastic brackets",
+      "Tubing"
+    ],
+    answer: 3
+  },
+  {
+    question: "Which of the following is **true** about an AIO liquid cooler?",
+    options: [
+      "Requires user assembly and custom fitting",
+      "Comes pre-assembled and sealed from the manufacturer",
+      "Requires oil instead of coolant",
+      "Does not include a radiator"
+    ],
+    answer: 1
+  },
+  {
+    question: "Why must liquid cooling systems be **checked regularly**?",
+    options: [
+      "For software updates",
+      "For coolant leaks and pump function",
+      "To prevent dust buildup in RAM",
+      "To reset BIOS settings"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which type of system is better for overclocked high-performance CPUs?",
+    options: [
+      "Passive air cooling",
+      "AIO or custom liquid cooling",
+      "Standard case fan",
+      "Stock heat sink"
+    ],
+    answer: 1
+  }
+],
+powerSupplyHardwareQuiz:[
+  {
+    question: "What does PSU stand for in a computer system?",
+    options: [
+      "Power System Unit",
+      "Peripheral Supply Unit",
+      "Power Supply Unit",
+      "Processing Supply Unit"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which connector supplies power to the motherboard?",
+    options: [
+      "SATA power connector",
+      "24-pin ATX connector",
+      "6-pin PCIe connector",
+      "4-pin Molex connector"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following is NOT a common PSU form factor?",
+    options: [
+      "ATX",
+      "SFX",
+      "MicroATX",
+      "TFX"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the purpose of the 6 or 8-pin PCIe connector?",
+    options: [
+      "Powering hard drives",
+      "Powering optical drives",
+      "Powering graphics cards",
+      "Connecting fans"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does an 80 Plus certification indicate about a PSU?",
+    options: [
+      "It supports overclocking",
+      "It has a lifespan over 80,000 hours",
+      "It is at least 80% energy efficient at 20%, 50%, and 100% loads",
+      "It can handle up to 80 volts"
+    ],
+    answer: 2
+  },
+  {
+    question: "What feature allows a PSU to keep running during a failure in the primary unit?",
+    options: [
+      "APFC",
+      "Dual voltage input",
+      "Redundant Power Supply (RPS)",
+      "Hybrid modular cables"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which connector is used to power SATA drives?",
+    options: [
+      "20-pin ATX",
+      "Molex",
+      "SATA power connector",
+      "Berg connector"
+    ],
+    answer: 2
+  },
+  {
+    question: "What voltage does a standard yellow PSU wire carry?",
+    options: [
+      "3.3V",
+      "5V",
+      "12V",
+      "0V (ground)"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which PSU feature adjusts to input voltages from different regions (e.g., 110V to 230V)?",
+    options: [
+      "APFC (Active Power Factor Correction)",
+      "Modular cabling",
+      "Smart fan control",
+      "SFX form factor"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which of the following is a sign of a **failing PSU**?",
+    options: [
+      "High frame rates in games",
+      "USB ports stop working randomly",
+      "System beeps normally at startup",
+      "Wi-Fi disconnects occasionally"
+    ],
+    answer: 1
+  }
+],
+Voltage:[
+  {
+    "topic": "Voltage & Connectors",
+    "question": "What voltage is typically carried by the yellow wire in a PSU?",
+    "options": ["3.3V", "5V", "12V", "1.5V"],
+    "answer": 2
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "Which connector is used to power SATA drives?",
+    "options": ["Molex", "24-pin ATX", "SATA Power Connector", "PCIe 8-pin"],
+    "answer": 2
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "Which wire color typically represents ground in a PSU?",
+    "options": ["Red", "Yellow", "Black", "Blue"],
+    "answer": 2
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "Which PSU connector is used for older IDE hard drives?",
+    "options": ["Molex", "SATA", "PCIe", "EPS12V"],
+    "answer": 0
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "What voltage is supplied by the red wire in most PSUs?",
+    "options": ["5V", "3.3V", "12V", "1.2V"],
+    "answer": 0
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "Which connector provides power to CPUs?",
+    "options": ["PCIe", "Molex", "4/8-pin EPS", "24-pin ATX"],
+    "answer": 2
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "What does a 24-pin ATX connector power?",
+    "options": ["Hard Drive", "Motherboard", "GPU", "Fan"],
+    "answer": 1
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "The blue wire in a PSU usually represents which voltage?",
+    "options": ["3.3V", "-12V", "5V", "+12V"],
+    "answer": 1
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "Which connector is most commonly used for graphics cards?",
+    "options": ["Molex", "24-pin ATX", "SATA", "PCIe 6/8-pin"],
+    "answer": 3
+  },
+  {
+    "topic": "Voltage & Connectors",
+    "question": "How many pins does a standard ATX power connector have?",
+    "options": ["4", "20", "24", "16"],
+    "answer": 2
+  },
+
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "What is the main purpose of thermal paste?",
+    "options": ["Lubrication", "Insulation", "Improve heat transfer", "Prevent dust"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which component usually includes a heat sink and fan by default?",
+    "options": ["RAM", "CPU", "SSD", "Motherboard chipset"],
+    "answer": 1
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which type of cooling uses liquid to transfer heat?",
+    "options": ["Air Cooling", "Passive Cooling", "Water Cooling", "Thermal Pads"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which is a symptom of poor cooling?",
+    "options": ["Fast boot time", "Fan noise", "System overheating", "Low power usage"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "What is the function of a case fan?",
+    "options": ["Provide power to GPU", "Increase voltage", "Move air in/out of the case", "Regulate RAM speed"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which fan configuration is best for airflow?",
+    "options": ["All intake", "All exhaust", "Balanced intake and exhaust", "No fans"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which part benefits most from a VRM heat sink?",
+    "options": ["GPU", "CPU", "Motherboard power delivery", "RAM"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which of the following helps reduce thermal buildup?",
+    "options": ["Extra RGB lights", "Cable clutter", "Proper airflow", "More USB ports"],
+    "answer": 2
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Which cooling method is quieter but often more complex?",
+    "options": ["Liquid cooling", "Air cooling", "Passive cooling", "Modular cooling"],
+    "answer": 0
+  },
+  {
+    "topic": "Cooling & Thermal Management",
+    "question": "Why is dust bad for cooling systems?",
+    "options": ["Increases voltage", "Improves airflow", "Blocks airflow and traps heat", "Helps heat transfer"],
+    "answer": 2
+  },
+
+  {
+    "topic": "Performance & Certification",
+    "question": "What does 80 Plus certification indicate?",
+    "options": ["GPU compatibility", "Energy efficiency", "High fan speed", "High wattage"],
+    "answer": 1
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "Which of the following 80 Plus ratings is the most efficient?",
+    "options": ["Bronze", "Gold", "Platinum", "Silver"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "Which PSU feature helps reduce power loss and harmonics?",
+    "options": ["Modular cables", "Redundant PSU", "Active PFC", "Overclocking"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "A PSU with 80 Plus Gold certification must be at least how efficient at 50% load?",
+    "options": ["80%", "85%", "90%", "92%"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "What is the advantage of a modular PSU?",
+    "options": ["Higher wattage", "Fixed cables", "Custom cabling and airflow", "More voltage rails"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "How is PSU wattage related to performance?",
+    "options": ["More wattage always improves speed", "It limits how many components you can power", "It only affects GPU", "Only affects cooling"],
+    "answer": 1
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "Which feature allows uninterrupted power in critical servers?",
+    "options": ["Modular design", "Redundant power supply", "80 Plus certification", "Liquid cooling"],
+    "answer": 1
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "What is the typical efficiency rating of an 80 Plus Bronze PSU at 50% load?",
+    "options": ["85%", "88%", "82%", "80%"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "Which of the following PSU certifications is the lowest tier?",
+    "options": ["Gold", "Titanium", "Bronze", "Platinum"],
+    "answer": 2
+  },
+  {
+    "topic": "Performance & Certification",
+    "question": "Why is energy efficiency important in a PSU?",
+    "options": ["Improves color rendering", "Reduces cost and heat", "Adds more power lines", "Increases noise"],
+    "answer": 1
+  }
+],
+
+
+    };
+
+    let currentTopic = "";
+    let currentQuestion = 0;
+
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('feedback').innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      if (selected === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.innerText = "❌ Incorrect.";
+        feedback.style.color = "red";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = '<h2>🎉 You have completed the quiz!</h2>';
+      }
+    }
+  </script>
+</body>
+</html>
