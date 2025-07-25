@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Power Supply & Cooling Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+<h1>Storage Devices & Memory</h1>
+  <div class="topic-buttons">
+     <button class="topic-btn" onclick="startQuiz('hddQuiz')">1. HDD (Hard Disk Drive)</button>
+    <button class="topic-btn" onclick="startQuiz('ssdQuiz')">2. SSD (Solid State Drive)</button>
+    <button class="topic-btn" onclick="startQuiz('raidQuiz')">3. RAID (Redundant Array of Independent Disks)</button>
+    <button class="topic-btn" onclick="startQuiz('opticalDrivesQuiz')">4. Optical Drives (CD/DVD/Blu-ray)</button>
+    <button class="topic-btn" onclick="startQuiz('ramQuiz')">5. RAM (Random Access Memory) Types</button>
+    <button class="topic-btn" onclick="startQuiz('virtualMemoryQuiz')">6. Virtual Memory</button>
+
+  </div>
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionButtons"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+  <script>
+    const quizData = {
+hddQuiz: [
+  {
+    question: "What type of storage does an HDD use?",
+    options: [
+      "Flash memory",
+      "Magnetic storage",
+      "Optical storage",
+      "Solid-state storage"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which component in an HDD moves to read/write data?",
+    options: [
+      "Spindle",
+      "Read/write head",
+      "Capacitor",
+      "Laser"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the typical rotational speed of consumer HDDs?",
+    options: [
+      "12000 RPM",
+      "3000 RPM",
+      "5400 or 7200 RPM",
+      "10000 RPM only"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is a disadvantage of HDDs compared to SSDs?",
+    options: [
+      "Higher cost",
+      "Low capacity",
+      "Slow speed",
+      "Noisy cooling fan"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which interface is most commonly used by HDDs in modern systems?",
+    options: [
+      "HDMI",
+      "PCIe",
+      "Thunderbolt",
+      "SATA"
+    ],
+    answer: 3
+  },
+  {
+    question: "Which part of an HDD stores data magnetically?",
+    options: [
+      "Actuator arm",
+      "Cache",
+      "PCB",
+      "Platter"
+    ],
+    answer: 3
+  },
+  {
+    question: "What happens when the read/write head touches the platter?",
+    options: [
+      "Improved performance",
+      "Head crash",
+      "System reboots",
+      "Drive becomes faster"
+    ],
+    answer: 1
+  },
+  {
+    question: "What type of memory is used in HDDs to retain data after shutdown?",
+    options: [
+      "Volatile",
+      "Non-volatile",
+      "Dynamic",
+      "Flash"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which tool monitors HDD health and failure prediction?",
+    options: [
+      "Disk Cleanup",
+      "BIOS",
+      "S.M.A.R.T.",
+      "Task Manager"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the main purpose of the HDD's cache?",
+    options: [
+      "Stores the OS",
+      "Holds user files",
+      "Buffers data temporarily for quick access",
+      "Formats the disk"
+    ],
+    answer: 2
+  }
+],
+ssdQuiz: [
+  {
+    question: "What type of storage technology does an SSD use?",
+    options: [
+      "Magnetic platters",
+      "Laser optics",
+      "Flash memory",
+      "Capacitor cells"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is an advantage of SSDs over HDDs?",
+    options: [
+      "Lower cost",
+      "Slower data access",
+      "Mechanical durability",
+      "Larger size"
+    ],
+    answer: 2
+  },
+  {
+    question: "Why are SSDs more resistant to shock than HDDs?",
+    options: [
+      "They use solid-state capacitors",
+      "They have no moving parts",
+      "They are encased in metal",
+      "They spin faster"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which interface is commonly used by modern SSDs for fastest speeds?",
+    options: [
+      "IDE",
+      "SATA",
+      "PCIe/NVMe",
+      "USB 2.0"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a major limitation of SSDs compared to HDDs?",
+    options: [
+      "Low performance",
+      "Slower boot time",
+      "Higher cost per GB",
+      "Longer lifespan"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which form factor is common for SATA SSDs?",
+    options: [
+      "3.5-inch",
+      "2.5-inch",
+      "1.8-inch",
+      "5.25-inch"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the main function of the SSD controller?",
+    options: [
+      "Move the read/write arm",
+      "Spin the platters",
+      "Manage data storage and retrieval",
+      "Cool the drive"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does NVMe stand for?",
+    options: [
+      "Non-Volatile Memory Express",
+      "New Virtual Memory Engine",
+      "Nonlinear Virtual Module Express",
+      "Networked Volume Managed Environment"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which type of SSD typically offers the highest performance?",
+    options: [
+      "SATA SSD",
+      "NVMe SSD",
+      "USB SSD",
+      "Hybrid SSD"
+    ],
+    answer: 1
+  },
+  {
+    question: "What can help extend the lifespan of an SSD?",
+    options: [
+      "Defragmenting regularly",
+      "Using TRIM command",
+      "Overclocking",
+      "Filling the drive completely"
+    ],
+    answer: 1
+  }
+],
+raidQuiz: [
+  {
+    question: "What is the main purpose of RAID in storage systems?",
+    options: [
+      "To increase internet speed",
+      "To improve disk performance and/or provide redundancy",
+      "To connect printers",
+      "To encrypt data"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAID level uses disk striping with **no** redundancy?",
+    options: [
+      "RAID 0",
+      "RAID 1",
+      "RAID 5",
+      "RAID 10"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which RAID level mirrors data across two or more drives?",
+    options: [
+      "RAID 2",
+      "RAID 1",
+      "RAID 0",
+      "RAID 6"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAID level provides fault tolerance and uses **parity**?",
+    options: [
+      "RAID 0",
+      "RAID 1",
+      "RAID 5",
+      "RAID 1+0"
+    ],
+    answer: 2
+  },
+  {
+    question: "How many drives are required at a **minimum** for RAID 5?",
+    options: [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAID level can **survive the failure of two drives**?",
+    options: [
+      "RAID 0",
+      "RAID 1",
+      "RAID 5",
+      "RAID 6"
+    ],
+    answer: 3
+  },
+  {
+    question: "What does RAID 10 (1+0) combine?",
+    options: [
+      "Parity and striping",
+      "Mirroring and striping",
+      "Encryption and compression",
+      "Cache and buffer"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAID level is best for performance **but has no data protection**?",
+    options: [
+      "RAID 1",
+      "RAID 5",
+      "RAID 0",
+      "RAID 6"
+    ],
+    answer: 2
+  },
+  {
+    question: "What happens if one disk fails in RAID 1?",
+    options: [
+      "All data is lost",
+      "System crashes",
+      "The mirrored drive continues to function",
+      "The system formats both drives"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is a **drawback** of using RAID 10?",
+    options: [
+      "Very slow speed",
+      "Consumes a lot of disk space for redundancy",
+      "Cannot recover from drive failure",
+      "Requires software encryption"
+    ],
+    answer: 1
+  }
+],
+opticalDrivesQuiz: [
+  {
+    question: "What type of technology do optical drives use to read and write data?",
+    options: [
+      "Magnetic fields",
+      "Electric pulses",
+      "Laser beams",
+      "Mechanical arms"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is a **read-only** optical disc format?",
+    options: [
+      "CD-R",
+      "CD-ROM",
+      "CD-RW",
+      "DVD-RW"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which format allows you to **rewrite** data multiple times?",
+    options: [
+      "DVD-R",
+      "CD-ROM",
+      "CD-RW",
+      "Blu-ray ROM"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does the 'RW' stand for in CD-RW and DVD-RW?",
+    options: [
+      "Rewritable",
+      "Read/Write",
+      "Rapid Write",
+      "Run and Write"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which of the following optical disc types holds the **most** data?",
+    options: [
+      "CD",
+      "DVD",
+      "Blu-ray",
+      "Floppy Disk"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the typical storage capacity of a **standard DVD**?",
+    options: [
+      "700 MB",
+      "4.7 GB",
+      "25 GB",
+      "1.44 MB"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following statements is **true** about Blu-ray discs?",
+    options: [
+      "They store less data than DVDs",
+      "They use a red laser",
+      "They support high-definition video",
+      "They are no longer optical media"
+    ],
+    answer: 2
+  },
+  {
+    question: "Why are optical drives becoming less common in modern laptops?",
+    options: [
+      "They overheat easily",
+      "They use too much RAM",
+      "Most software is distributed digitally",
+      "They cannot read SSDs"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of these is an **example use** of optical drives today?",
+    options: [
+      "Cloud backup",
+      "Installing software from discs",
+      "Data encryption",
+      "Reading barcodes"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which color laser does a **Blu-ray** drive use?",
+    options: [
+      "Red",
+      "Blue-violet",
+      "Green",
+      "White"
+    ],
+    answer: 1
+  }
+],
+ramQuiz: [
+  {
+    question: "What type of memory is RAM classified as?",
+    options: [
+      "Non-volatile",
+      "Permanent",
+      "Volatile",
+      "Read-only"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is **true** about RAM?",
+    options: [
+      "It stores data permanently",
+      "It loses data when the power is off",
+      "It is used only for backups",
+      "It replaces the CPU"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAM type is commonly used in desktop computers today?",
+    options: [
+      "DDR2",
+      "SDRAM",
+      "DDR4/DDR5",
+      "EPROM"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does DDR stand for in DDR RAM?",
+    options: [
+      "Direct Data Relay",
+      "Double Data Rate",
+      "Digital Data Router",
+      "Dynamic Device Register"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which RAM type is **faster** and used in CPU caches?",
+    options: [
+      "SRAM",
+      "DRAM",
+      "EPROM",
+      "Flash"
+    ],
+    answer: 0
+  },
+  {
+    question: "What does DRAM stand for?",
+    options: [
+      "Dual RAM",
+      "Dynamic RAM",
+      "Direct RAM",
+      "Dedicated RAM"
+    ],
+    answer: 1
+  },
+  {
+    question: "How does SRAM differ from DRAM?",
+    options: [
+      "SRAM needs constant refreshing",
+      "DRAM is faster than SRAM",
+      "SRAM is faster and does not need refreshing",
+      "DRAM stores data without power"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which RAM type is mainly found in laptops due to its compact size?",
+    options: [
+      "DIMM",
+      "SO-DIMM",
+      "VRAM",
+      "Cache"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the role of RAM in a computer?",
+    options: [
+      "To store long-term files",
+      "To cool down the CPU",
+      "To temporarily store data for running programs",
+      "To replace the hard drive"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is one main difference between DDR4 and DDR5 RAM?",
+    options: [
+      "DDR4 is faster",
+      "DDR5 has lower capacity",
+      "DDR5 offers higher speed and bandwidth",
+      "DDR5 uses magnetic storage"
+    ],
+    answer: 2
+  }
+],
+virtualMemoryQuiz: [
+  {
+    question: "What is virtual memory?",
+    options: [
+      "A backup of RAM stored online",
+      "Memory stored in the CPU cache",
+      "A section of the hard drive used to simulate additional RAM",
+      "Permanent memory on the motherboard"
+    ],
+    answer: 2
+  },
+  {
+    question: "When is virtual memory used?",
+    options: [
+      "When the CPU needs more power",
+      "When physical RAM is full",
+      "When the BIOS starts up",
+      "When the computer is shut down"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which file does Windows use to manage virtual memory?",
+    options: [
+      "pagefile.sys",
+      "virtual.sys",
+      "vmemory.dll",
+      "temp.dat"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is the main disadvantage of virtual memory compared to RAM?",
+    options: [
+      "It costs more",
+      "It is much slower",
+      "It requires a graphics card",
+      "It uses too much power"
+    ],
+    answer: 1
+  },
+  {
+    question: "Where is virtual memory located?",
+    options: [
+      "In the CPU",
+      "On the SSD/HDD",
+      "On the RAM stick",
+      "Inside the BIOS"
+    ],
+    answer: 1
+  },
+  {
+    question: "What process moves data between RAM and virtual memory?",
+    options: [
+      "Paging",
+      "Caching",
+      "Buffering",
+      "Refreshing"
+    ],
+    answer: 0
+  },
+  {
+    question: "Why is virtual memory important?",
+    options: [
+      "It increases CPU clock speed",
+      "It replaces the GPU",
+      "It allows the system to handle more applications than physical RAM can",
+      "It stores user passwords"
+    ],
+    answer: 2
+  },
+  {
+    question: "What happens if a system runs out of both RAM and virtual memory?",
+    options: [
+      "It switches to BIOS memory",
+      "It reboots automatically",
+      "Applications crash or freeze",
+      "It uses the CPU for memory"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following can improve virtual memory performance?",
+    options: [
+      "Using a faster hard drive (SSD instead of HDD)",
+      "Overclocking the GPU",
+      "Disabling the antivirus",
+      "Removing system fans"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is 'thrashing' in the context of virtual memory?",
+    options: [
+      "Overheating of memory modules",
+      "Using the entire SSD for storage",
+      "Excessive paging causing system slowdown",
+      "A virus that deletes memory"
+    ],
+    answer: 2
+  }
+],
+};
+
+    let currentTopic = "";
+    let currentQuestion = 0;
+
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('feedback').innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      if (selected === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.innerText = "❌ Incorrect.";
+        feedback.style.color = "red";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = '<h2>🎉 You have completed the quiz!</h2>';
+      }
+    }
+  </script>
+</body>
