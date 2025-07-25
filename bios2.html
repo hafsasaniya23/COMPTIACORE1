@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BIOS Simulator</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000080;
+      color: #be0000;
+      font-family: monospace;
+      font-weight:bold;
+      font-size: 20px;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .bios-container {
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      border: 4px solid #000;
+      box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      background-color: #000080;
+      color: #fff;
+    }
+    .tab {
+      padding: 5px 15px;
+      border-right: 1px solid #fff;
+      cursor: pointer;
+    }
+    .tab.active {
+      background-color: #fff;
+      color: #000;
+    }
+    .menu {
+      flex-grow: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .menu-item {
+      padding: 5px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .menu-item.selected {
+      background-color: #000080;
+      color: #fff;
+    }
+    .help-box {
+      background-color: #000080;
+      color: #ffff00;
+      padding: 10px;
+      font-size: 14px;
+      min-height: 60px;
+      border-top: 2px solid #fff;
+    }
+    .footer {
+      background-color: #000080;
+      color: #ffffff;
+      padding: 5px;
+      font-size: 12px;
+      text-align: center;
+    }
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border: 2px solid #000;
+      z-index: 1000;
+    }
+    .modal input {
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .modal button {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body tabindex="0">
+  <div class="bios-container">
+    <div class="tabs" id="tabs"></div>
+    <div class="menu" id="menu"></div>
+    <div class="help-box" id="help-box">Use arrow keys or mouse to explore BIOS settings. Detailed explanations will appear here.</div>
+    <div class="footer">F1: Help | F9: Defaults | F10: Save & Exit | ESC: Exit</div>
+  </div>
+
+  <div id="modal" class="modal" style="display: none;">
+    <div id="modal-content"></div>
+    <input type="text" id="modal-input" />
+    <button onclick="closeModal()">OK</button>
+  </div>
+
+  <script>
+    const biosData = {
+      tabs: ['Main', 'Advanced', 'Security', 'Boot', 'Power', 'Chipset', 'Info', 'Exit'],
+      menu: {
+        Main: [
+          { label: 'System Time', value: new Date().toLocaleTimeString(), type: 'time', help: 'Adjust the internal system time. This sets the BIOS clock used during boot and system operations.' },
+          { label: 'System Date', value: new Date().toLocaleDateString(), type: 'date', help: 'Set the system calendar date. Essential for time-sensitive tasks and logs.' },
+          { label: 'Legacy Diskette A', value: '1.44/1.25 MB 3½"', options: ['Disabled', '1.44/1.25 MB 3½"'], type: 'select', help: 'Choose whether to enable floppy disk drive support. Legacy option for older devices.' },
+          { label: 'Primary Master', value: 'VMware Virtual ID', type: 'info', help: 'Displays the connected drive on the primary IDE/SATA port.' },
+          { label: 'Primary Slave', value: '[None]', type: 'info', help: 'Displays if a secondary drive is connected to the IDE/SATA port.' },
+          { label: 'Keyboard Features', value: '[Enter]', type: 'info', help: 'View and configure keyboard boot settings, like NumLock default state.' },
+          { label: 'System Memory', value: '640 KB', type: 'info', help: 'Shows the amount of base RAM detected during POST (Power-On Self Test).'},
+          { label: 'Extended Memory', value: '785408 KB', type: 'info', help: 'Shows available RAM above 1MB that the OS can use.' }
+        ],
+        Advanced: [
+          { label: 'USB Controller', value: 'Enabled', options: ['Enabled', 'Disabled'], type: 'select', help: 'Enable or disable USB ports for external devices.' },
+          { label: 'Virtualization Tech', value: 'Enabled', options: ['Enabled', 'Disabled'], type: 'select', help: 'Enable CPU virtualization for virtual machines like VMware or Hyper-V.' },
+          { label: 'Execute Disable Bit', value: 'Enabled', options: ['Enabled', 'Disabled'], type: 'select', help: 'Security feature to prevent malware from executing in certain memory areas.' }
+        ],
+        Security: [
+          { label: 'Administrator Password', value: '[Not Set]', type: 'password', help: 'Create or change a password required to access BIOS setup.' },
+          { label: 'User Password', value: '[Not Set]', type: 'password', help: 'Set a password that restricts normal user access to the system during boot.' },
+          { label: 'TPM Device', value: 'Available', type: 'info', help: 'Trusted Platform Module support for hardware-based security.' },
+          { label: 'TPM State', value: 'Enabled', options: ['Enabled', 'Disabled'], type: 'select', help: 'Enable or disable TPM usage for encryption-based services.' }
+        ],
+        Boot: [
+          { label: 'Boot Mode', value: 'UEFI', options: ['UEFI', 'Legacy'], type: 'select', help: 'Choose between newer UEFI or traditional Legacy booting methods.' },
+          { label: '1st Boot Device', value: 'USB', options: ['USB', 'HDD', 'CD-ROM'], type: 'select', help: 'Select the first device to attempt booting from.' },
+          { label: '2nd Boot Device', value: 'HDD', options: ['USB', 'HDD', 'CD-ROM'], type: 'select', help: 'Secondary device to boot if the first one fails.' },
+          { label: '3rd Boot Device', value: 'CD-ROM', options: ['USB', 'HDD', 'CD-ROM'], type: 'select', help: 'Tertiary device in boot order list.' }
+        ],
+        Power: [
+          { label: 'ACPI Suspend Type', value: 'S3 (STR)', options: ['S1 (POS)', 'S3 (STR)'], type: 'select', help: 'Configure system sleep state mode (Suspend to RAM or to CPU).' },
+          { label: 'Wake on LAN', value: 'Disabled', options: ['Enabled', 'Disabled'], type: 'select', help: 'Allows computer to boot when LAN activity is detected.' }
+        ],
+        Chipset: [
+          { label: 'Primary Graphics Adapter', value: 'Auto', options: ['Auto', 'PCI-E', 'Onboard'], type: 'select', help: 'Set priority for using graphics cards: integrated or external PCI-E.' }
+        ],
+        Info: [
+          { label: 'BIOS Version', value: '1.02.01', type: 'info', help: 'Current BIOS firmware version installed.' },
+          { label: 'System Serial Number', value: 'SN1234567890', type: 'info', help: 'Unique ID assigned by the manufacturer to your system.' }
+        ],
+        Exit: [
+          { label: 'Exit Saving Changes', value: '[Enter]', type: 'action', help: 'Apply any changes made and restart the system.' },
+          { label: 'Exit Discarding Changes', value: '[Enter]', type: 'action', help: 'Leave BIOS without saving any modifications.' },
+          { label: 'Load Setup Defaults', value: '[Enter]', type: 'action', help: 'Reset all BIOS settings to factory defaults.' }
+        ]
+      }
+    };
+
+    let currentTab = 0;
+    let selectedIndex = 0;
+
+    function renderTabs() {
+      const tabsDiv = document.getElementById('tabs');
+      tabsDiv.innerHTML = biosData.tabs.map((tab, idx) =>
+        `<div class="tab ${idx === currentTab ? 'active' : ''}" onclick="switchTab(${idx})">${tab}</div>`
+      ).join('');
+    }
+
+    function renderMenu() {
+      const menuDiv = document.getElementById('menu');
+      const helpBox = document.getElementById('help-box');
+      const items = biosData.menu[biosData.tabs[currentTab]];
+
+      menuDiv.innerHTML = items.map((item, idx) =>
+        `<div class="menu-item ${idx === selectedIndex ? 'selected' : ''}" onmouseover="updateHelp('${item.help}')">
+          <span>${item.label}</span><span>${Array.isArray(item.value) ? item.value.join(', ') : item.value}</span>
+        </div>`
+      ).join('');
+
+      helpBox.textContent = items[selectedIndex]?.help || 'Use arrow keys to navigate. Enter to change.';
+    }
+
+    function updateHelp(text) {
+      document.getElementById('help-box').textContent = text;
+    }
+
+    function switchTab(idx) {
+      currentTab = idx;
+      selectedIndex = 0;
+      renderTabs();
+      renderMenu();
+    }
+
+    function handleKey(e) {
+      const items = biosData.menu[biosData.tabs[currentTab]];
+      if (!items) return;
+      if (e.key === 'ArrowDown') selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      else if (e.key === 'ArrowUp') selectedIndex = Math.max(selectedIndex - 1, 0);
+      else if (e.key === 'ArrowRight') switchTab((currentTab + 1) % biosData.tabs.length);
+      else if (e.key === 'ArrowLeft') switchTab((currentTab - 1 + biosData.tabs.length) % biosData.tabs.length);
+      else if (e.key === 'Enter') {
+        const item = items[selectedIndex];
+        if (item.options) {
+          const idx = item.options.indexOf(item.value);
+          item.value = item.options[(idx + 1) % item.options.length];
+        } else if (item.type === 'password' || item.type === 'time' || item.type === 'date') {
+          showModal(item);
+        }
+      }
+      renderTabs();
+      renderMenu();
+    }
+
+    function showModal(item) {
+      document.getElementById('modal').style.display = 'block';
+      document.getElementById('modal-content').textContent = `Enter new ${item.label}:`;
+      document.getElementById('modal-input').value = '';
+      document.getElementById('modal-input').onkeypress = (e) => {
+        if (e.key === 'Enter') {
+          item.value = e.target.value || '[Not Set]';
+          closeModal();
+        }
+      };
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+      renderMenu();
+    }
+
+    document.body.addEventListener('keydown', handleKey);
+    renderTabs();
+    renderMenu();
+  </script>
+</body>
+</html>
