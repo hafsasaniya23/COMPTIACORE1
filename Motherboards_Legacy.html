@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CPU & BIOS/UEFI Knowledge Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+    .next-btn {
+      display: block;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+  </style>
+</head>
+<body>
+<h1>Motherboards & Legacy Cables Quiz</h1>
+  <div class="topic-buttons">
+    <button class="topic-btn" onclick="startQuiz('motherboardBasics')">Motherboard Basics</button>
+    <button class="topic-btn" onclick="startQuiz('cpuSockets')">CPU Sockets</button>
+    <button class="topic-btn" onclick="startQuiz('ramSlotsDIMM')">RAM Slots & Memory</button>
+    <button class="topic-btn" onclick="startQuiz('chipsetArchitecture')">Chipset & Architecture</button>
+    <button class="topic-btn" onclick="startQuiz('biosUefiCmos')">BIOS / UEFI & CMOS</button>
+    <button class="topic-btn" onclick="startQuiz('powerAndVRM')">Power & VRM</button>
+    <button class="topic-btn" onclick="startQuiz('expansionAndStorageSlots')">Expansion & Storage Slots</button>
+    <button class="topic-btn" onclick="startQuiz('motherboardFormFactors')">Form Factors</button>
+    <button class="topic-btn" onclick="startQuiz('legacyPorts')">Legacy Ports</button>
+    <button class="topic-btn" onclick="startQuiz('troubleshootingMotherboards')">Troubleshooting Motherboards</button>
+  </div>
+
+
+  <div class="quiz-container" id="quizBox">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="optionButtons"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" onclick="nextQuestion()">Next Question</button>
+  </div>
+</body>
+</html>
+
+  <script>
+    const quizData = {
+motherboardBasics: [
+  {
+    question: "What is the primary function of a motherboard?",
+    options: [
+      "Store OS",
+      "Connect all components",
+      "Power GPU",
+      "Install RAM"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is another name for the motherboard?",
+    options: [
+      "Sub-board",
+      "Minor board",
+      "System board",
+      "Graphic board"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is directly attached to the motherboard?",
+    options: [
+      "Printer",
+      "USB Hub",
+      "CPU",
+      "Power Supply"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the largest board inside a standard desktop computer?",
+    options: [
+      "RAM module",
+      "CPU socket",
+      "GPU",
+      "Motherboard"
+    ],
+    answer: 3
+  },
+  {
+    question: "Which component connects RAM, CPU, storage, and peripherals?",
+    options: [
+      "SATA cable",
+      "Motherboard",
+      "CMOS battery",
+      "Monitor cable"
+    ],
+    answer: 1
+  },
+  {
+    question: "What ensures different motherboards fit different PC cases?",
+    options: [
+      "Color scheme",
+      "BIOS version",
+      "Form factor",
+      "CPU speed"
+    ],
+    answer: 2
+  },
+  {
+    question: "What allows the motherboard to communicate with all hardware components?",
+    options: [
+      "USB controller",
+      "Chipset",
+      "Display driver",
+      "VRAM"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which one of these is NOT found on the motherboard?",
+    options: [
+      "CPU socket",
+      "Hard disk drive",
+      "RAM slots",
+      "PCIe slots"
+    ],
+    answer: 1
+  },
+  {
+    question: "What powers the motherboard in a computer?",
+    options: [
+      "CMOS battery",
+      "PCI slot",
+      "24-pin ATX power connector",
+      "Fan header"
+    ],
+    answer: 2
+  },
+  {
+    question: "Why is grounding important when working with a motherboard?",
+    options: [
+      "For brighter display",
+      "Prevents overheating",
+      "Prevents electrostatic discharge",
+      "Speeds up BIOS boot"
+    ],
+    answer: 2
+  }
+],
+cpuSockets: [
+  {
+    question: "Which socket type is used by most Intel processors?",
+    options: [
+      "PGA",
+      "LGA",
+      "BGA",
+      "CGA"
+    ],
+    answer: 1
+  },
+  {
+    question: "In an LGA socket, where are the pins located?",
+    options: [
+      "On the CPU",
+      "On the cooler",
+      "On the motherboard socket",
+      "Under the chipset"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does PGA stand for?",
+    options: [
+      "Pin Grid Array",
+      "Peripheral Graphic Adapter",
+      "Processor Grid Alignment",
+      "Plug Graphics Array"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is the purpose of a CPU socket?",
+    options: [
+      "Provide power to motherboard",
+      "Connect the CPU to memory",
+      "Physically and electrically connect CPU to motherboard",
+      "Store BIOS settings"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which CPU socket type is permanently soldered and not user-upgradable?",
+    options: [
+      "LGA",
+      "PGA",
+      "BGA",
+      "ZIF"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does ZIF socket mean?",
+    options: [
+      "Zero Interface Fix",
+      "Zero Interference Force",
+      "Zero Insertion Force",
+      "Zonal Interface Flow"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which socket is more commonly associated with AMD processors?",
+    options: [
+      "LGA",
+      "BGA",
+      "PGA",
+      "ZIF"
+    ],
+    answer: 2
+  },
+  {
+    question: "If you're replacing a CPU, what must match between the CPU and motherboard?",
+    options: [
+      "GPU",
+      "Socket Type",
+      "Power Supply",
+      "RAM speed"
+    ],
+    answer: 1
+  },
+  {
+    question: "Why is proper alignment important when installing a CPU?",
+    options: [
+      "To improve graphics performance",
+      "To avoid damage to CPU or socket pins",
+      "To reduce boot time",
+      "To access BIOS"
+    ],
+    answer: 1
+  },
+  {
+    question: "What tool is typically needed to install a CPU into an LGA socket?",
+    options: [
+      "Phillips screwdriver",
+      "Flathead screwdriver",
+      "No tool — uses retention arm",
+      "Socket wrench"
+    ],
+    answer: 2
+  }
+],
+ramSlotsDIMM: [
+  {
+    question: "What does DIMM stand for?",
+    options: [
+      "Dual Inline Memory Module",
+      "Double Interfaced Memory Model",
+      "Direct Insertion Memory Mechanism",
+      "Dual Internal Memory Module"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is the purpose of RAM in a computer?",
+    options: [
+      "Store permanent data",
+      "Increase display resolution",
+      "Temporarily store data for quick access",
+      "Connect storage to CPU"
+    ],
+    answer: 2
+  },
+  {
+    question: "Where are RAM sticks inserted on a motherboard?",
+    options: [
+      "PCIe Slots",
+      "SATA Ports",
+      "DIMM Slots",
+      "M.2 Slots"
+    ],
+    answer: 2
+  },
+  {
+    question: "What effect does adding more RAM have on system performance?",
+    options: [
+      "Slows down boot time",
+      "Improves display color",
+      "Enhances multitasking and speed",
+      "Increases hard drive capacity"
+    ],
+    answer: 2
+  },
+  {
+    question: "What type of memory is RAM?",
+    options: [
+      "Permanent",
+      "Read-only",
+      "Volatile",
+      "Non-volatile"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which generation of RAM is commonly used in modern PCs?",
+    options: [
+      "DDR",
+      "DDR2",
+      "DDR3",
+      "DDR4/DDR5"
+    ],
+    answer: 3
+  },
+  {
+    question: "What does volatile memory mean?",
+    options: [
+      "Data is erased when power is off",
+      "Data is always saved to disk",
+      "Data is encrypted permanently",
+      "Data is readable but not writable"
+    ],
+    answer: 0
+  },
+  {
+    question: "How many notches does a DDR4 DIMM typically have?",
+    options: [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    answer: 0
+  },
+  {
+    question: "Can RAM be upgraded in most desktop PCs?",
+    options: [
+      "No, it's soldered permanently",
+      "Only if the CPU is replaced",
+      "Yes, by inserting into available DIMM slots",
+      "Only via BIOS update"
+    ],
+    answer: 2
+  },
+  {
+    question: "What happens if you install incompatible RAM in a slot?",
+    options: [
+      "It will automatically downgrade speed",
+      "The system will boot normally",
+      "The RAM may not be detected or cause errors",
+      "The CPU gets damaged"
+    ],
+    answer: 2
+  }
+],
+chipsetArchitecture: [
+  {
+    question: "What is the main role of the motherboard chipset?",
+    options: [
+      "Control monitor brightness",
+      "Manage communication between CPU, memory, and devices",
+      "Generate audio signals",
+      "Render 3D graphics"
+    ],
+    answer: 1
+  },
+  {
+    question: "What are the two main components of older motherboard chipsets?",
+    options: [
+      "RAM and CPU",
+      "Northbridge and Southbridge",
+      "BIOS and CMOS",
+      "USB and HDMI"
+    ],
+    answer: 1
+  },
+  {
+    question: "What has replaced Northbridge and Southbridge in modern systems?",
+    options: [
+      "CMOS",
+      "UEFI",
+      "PCH (Platform Controller Hub)",
+      "VRAM"
+    ],
+    answer: 2
+  },
+  {
+    question: "What did the Northbridge typically control?",
+    options: [
+      "Mouse and keyboard",
+      "Power supply",
+      "RAM and graphics",
+      "Audio and USB"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which component managed I/O functions like USB and SATA in older systems?",
+    options: [
+      "Northbridge",
+      "CPU",
+      "Southbridge",
+      "DIMM"
+    ],
+    answer: 2
+  },
+  {
+    question: "Where is the chipset located on the motherboard?",
+    options: [
+      "Inside the CPU",
+      "In the CMOS battery",
+      "Onboard near the CPU socket",
+      "Within the power supply"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following is NOT a role of the chipset?",
+    options: [
+      "Data flow control",
+      "Connect storage devices",
+      "Manage RAM access",
+      "Display GUI on OS"
+    ],
+    answer: 3
+  },
+  {
+    question: "What is a benefit of having an integrated PCH chipset?",
+    options: [
+      "Larger power draw",
+      "More expansion slots",
+      "Simplified design and lower latency",
+      "Bigger BIOS chips"
+    ],
+    answer: 2
+  },
+  {
+    question: "How does the chipset affect system performance?",
+    options: [
+      "It speeds up the fan",
+      "It manages how quickly data moves between components",
+      "It installs updates",
+      "It controls screen resolution"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which modern Intel platform uses a PCH architecture?",
+    options: [
+      "Core i9-9900K",
+      "Z690",
+      "BIOS",
+      "LGA 775"
+    ],
+    answer: 1
+  }
+],
+biosUefiCmos: [
+  {
+    question: "What does BIOS stand for?",
+    options: [
+      "Basic Input/Output System",
+      "Binary Integrated Output Structure",
+      "Boot Instruction Over System",
+      "Base Interface Operating Software"
+    ],
+    answer: 0
+  },
+  {
+    question: "What has replaced BIOS in modern computers?",
+    options: [
+      "RAM",
+      "UEFI",
+      "USB",
+      "SATA"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the main function of BIOS or UEFI?",
+    options: [
+      "Display graphics",
+      "Store user files",
+      "Initialize hardware during boot",
+      "Access the internet"
+    ],
+    answer: 2
+  },
+  {
+    question: "Where are BIOS/UEFI settings stored?",
+    options: [
+      "Hard drive",
+      "CPU",
+      "CMOS chip",
+      "RAM"
+    ],
+    answer: 2
+  },
+  {
+    question: "What powers the CMOS chip when the computer is off?",
+    options: [
+      "USB cable",
+      "Power supply unit (PSU)",
+      "Graphics card",
+      "CMOS battery"
+    ],
+    answer: 3
+  },
+  {
+    question: "Which of the following is a feature of UEFI but not traditional BIOS?",
+    options: [
+      "Graphical interface",
+      "Text-only menu",
+      "No mouse support",
+      "2 TB drive limit"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is typically stored in CMOS?",
+    options: [
+      "Operating system",
+      "User documents",
+      "System clock and BIOS settings",
+      "BIOS chip firmware"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which key is commonly used to enter BIOS/UEFI during boot?",
+    options: [
+      "F1",
+      "Delete or F2",
+      "Esc",
+      "F12"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does Secure Boot do in UEFI systems?",
+    options: [
+      "Speeds up POST",
+      "Checks for secure OS signatures before booting",
+      "Backs up files",
+      "Disables USB ports"
+    ],
+    answer: 1
+  },
+  {
+    question: "What happens if the CMOS battery fails?",
+    options: [
+      "RAM will be lost",
+      "Hard drive crashes",
+      "Date/time resets and BIOS settings are lost",
+      "CPU stops working"
+    ],
+    answer: 2
+  }
+],
+powerAndVRM: [
+  {
+    question: "What is the standard power connector for the motherboard?",
+    options: [
+      "20-pin Molex",
+      "8-pin PCIe",
+      "24-pin ATX connector",
+      "4-pin SATA"
+    ],
+    answer: 2
+  },
+  {
+    question: "What component supplies power to the CPU?",
+    options: [
+      "CMOS battery",
+      "24-pin ATX connector",
+      "4/8-pin CPU power connector",
+      "VRAM module"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does VRM stand for?",
+    options: [
+      "Voltage Regulation Machine",
+      "Voltage Retention Module",
+      "Voltage Regulator Module",
+      "Variable RAM Monitor"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the role of the VRM?",
+    options: [
+      "Provide internet connectivity",
+      "Convert voltage to match CPU needs",
+      "Enhance graphics quality",
+      "Display BIOS settings"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which connector provides power directly to high-performance CPUs?",
+    options: [
+      "6-pin PCIe",
+      "SATA connector",
+      "4/8-pin CPU connector",
+      "M.2 slot"
+    ],
+    answer: 2
+  },
+  {
+    question: "Why is VRM quality important for CPUs?",
+    options: [
+      "For faster USB ports",
+      "For powering fans",
+      "For stable power and overclocking",
+      "To improve video resolution"
+    ],
+    answer: 2
+  },
+  {
+    question: "What can happen if VRMs are inadequate?",
+    options: [
+      "Overclocking stability improves",
+      "Power delivery becomes inconsistent",
+      "RAM speed increases",
+      "BIOS loads faster"
+    ],
+    answer: 1
+  },
+  {
+    question: "Where is the VRM usually located?",
+    options: [
+      "Near RAM slots",
+      "Under GPU",
+      "Near CPU socket with heatsinks",
+      "In the power supply unit"
+    ],
+    answer: 2
+  },
+  {
+    question: "What component cools the VRMs?",
+    options: [
+      "CMOS fan",
+      "Northbridge fan",
+      "VRM heatsinks",
+      "Display fans"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the main function of the ATX 24-pin connector?",
+    options: [
+      "Power the graphics card",
+      "Connect case fans",
+      "Provide power to the motherboard",
+      "Store BIOS settings"
+    ],
+    answer: 2
+  }
+],
+expansionAndStorageSlots: [
+  {
+    question: "Which slot is used to install a graphics card?",
+    options: [
+      "DIMM slot",
+      "PCI slot",
+      "PCIe x16 slot",
+      "SATA port"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does PCIe stand for?",
+    options: [
+      "Peripheral Connection Interface Express",
+      "Processor Control Interface Extension",
+      "Peripheral Component Interconnect Express",
+      "Plug & Connect Integrated Extension"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which storage interface is commonly used for HDDs and SSDs?",
+    options: [
+      "PCI slot",
+      "M.2 slot",
+      "DIMM slot",
+      "SATA port"
+    ],
+    answer: 3
+  },
+  {
+    question: "What type of device typically connects to a PCI slot?",
+    options: [
+      "CPU",
+      "Legacy expansion cards",
+      "RAM",
+      "CMOS battery"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which is faster: SATA or NVMe?",
+    options: [
+      "SATA",
+      "They are the same",
+      "NVMe",
+      "USB 2.0"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the M.2 slot commonly used for?",
+    options: [
+      "CPU overclocking",
+      "RAM expansion",
+      "High-speed SSDs",
+      "Installing sound cards"
+    ],
+    answer: 2
+  },
+  {
+    question: "How is a PCIe slot different from a PCI slot?",
+    options: [
+      "PCIe is slower",
+      "PCIe uses serial communication and is faster",
+      "PCI is newer",
+      "PCI is for storage only"
+    ],
+    answer: 1
+  },
+  {
+    question: "What determines the speed and bandwidth of a PCIe slot?",
+    options: [
+      "Number of USB ports",
+      "Chipset temperature",
+      "Number of lanes (x1, x4, x8, x16)",
+      "BIOS version"
+    ],
+    answer: 2
+  },
+  {
+    question: "What kind of devices can you plug into PCIe slots?",
+    options: [
+      "RAM only",
+      "Storage drives only",
+      "Expansion cards like GPU, sound, and Wi-Fi cards",
+      "Only USB hubs"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which connector is used for traditional mechanical hard drives?",
+    options: [
+      "PCI",
+      "M.2",
+      "DIMM",
+      "SATA"
+    ],
+    answer: 3
+  }
+],
+motherboardFormFactors: [
+  {
+    question: "What does ATX stand for?",
+    options: [
+      "Advanced Technology Extended",
+      "Alternate Technical Xpress",
+      "All-Terrain Expansion",
+      "Advanced Transmission Exchange"
+    ],
+    answer: 0
+  },
+  {
+    question: "Which form factor is the largest among standard motherboards?",
+    options: [
+      "Mini-ITX",
+      "MicroATX",
+      "ATX",
+      "Nano-ITX"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which motherboard form factor is most suitable for compact builds?",
+    options: [
+      "ATX",
+      "MicroATX",
+      "Mini-ITX",
+      "Extended ATX"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which form factor typically has the most expansion slots?",
+    options: [
+      "Mini-ITX",
+      "MicroATX",
+      "ATX",
+      "BTX"
+    ],
+    answer: 2
+  },
+  {
+    question: "What is the standard size of a MicroATX motherboard?",
+    options: [
+      "305 x 244 mm",
+      "244 x 244 mm",
+      "170 x 170 mm",
+      "150 x 150 mm"
+    ],
+    answer: 1
+  },
+  {
+    question: "Why are form factors important in choosing a motherboard?",
+    options: [
+      "To match with GPU driver",
+      "To ensure compatibility with CPU brand",
+      "To fit correctly in the computer case",
+      "To determine operating system type"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which form factor is often used in HTPCs (Home Theater PCs)?",
+    options: [
+      "ATX",
+      "Mini-ITX",
+      "Extended ATX",
+      "MicroBTX"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which of the following has the fewest RAM and expansion slots?",
+    options: [
+      "ATX",
+      "MicroATX",
+      "Mini-ITX",
+      "Full Tower"
+    ],
+    answer: 2
+  },
+  {
+    question: "What does 'form factor' refer to in motherboards?",
+    options: [
+      "Power rating",
+      "Size and layout standard",
+      "Storage speed",
+      "Firmware version"
+    ],
+    answer: 1
+  },
+  {
+    question: "Can a MicroATX motherboard fit into an ATX case?",
+    options: [
+      "No, only in Mini-ITX cases",
+      "Yes, most ATX cases support MicroATX",
+      "Only in horizontal desktops",
+      "Only if overclocking is disabled"
+    ],
+    answer: 1
+  }
+],
+legacyPorts: [
+  {
+    question: "What type of signal does a VGA port transmit?",
+    options: [
+      "Digital only",
+      "Analog only",
+      "Digital and analog",
+      "Audio signals"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does DVI stand for?",
+    options: [
+      "Digital Video Interface",
+      "Display Video Interconnect",
+      "Digital Visual Interface",
+      "Data Visual Input"
+    ],
+    answer: 2
+  },
+  {
+    question: "What color is typically used for a VGA port?",
+    options: [
+      "Red",
+      "White",
+      "Blue",
+      "Green"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which DVI type supports both digital and analog signals?",
+    options: [
+      "DVI-D",
+      "DVI-A",
+      "DVI-I",
+      "DVI-P"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which port was traditionally used for printers?",
+    options: [
+      "Serial (COM) port",
+      "Parallel (LPT) port",
+      "PS/2 port",
+      "RJ-45 port"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is the common use of the PS/2 port?",
+    options: [
+      "Connecting external monitors",
+      "Connecting hard drives",
+      "Connecting mouse and keyboard",
+      "Connecting power supply"
+    ],
+    answer: 2
+  },
+  {
+    question: "What kind of connector is used for a Serial port?",
+    options: [
+      "6-pin Mini-DIN",
+      "25-pin Parallel",
+      "9-pin D-sub",
+      "15-pin VGA"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which legacy port has been most widely replaced by USB?",
+    options: [
+      "PS/2 and Parallel",
+      "HDMI",
+      "PCIe",
+      "RJ-45"
+    ],
+    answer: 0
+  },
+  {
+    question: "What is a limitation of the Serial port?",
+    options: [
+      "Too many pins",
+      "High cost",
+      "Slow speed (~115 kbps)",
+      "No color support"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which of the following ports transmits both audio and video digitally?",
+    options: [
+      "VGA",
+      "DVI",
+      "HDMI",
+      "Serial"
+    ],
+    answer: 2
+  }
+],
+troubleshootingMotherboards: [
+  {
+    question: "What is the purpose of a POST during startup?",
+    options: [
+      "To load the operating system",
+      "To check hardware functionality before booting",
+      "To test internet speed",
+      "To detect viruses"
+    ],
+    answer: 1
+  },
+  {
+    question: "What does a series of beeps during POST typically indicate?",
+    options: [
+      "All systems are functioning",
+      "Hardware error code",
+      "Successful boot",
+      "The OS is loading"
+    ],
+    answer: 1
+  },
+  {
+    question: "How can you reset the BIOS/UEFI settings to default?",
+    options: [
+      "Delete the hard drive",
+      "Use a jumper or remove the CMOS battery",
+      "Reinstall the operating system",
+      "Update the drivers"
+    ],
+    answer: 1
+  },
+  {
+    question: "What is a POST card used for?",
+    options: [
+      "To test RAM",
+      "To measure CPU temperature",
+      "To diagnose motherboard boot issues",
+      "To upgrade BIOS"
+    ],
+    answer: 2
+  },
+  {
+    question: "Which symptom might indicate a failing motherboard?",
+    options: [
+      "Loud fan noise",
+      "Blank screen and no power to components",
+      "Mouse lag",
+      "Slow internet"
+    ],
+    answer: 1
+  },
+  {
+    question: "You suspect the BIOS is corrupted. What is a common solution?",
+    options: [
+      "Install antivirus software",
+      "Flash or update the BIOS",
+      "Change the RAM",
+      "Reset Windows"
+    ],
+    answer: 1
+  },
+  {
+    question: "What should you check if the system powers on but does not POST?",
+    options: [
+      "Graphics card drivers",
+      "RAM and CPU seating",
+      "Monitor brightness",
+      "Internet connection"
+    ],
+    answer: 1
+  },
+  {
+    question: "Which tool helps ensure safe handling during motherboard work?",
+    options: [
+      "Screwdriver",
+      "Anti-static wrist strap",
+      "Hammer",
+      "CMOS battery"
+    ],
+    answer: 1
+  },
+  {
+    question: "What can clearing the CMOS fix?",
+    options: [
+      "Software lag",
+      "Incorrect BIOS settings or boot errors",
+      "Network congestion",
+      "Damaged SSD"
+    ],
+    answer: 1
+  },
+  {
+    question: "Why is it important to check power delivery when troubleshooting?",
+    options: [
+      "To avoid BIOS errors",
+      "To ensure components receive enough voltage to operate",
+      "To increase gaming speed",
+      "To clean the screen"
+    ],
+    answer: 1
+  }
+],
+
+    };
+
+    let currentTopic = "";
+    let currentQuestion = 0;
+
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(idx);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById('feedback').innerText = "";
+    }
+
+    function checkAnswer(selected) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      if (selected === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+      } else {
+        feedback.innerText = "❌ Incorrect.";
+        feedback.style.color = "red";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        document.getElementById('quizBox').innerHTML = '<h2>🎉 You have completed the quiz!</h2>';
+      }
+    }
+  </script>
+</body>
