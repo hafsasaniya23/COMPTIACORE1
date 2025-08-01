@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Networking Overview & Hardware Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #667eea, #764ba2);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #3e8e41;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #e68900;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #9C27B0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #7B1FA2;
+    }
+  </style>
+</head>
+<body>
+<h1>Networking Overview & Hardware Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('lanWan')">LAN/WAN</button>
+  <button class="topic-btn" onclick="startQuiz('soho')">SOHO</button>
+  <button class="topic-btn" onclick="startQuiz('nics')">NICs</button>
+  <button class="topic-btn" onclick="startQuiz('patchPanels')">Patch Panels</button>
+  <button class="topic-btn" onclick="startQuiz('switches')">Switches</button>
+  <button class="topic-btn" onclick="startQuiz('poe')">PoE</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        lanWan: [
+            {
+                question: "What does LAN stand for?",
+                options: ["Local Area Network", "Long Area Network", "Large Area Network", "Logical Area Network"],
+                answer: "Local Area Network"
+            },
+            {
+                question: "What is the typical maximum distance for a Category 6 Ethernet cable?",
+                options: ["50 meters", "100 meters", "185 meters", "500 meters"],
+                answer: "100 meters"
+            },
+            {
+                question: "Which device is used to connect a LAN to the Internet?",
+                options: ["Switch", "Hub", "Router", "Bridge"],
+                answer: "Router"
+            },
+            {
+                question: "What is the primary function of a WAN?",
+                options: ["Connect devices in a single building", "Connect networks across large geographical areas", "Provide wireless connectivity", "Filter network traffic"],
+                answer: "Connect networks across large geographical areas"
+            },
+            {
+                question: "Which topology is most commonly used in modern LANs?",
+                options: ["Bus", "Ring", "Star", "Mesh"],
+                answer: "Star"
+            },
+            {
+                question: "What is the maximum data transfer rate of Fast Ethernet?",
+                options: ["10 Mbps", "100 Mbps", "1 Gbps", "10 Gbps"],
+                answer: "100 Mbps"
+            },
+            {
+                question: "Which protocol is commonly used for secure remote access to a LAN?",
+                options: ["HTTP", "FTP", "VPN", "DHCP"],
+                answer: "VPN"
+            },
+            {
+                question: "What is the purpose of a subnet mask in a LAN?",
+                options: ["To encrypt data", "To identify the network portion of an IP address", "To assign IP addresses", "To route traffic between VLANs"],
+                answer: "To identify the network portion of an IP address"
+            },
+            {
+                question: "Which device operates at Layer 2 of the OSI model?",
+                options: ["Router", "Switch", "Hub", "Repeater"],
+                answer: "Switch"
+            },
+            {
+                question: "What is the primary characteristic of a WAN?",
+                options: ["High speed", "Low cost", "Covers a large geographic area", "Uses only wireless technology"],
+                answer: "Covers a large geographic area"
+            },
+            {
+                question: "Which technology is commonly used for WAN connections?",
+                options: ["Ethernet", "Token Ring", "T1/E1", "Bluetooth"],
+                answer: "T1/E1"
+            },
+            {
+                question: "What is the purpose of a default gateway in a LAN?",
+                options: ["To assign IP addresses", "To provide DNS resolution", "To route traffic outside the local network", "To filter content"],
+                answer: "To route traffic outside the local network"
+            },
+            {
+                question: "Which LAN technology uses CSMA/CD?",
+                options: ["Token Ring", "Ethernet", "FDDI", "ATM"],
+                answer: "Ethernet"
+            },
+            {
+                question: "What is the maximum number of hosts in a Class C network?",
+                options: ["254", "512", "1024", "65,534"],
+                answer: "254"
+            },
+            {
+                question: "Which WAN technology provides the highest bandwidth?",
+                options: ["T1", "DSL", "Cable", "Fiber Optic"],
+                answer: "Fiber Optic"
+            }
+        ],
+        soho: [
+            {
+                question: "What does SOHO stand for?",
+                options: ["Small Office/Home Office", "Secure Office/Home Office", "System Office/Home Office", "Simple Office/Home Office"],
+                answer: "Small Office/Home Office"
+            },
+            {
+                question: "Which device is typically used to share an Internet connection in a SOHO network?",
+                options: ["Hub", "Switch", "Router", "Bridge"],
+                answer: "Router"
+            },
+            {
+                question: "What is the most common type of Internet connection for SOHO networks?",
+                options: ["T1", "DSL/Cable", "Fiber Optic", "Satellite"],
+                answer: "DSL/Cable"
+            },
+            {
+                question: "Which security feature is essential for a SOHO network?",
+                options: ["Intrusion Detection System", "Firewall", "VPN Server", "Proxy Server"],
+                answer: "Firewall"
+            },
+            {
+                question: "What is the typical range of a SOHO wireless network?",
+                options: ["10-30 meters", "30-100 meters", "100-300 meters", "1-5 kilometers"],
+                answer: "30-100 meters"
+            },
+            {
+                question: "Which protocol is used to automatically assign IP addresses in a SOHO network?",
+                options: ["DNS", "DHCP", "SNMP", "FTP"],
+                answer: "DHCP"
+            },
+            {
+                question: "What is the primary advantage of a mesh network in a SOHO environment?",
+                options: ["Lower cost", "Simpler setup", "Extended coverage", "Higher security"],
+                answer: "Extended coverage"
+            },
+            {
+                question: "Which device can extend the range of a SOHO wireless network?",
+                options: ["Hub", "Switch", "Range Extender", "Modem"],
+                answer: "Range Extender"
+            },
+            {
+                question: "What is the purpose of port forwarding in a SOHO router?",
+                options: ["To block unwanted traffic", "To direct external traffic to internal devices", "To prioritize certain types of traffic", "To encrypt data"],
+                answer: "To direct external traffic to internal devices"
+            },
+            {
+                question: "Which security protocol is recommended for SOHO wireless networks?",
+                options: ["WEP", "WPA", "WPA2", "WPA3"],
+                answer: "WPA3"
+            },
+            {
+                question: "What is the typical number of devices in a SOHO network?",
+                options: ["1-5", "5-25", "25-100", "100-500"],
+                answer: "5-25"
+            },
+            {
+                question: "Which feature allows a SOHO router to prioritize certain types of network traffic?",
+                options: ["Port forwarding", "DMZ", "QoS", "NAT"],
+                answer: "QoS"
+            },
+            {
+                question: "What is the purpose of the DMZ feature in a SOHO router?",
+                options: ["To isolate a device from the network", "To expose a device to the Internet", "To prioritize traffic", "To block specific websites"],
+                answer: "To expose a device to the Internet"
+            },
+            {
+                question: "Which device connects a SOHO network to the Internet service provider?",
+                options: ["Switch", "Router", "Modem", "Hub"],
+                answer: "Modem"
+            },
+            {
+                question: "What is the primary function of NAT in a SOHO router?",
+                options: ["To encrypt data", "To translate between public and private IP addresses", "To filter content", "To prioritize traffic"],
+                answer: "To translate between public and private IP addresses"
+            }
+        ],
+        nics: [
+            {
+                question: "What does NIC stand for?",
+                options: ["Network Interface Card", "Network Interface Controller", "Network Interconnect Card", "Network Input Controller"],
+                answer: "Network Interface Card"
+            },
+            {
+                question: "At which layer of the OSI model does a NIC operate?",
+                options: ["Physical", "Data Link", "Network", "Transport"],
+                answer: "Physical and Data Link"
+            },
+            {
+                question: "What is the primary function of a NIC?",
+                options: ["To route network traffic", "To connect a computer to a network", "To assign IP addresses", "To filter network traffic"],
+                answer: "To connect a computer to a network"
+            },
+            {
+                question: "Which connector type is commonly used on Ethernet NICs?",
+                options: ["BNC", "RJ-11", "RJ-45", "SC"],
+                answer: "RJ-45"
+            },
+            {
+                question: "What is the purpose of a MAC address on a NIC?",
+                options: ["To identify the manufacturer", "To provide a unique hardware identifier", "To specify the network speed", "To indicate the IP address"],
+                answer: "To provide a unique hardware identifier"
+            },
+            {
+                question: "Which feature allows a NIC to operate at multiple speeds?",
+                options: ["Auto-negotiation", "Full-duplex", "Half-duplex", "QoS"],
+                answer: "Auto-negotiation"
+            },
+            {
+                question: "What is the maximum data rate of a Gigabit Ethernet NIC?",
+                options: ["10 Mbps", "100 Mbps", "1 Gbps", "10 Gbps"],
+                answer: "1 Gbps"
+            },
+            {
+                question: "Which type of NIC is used to connect to a wireless network?",
+                options: ["Ethernet NIC", "Wireless NIC", "Fiber NIC", "Token Ring NIC"],
+                answer: "Wireless NIC"
+            },
+            {
+                question: "What is the purpose of a driver for a NIC?",
+                options: ["To provide power to the NIC", "To allow the operating system to communicate with the NIC", "To configure the IP address", "To encrypt network traffic"],
+                answer: "To allow the operating system to communicate with the NIC"
+            },
+            {
+                question: "Which technology allows multiple NICs to work together as a single interface?",
+                options: ["VLAN", "NIC Teaming", "QoS", "NAT"],
+                answer: "NIC Teaming"
+            },
+            {
+                question: "What is the purpose of a Wake-on-LAN feature on a NIC?",
+                options: ["To reduce power consumption", "To remotely power on a computer", "To improve network performance", "To secure the network connection"],
+                answer: "To remotely power on a computer"
+            },
+            {
+                question: "Which type of NIC uses light to transmit data?",
+                options: ["Ethernet NIC", "Wireless NIC", "Fiber NIC", "Token Ring NIC"],
+                answer: "Fiber NIC"
+            },
+            {
+                question: "What is the purpose of a VLAN on a NIC?",
+                options: ["To increase network speed", "To logically segment a physical network", "To encrypt network traffic", "To assign IP addresses"],
+                answer: "To logically segment a physical network"
+            },
+            {
+                question: "Which feature allows a NIC to prioritize certain types of network traffic?",
+                options: ["VLAN", "QoS", "NAT", "DHCP"],
+                answer: "QoS"
+            },
+            {
+                question: "What is the primary advantage of a multi-port NIC?",
+                options: ["Lower cost", "Higher speed", "Redundancy and load balancing", "Simpler configuration"],
+                answer: "Redundancy and load balancing"
+            }
+        ],
+        patchPanels: [
+            {
+                question: "What is the primary purpose of a patch panel?",
+                options: ["To amplify network signals", "To organize and manage network cables", "To assign IP addresses", "To filter network traffic"],
+                answer: "To organize and manage network cables"
+            },
+            {
+                question: "Which type of connector is typically found on a patch panel?",
+                options: ["BNC", "RJ-11", "RJ-45", "SC"],
+                answer: "RJ-45"
+            },
+            {
+                question: "What is the standard height of a rack-mountable patch panel?",
+                options: ["1U", "2U", "3U", "4U"],
+                answer: "1U"
+            },
+            {
+                question: "Which tool is used to terminate cables onto a patch panel?",
+                options: ["Crimper", "Punch-down tool", "Cable tester", "Wire stripper"],
+                answer: "Punch-down tool"
+            },
+            {
+                question: "What is the purpose of a port label on a patch panel?",
+                options: ["To indicate the cable type", "To identify the connected device", "To specify the network speed", "To show the IP address"],
+                answer: "To identify the connected device"
+            },
+            {
+                question: "Which wiring standard is commonly used for patch panels?",
+                options: ["T568A", "T568B", "Both T568A and T568B", "Neither T568A nor T568B"],
+                answer: "Both T568A and T568B"
+            },
+            {
+                question: "What is the purpose of a patch cord?",
+                options: ["To connect devices to the patch panel", "To test network connectivity", "To amplify signals", "To filter network traffic"],
+                answer: "To connect devices to the patch panel"
+            },
+            {
+                question: "Which type of patch panel is used for fiber optic cables?",
+                options: ["RJ-45 patch panel", "Fiber patch panel", "Coaxial patch panel", "Token ring patch panel"],
+                answer: "Fiber patch panel"
+            },
+            {
+                question: "What is the primary advantage of using a patch panel?",
+                options: ["Increased network speed", "Simplified cable management", "Enhanced security", "Lower cost"],
+                answer: "Simplified cable management"
+            },
+            {
+                question: "Which component is used to connect a patch panel to a switch?",
+                options: ["Crossover cable", "Patch cord", "Console cable", "Rollover cable"],
+                answer: "Patch cord"
+            },
+            {
+                question: "What is the purpose of a cable management arm in a rack?",
+                options: ["To provide power to devices", "To organize cables and prevent strain", "To cool the equipment", "To secure the rack"],
+                answer: "To organize cables and prevent strain"
+            },
+            {
+                question: "Which type of patch panel has ports on both the front and back?",
+                options: ["Passive patch panel", "Active patch panel", "Shielded patch panel", "Unshielded patch panel"],
+                answer: "Passive patch panel"
+            },
+            {
+                question: "What is the purpose of a blanking panel in a rack?",
+                options: ["To provide additional ports", "To cover unused rack space", "To improve cooling", "To secure cables"],
+                answer: "To cover unused rack space"
+            },
+            {
+                question: "Which type of patch panel provides additional protection against electromagnetic interference?",
+                options: ["Unshielded patch panel", "Shielded patch panel", "Passive patch panel", "Active patch panel"],
+                answer: "Shielded patch panel"
+            },
+            {
+                question: "What is the primary purpose of a horizontal cable manager?",
+                options: ["To connect devices to the network", "To organize cables between equipment", "To provide power to devices", "To test network connectivity"],
+                answer: "To organize cables between equipment"
+            }
+        ],
+        switches: [
+            {
+                question: "At which layer of the OSI model does a switch primarily operate?",
+                options: ["Physical", "Data Link", "Network", "Transport"],
+                answer: "Data Link"
+            },
+            {
+                question: "What is the primary function of a switch?",
+                options: ["To connect different networks", "To forward data between devices on the same network", "To assign IP addresses", "To filter Internet content"],
+                answer: "To forward data between devices on the same network"
+            },
+            {
+                question: "Which technology allows a switch to learn the MAC addresses of connected devices?",
+                options: ["ARP", "DNS", "DHCP", "STP"],
+                answer: "ARP"
+            },
+            {
+                question: "What is the purpose of a MAC address table in a switch?",
+                options: ["To store IP addresses", "To map MAC addresses to ports", "To prioritize traffic", "To filter content"],
+                answer: "To map MAC addresses to ports"
+            },
+            {
+                question: "Which type of switch operates at Layer 3 of the OSI model?",
+                options: ["Unmanaged switch", "Managed switch", "Layer 2 switch", "Multilayer switch"],
+                answer: "Multilayer switch"
+            },
+            {
+                question: "What is the purpose of VLANs on a switch?",
+                options: ["To increase network speed", "To logically segment a physical network", "To provide power to devices", "To assign IP addresses"],
+                answer: "To logically segment a physical network"
+            },
+            {
+                question: "Which protocol prevents switching loops in a network with redundant paths?",
+                options: ["ARP", "STP", "VTP", "CDP"],
+                answer: "STP"
+            },
+            {
+                question: "What is the primary advantage of a managed switch over an unmanaged switch?",
+                options: ["Lower cost", "Higher speed", "Configuration options and monitoring", "Simpler setup"],
+                answer: "Configuration options and monitoring"
+            },
+            {
+                question: "Which feature allows a switch to prioritize certain types of network traffic?",
+                options: ["VLAN", "QoS", "STP", "NAT"],
+                answer: "QoS"
+            },
+            {
+                question: "What is the purpose of port mirroring on a switch?",
+                options: ["To increase bandwidth", "To copy network traffic for analysis", "To connect multiple devices", "To provide power"],
+                answer: "To copy network traffic for analysis"
+            },
+            {
+                question: "Which type of switch forwards frames only to the intended recipient?",
+                options: ["Hub", "Bridge", "Switch", "Router"],
+                answer: "Switch"
+            },
+            {
+                question: "What is the purpose of a trunk port on a switch?",
+                options: ["To connect to an end device", "To carry traffic for multiple VLANs", "To provide power to devices", "To connect to a router"],
+                answer: "To carry traffic for multiple VLANs"
+            },
+            {
+                question: "Which technology allows multiple physical links to be combined into a single logical link?",
+                options: ["VLAN", "STP", "Link Aggregation", "QoS"],
+                answer: "Link Aggregation"
+            },
+            {
+                question: "What is the primary function of a core switch in a network design?",
+                options: ["To connect end devices", "To aggregate traffic from distribution switches", "To provide Internet access", "To filter content"],
+                answer: "To aggregate traffic from distribution switches"
+            },
+            {
+                question: "Which feature allows a switch to dynamically assign VLANs based on MAC addresses?",
+                options: ["VTP", "VMPS", "STP", "CDP"],
+                answer: "VMPS"
+            }
+        ],
+        poe: [
+            {
+                question: "What does PoE stand for?",
+                options: ["Power over Ethernet", "Point of Entry", "Port over Ethernet", "Power on Ethernet"],
+                answer: "Power over Ethernet"
+            },
+            {
+                question: "Which IEEE standard defines PoE?",
+                options: ["802.3af", "802.11n", "802.1q", "802.3u"],
+                answer: "802.3af"
+            },
+            {
+                question: "What is the maximum power output per port for the original PoE standard (802.3af)?",
+                options: ["15.4W", "25.5W", "30W", "60W"],
+                answer: "15.4W"
+            },
+            {
+                question: "Which PoE standard provides up to 30W per port?",
+                options: ["PoE (802.3af)", "PoE+ (802.3at)", "PoE++ (802.3bt)", "UPoE"],
+                answer: "PoE+ (802.3at)"
+            },
+            {
+                question: "Which pairs of wires are used to deliver power in a standard PoE implementation?",
+                options: ["Pairs 1-2 and 3-6", "Pairs 4-5 and 7-8", "All four pairs", "Only pair 1-2"],
+                answer: "Pairs 1-2 and 3-6"
+            },
+            {
+                question: "What is the primary advantage of PoE?",
+                options: ["Increased data speed", "Reduced cabling requirements", "Enhanced security", "Lower cost"],
+                answer: "Reduced cabling requirements"
+            },
+            {
+                question: "Which device is typically used to inject power into an Ethernet cable for PoE?",
+                options: ["Switch", "Router", "Midspan injector", "Hub"],
+                answer: "Midspan injector"
+            },
+            {
+                question: "What is the maximum distance for PoE over Ethernet cable?",
+                options: ["50 meters", "100 meters", "185 meters", "500 meters"],
+                answer: "100 meters"
+            },
+            {
+                question: "Which PoE standard provides up to 60W per port?",
+                options: ["PoE (802.3af)", "PoE+ (802.3at)", "PoE++ Type 3 (802.3bt)", "PoE++ Type 4 (802.3bt)"],
+                answer: "PoE++ Type 3 (802.3bt)"
+            },
+            {
+                question: "What is the purpose of power classification in PoE?",
+                options: ["To increase data speed", "To negotiate power requirements between PSE and PD", "To encrypt power delivery", "To reduce interference"],
+                answer: "To negotiate power requirements between PSE and PD"
+            },
+            {
+                question: "What does PSE stand for in PoE terminology?",
+                options: ["Power Source Equipment", "Power Sourcing Equipment", "Power Supply Equipment", "Power Sending Equipment"],
+                answer: "Power Sourcing Equipment"
+            },
+            {
+                question: "What does PD stand for in PoE terminology?",
+                options: ["Power Device", "Powered Device", "Power Delivery", "Power Distribution"],
+                answer: "Powered Device"
+            },
+            {
+                question: "Which device is an example of a PoE-powered device?",
+                options: ["Desktop computer", "IP phone", "Server", "Router"],
+                answer: "IP phone"
+            },
+            {
+                question: "What is the primary safety concern with PoE?",
+                options: ["Data interference", "Electrical shock", "Fire hazard", "Data theft"],
+                answer: "Electrical shock"
+            },
+            {
+                question: "Which PoE standard provides up to 90W per port?",
+                options: ["PoE (802.3af)", "PoE+ (802.3at)", "PoE++ Type 3 (802.3bt)", "PoE++ Type 4 (802.3bt)"],
+                answer: "PoE++ Type 4 (802.3bt)"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'lanWan': 'LAN/WAN',
+        'soho': 'SOHO',
+        'nics': 'NICs',
+        'patchPanels': 'Patch Panels',
+        'switches': 'Switches',
+        'poe': 'PoE'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
