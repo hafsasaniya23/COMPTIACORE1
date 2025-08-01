@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Networking Quiz Topics</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #3e8e41;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #e68900;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<h1>Networking Quiz Topics</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('networkCables')">Network Cables & Connectors</button>
+  <button class="topic-btn" onclick="startQuiz('networkTools')">Network Tools & Testing</button>
+  <button class="topic-btn" onclick="startQuiz('wirelessStandards')">Wireless Technologies & Standards</button>
+  <button class="topic-btn" onclick="startQuiz('wirelessDevices')">Wireless Devices & Short-Range Wireless</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+ <script>
+    const quizData = {
+        networkCables:[
+  {
+    question: "Which type of cable is most commonly used in Ethernet networks?",
+    options: ["Coaxial", "Fiber Optic", "UTP", "STP"],
+    answer: "UTP"
+  },
+  {
+    question: "What is the main difference between UTP and STP cables?",
+    options: [
+      "STP is slower than UTP",
+      "UTP has shielding for EMI",
+      "STP includes shielding for EMI",
+      "UTP is used for fiber optic connections"
+    ],
+    answer: "STP includes shielding for EMI"
+  },
+  {
+    question: "Which cable type uses BNC and F-type connectors?",
+    options: ["UTP", "Fiber", "Coaxial", "STP"],
+    answer: "Coaxial"
+  },
+  {
+    question: "Which coaxial cable type is typically used for broadband internet?",
+    options: ["RG-59", "RG-6", "Cat 5e", "Cat 7"],
+    answer: "RG-6"
+  },
+  {
+    question: "Which connector is used with Ethernet cables?",
+    options: ["RJ-11", "RJ-45", "BNC", "SC"],
+    answer: "RJ-45"
+  },
+  {
+    question: "Which connector is commonly used with telephone lines?",
+    options: ["RJ-45", "RJ-11", "LC", "ST"],
+    answer: "RJ-11"
+  },
+  {
+    question: "Which fiber optic cable type is best for long-distance transmission?",
+    options: ["Multi-mode", "Single-mode", "Cat 6", "UTP"],
+    answer: "Single-mode"
+  },
+  {
+    question: "What is the maximum supported speed for Cat 6a cables?",
+    options: ["1 Gbps", "10 Gbps over short distance", "10 Gbps over 100m", "100 Mbps"],
+    answer: "10 Gbps over 100m"
+  },
+  {
+    question: "Which of these is a fiber optic connector?",
+    options: ["BNC", "RJ-45", "LC", "RJ-11"],
+    answer: "LC"
+  },
+  {
+    question: "What is the main advantage of using fiber optic cables?",
+    options: ["Lower cost", "Higher speeds over longer distances", "More interference", "Thicker cables"],
+    answer: "Higher speeds over longer distances"
+  },
+  {
+    question: "Which twisted pair category supports 1 Gbps speed?",
+    options: ["Cat 3", "Cat 5e", "Cat 6a", "Cat 8"],
+    answer: "Cat 5e"
+  },
+  {
+    question: "Which tool is used to terminate wires into a patch panel?",
+    options: ["Crimper", "Punch-down tool", "Loopback plug", "Tone probe"],
+    answer: "Punch-down tool"
+  },
+  {
+    question: "Which tool tests whether a cable is wired correctly from end to end?",
+    options: ["Multimeter", "Loopback plug", "Cable tester", "Punch tool"],
+    answer: "Cable tester"
+  },
+  {
+    question: "What does a crimper do?",
+    options: ["Test connections", "Attach connectors to cable ends", "Measure voltage", "Generate signal tones"],
+    answer: "Attach connectors to cable ends"
+  },
+  {
+    question: "What is a loopback plug used for?",
+    options: ["Extending cable length", "Testing network interfaces", "Punching down wires", "Detecting tone"],
+    answer: "Testing network interfaces"
+  },
+  {
+    question: "Which device helps locate cables in walls by tone?",
+    options: ["Cable tester", "Crimper", "Tone generator and probe", "Multimeter"],
+    answer: "Tone generator and probe"
+  },
+  {
+    question: "Which connector is most likely used with RG-59 cable?",
+    options: ["SC", "BNC", "LC", "RJ-45"],
+    answer: "BNC"
+  },
+  {
+    question: "Which of the following is a shielded twisted pair cable?",
+    options: ["Cat 5e", "STP", "UTP", "RG-6"],
+    answer: "STP"
+  },
+  {
+    question: "What type of connector is used for single-mode fiber?",
+    options: ["BNC", "RJ-11", "SC", "RJ-45"],
+    answer: "SC"
+  },
+  {
+    question: "What does EMI stand for?",
+    options: ["Electromagnetic Interference", "Electronic Media Interface", "Ethernet Media Integration", "Extended Mode Interface"],
+    answer: "Electromagnetic Interference"
+  }
+],
+        networkTools:[
+        {
+            question: "Which tool is used to test the continuity of a network cable?",
+            options: ["Crimper", "Cable Tester", "Tone Generator", "Multimeter"],
+            answer: "Cable Tester"
+        },
+        {
+            question: "What is the primary purpose of a crimper?",
+            options: ["Test cables", "Terminate cables to a connector", "Generate tones", "Measure voltage"],
+            answer: "Terminate cables to a connector"
+        },
+        {
+            question: "What does a punch-down tool do?",
+            options: ["Punch holes in cable insulation", "Test cable speed", "Secure wires into patch panels or keystone jacks", "Cut fiber optic cables"],
+            answer: "Secure wires into patch panels or keystone jacks"
+        },
+        {
+            question: "Which tool is used to simulate a network connection for testing?",
+            options: ["Loopback Plug", "Punch-down Tool", "Cable Tester", "Multimeter"],
+            answer: "Loopback Plug"
+        },
+        {
+            question: "Which tool emits a signal that can be tracked through a cable with a probe?",
+            options: ["Multimeter", "Tone Generator and Probe", "Crimper", "Cable Tester"],
+            answer: "Tone Generator and Probe"
+        },
+        {
+            question: "Which of the following tools can measure AC/DC voltage, current, and resistance?",
+            options: ["Tone Generator", "Cable Tester", "Multimeter", "Loopback Plug"],
+            answer: "Multimeter"
+        },
+        {
+            question: "What tool is most useful for identifying which port a cable is connected to on a patch panel?",
+            options: ["Tone Generator and Probe", "Punch-down Tool", "Crimper", "Multimeter"],
+            answer: "Tone Generator and Probe"
+        },
+        {
+            question: "What does a loopback plug test?",
+            options: ["Cable speed", "Network configuration", "NIC functionality", "IP address"],
+            answer: "NIC functionality"
+        },
+        {
+            question: "Which of these would NOT be found in a basic cable installation toolkit?",
+            options: ["Crimper", "Punch-down Tool", "Tone Generator", "GPU"],
+            answer: "GPU"
+        },
+        {
+            question: "Which tool is typically used when terminating Ethernet cables?",
+            options: ["Cable Tester", "Crimper", "Multimeter", "Loopback Plug"],
+            answer: "Crimper"
+        },
+        {
+            question: "What is the main use of a tone generator?",
+            options: ["Create power", "Trace cables", "Encrypt signals", "Fix errors"],
+            answer: "Trace cables"
+        },
+        {
+            question: "What does a multimeter NOT measure?",
+            options: ["Voltage", "Current", "Resistance", "Cable length"],
+            answer: "Cable length"
+        },
+        {
+            question: "Where would you typically use a punch-down tool?",
+            options: ["RJ-45 connectors", "Patch panels and keystone jacks", "Wireless routers", "Fiber connectors"],
+            answer: "Patch panels and keystone jacks"
+        },
+        {
+            question: "Which tool helps verify if a network cable is wired correctly?",
+            options: ["Loopback Plug", "Cable Tester", "Multimeter", "Punch-down Tool"],
+            answer: "Cable Tester"
+        },
+        {
+            question: "Which tool is LEAST likely to be used for network cable installation?",
+            options: ["Tone Generator", "Fiber Splicer", "Crimper", "Cable Tester"],
+            answer: "Fiber Splicer"
+        },
+        {
+            question: "What does a loopback plug connect?",
+            options: ["Router to switch", "TX and RX pins on a NIC", "Cable to outlet", "Patch panel to jack"],
+            answer: "TX and RX pins on a NIC"
+        },
+        {
+            question: "What is an RJ-45 crimper used for?",
+            options: ["Testing fiber", "Crimping Ethernet connectors", "Attaching coax ends", "Shortening cables"],
+            answer: "Crimping Ethernet connectors"
+        },
+        {
+            question: "You want to verify continuity in a copper cable. What tool would you use?",
+            options: ["Punch-down Tool", "Cable Tester", "Loopback Plug", "Wi-Fi Analyzer"],
+            answer: "Cable Tester"
+        },
+        {
+            question: "Which of these tools can help check if an outlet has power?",
+            options: ["Cable Tester", "Loopback Plug", "Multimeter", "Punch-down Tool"],
+            answer: "Multimeter"
+        },
+        {
+            question: "Which tool can generate an audible tone to locate a cable in a wall?",
+            options: ["Multimeter", "Tone Generator and Probe", "Cable Tester", "Loopback Plug"],
+            answer: "Tone Generator and Probe"
+        }
+        ],
+        wirelessStandards:[
+        {
+            question: "What frequency does 802.11b operate on?",
+            options: ["2.4 GHz", "5 GHz", "6 GHz", "1.8 GHz"],
+            answer: "2.4 GHz"
+        },
+        {
+            question: "Which Wi-Fi standard supports the fastest speeds?",
+            options: ["802.11n", "802.11ac", "802.11g", "802.11ax"],
+            answer: "802.11ax"
+        },
+        {
+            question: "What is the maximum theoretical speed of 802.11ac?",
+            options: ["433 Mbps", "1.3 Gbps", "600 Mbps", "9.6 Gbps"],
+            answer: "1.3 Gbps"
+        },
+        {
+            question: "Which standard introduced MU-MIMO technology?",
+            options: ["802.11n", "802.11ac", "802.11g", "802.11a"],
+            answer: "802.11ac"
+        },
+        {
+            question: "Which Wi-Fi standard operates only in the 5 GHz band?",
+            options: ["802.11a", "802.11b", "802.11n", "802.11ax"],
+            answer: "802.11a"
+        },
+        {
+            question: "What does SSID stand for?",
+            options: ["Single Station ID", "Service Set Identifier", "Signal Source Identifier", "Shared Service Identifier"],
+            answer: "Service Set Identifier"
+        },
+        {
+            question: "Which Wi-Fi band has a longer range but lower speed?",
+            options: ["5 GHz", "2.4 GHz", "6 GHz", "900 MHz"],
+            answer: "2.4 GHz"
+        },
+        {
+            question: "What is the maximum range of Bluetooth Class 2 devices?",
+            options: ["1 meter", "10 meters", "100 meters", "50 meters"],
+            answer: "10 meters"
+        },
+        {
+            question: "Which protocol replaced WEP due to its security flaws?",
+            options: ["WPA", "MAC", "SSID", "802.1X"],
+            answer: "WPA"
+        },
+        {
+            question: "Which wireless encryption is considered the most secure?",
+            options: ["WEP", "WPA2", "WPA", "WPA3"],
+            answer: "WPA3"
+        },
+        {
+            question: "What causes wireless interference?",
+            options: ["Microwaves", "Walls", "Other Wi-Fi networks", "All of the above"],
+            answer: "All of the above"
+        },
+        {
+            question: "What is a benefit of hiding an SSID?",
+            options: ["Increases range", "Enhances security slightly", "Improves speed", "Uses more power"],
+            answer: "Enhances security slightly"
+        },
+        {
+            question: "What is MAC filtering used for?",
+            options: ["Blocking ports", "Filtering IPs", "Allowing specific devices", "Encrypting packets"],
+            answer: "Allowing specific devices"
+        },
+        {
+            question: "Which Wi-Fi frequency is more prone to interference?",
+            options: ["2.4 GHz", "5 GHz", "6 GHz", "All are equal"],
+            answer: "2.4 GHz"
+        },
+        {
+            question: "What frequency does Wi-Fi 6E introduce?",
+            options: ["6 GHz", "3.5 GHz", "900 MHz", "2.5 GHz"],
+            answer: "6 GHz"
+        },
+        {
+            question: "What does NFC stand for?",
+            options: ["Near Field Communication", "Network Frequency Control", "New Fast Connection", "Near Fiber Channel"],
+            answer: "Near Field Communication"
+        },
+        {
+            question: "Which wireless technology requires line-of-sight?",
+            options: ["Bluetooth", "Wi-Fi", "Infrared", "NFC"],
+            answer: "Infrared"
+        },
+        {
+            question: "Which standard is considered part of Wi-Fi 5?",
+            options: ["802.11g", "802.11ac", "802.11b", "802.11ax"],
+            answer: "802.11ac"
+        },
+        {
+            question: "Which feature is unique to 802.11ax (Wi-Fi 6)?",
+            options: ["OFDM", "MU-MIMO", "OFDMA", "WEP"],
+            answer: "OFDMA"
+        },
+        {
+            question: "Which standard supports 9.6 Gbps maximum speed?",
+            options: ["802.11n", "802.11ac", "802.11ax", "802.11g"],
+            answer: "802.11ax"
+        }
+        ],
+        wirelessDevices:[
+  {
+    question: "What does an Access Point (AP) do in a network?",
+    options: [
+      "Assigns IP addresses",
+      "Routes data between networks",
+      "Extends a wireless network",
+      "Blocks unauthorized users"
+    ],
+    answer: "Extends a wireless network"
+  },
+  {
+    question: "What is the primary function of a router?",
+    options: [
+      "Connects devices in a LAN",
+      "Extends wireless signal",
+      "Connects multiple networks",
+      "Boosts signal range"
+    ],
+    answer: "Connects multiple networks"
+  },
+  {
+    question: "What is Bluetooth primarily used for?",
+    options: [
+      "Connecting over long distances",
+      "Personal Area Networking",
+      "Wired Ethernet connection",
+      "VPN access"
+    ],
+    answer: "Personal Area Networking"
+  },
+  {
+    question: "Which Bluetooth class offers the longest range?",
+    options: [
+      "Class 1",
+      "Class 2",
+      "Class 3",
+      "Class 4"
+    ],
+    answer: "Class 1"
+  },
+  {
+    question: "What is required for two Bluetooth devices to communicate?",
+    options: [
+      "Same IP address",
+      "Pairing process",
+      "SSID broadcast",
+      "Same channel number"
+    ],
+    answer: "Pairing process"
+  },
+  {
+    question: "What is the range of NFC communication?",
+    options: [
+      "Up to 10 meters",
+      "Less than 10 cm",
+      "1 meter",
+      "100 meters"
+    ],
+    answer: "Less than 10 cm"
+  },
+  {
+    question: "Which technology is commonly used in tap-to-pay systems?",
+    options: [
+      "Bluetooth",
+      "Infrared",
+      "NFC",
+      "Wi-Fi"
+    ],
+    answer: "NFC"
+  },
+  {
+    question: "Which of the following requires line-of-sight to function?",
+    options: [
+      "Bluetooth",
+      "Wi-Fi",
+      "NFC",
+      "Infrared"
+    ],
+    answer: "Infrared"
+  },
+  {
+    question: "Which wireless technology is least affected by walls?",
+    options: [
+      "Bluetooth",
+      "Infrared",
+      "Wi-Fi",
+      "NFC"
+    ],
+    answer: "Bluetooth"
+  },
+  {
+    question: "What does PAN stand for?",
+    options: [
+      "Private Area Network",
+      "Public Access Network",
+      "Personal Area Network",
+      "Primary Access Node"
+    ],
+    answer: "Personal Area Network"
+  },
+  {
+    question: "Which class of Bluetooth is typically found in mobile phones?",
+    options: [
+      "Class 1",
+      "Class 2",
+      "Class 3",
+      "Class 4"
+    ],
+    answer: "Class 2"
+  },
+  {
+    question: "What is one major security concern with NFC?",
+    options: [
+      "Password reuse",
+      "Eavesdropping due to close range",
+      "High transmission power",
+      "Network congestion"
+    ],
+    answer: "Eavesdropping due to close range"
+  },
+  {
+    question: "Which device combines both routing and access point features?",
+    options: [
+      "Repeater",
+      "Switch",
+      "Modem",
+      "Wireless router"
+    ],
+    answer: "Wireless router"
+  },
+  {
+    question: "Bluetooth operates on which frequency band?",
+    options: [
+      "2.4 GHz",
+      "5 GHz",
+      "900 MHz",
+      "6 GHz"
+    ],
+    answer: "2.4 GHz"
+  },
+  {
+    question: "Which technology allows quick connection between two devices by bringing them close together?",
+    options: [
+      "Infrared",
+      "NFC",
+      "Wi-Fi Direct",
+      "Ethernet"
+    ],
+    answer: "NFC"
+  },
+  {
+    question: "What kind of connection does infrared require?",
+    options: [
+      "Proximity within 10m",
+      "Radio frequency link",
+      "Line-of-sight",
+      "Bluetooth pairing"
+    ],
+    answer: "Line-of-sight"
+  },
+  {
+    question: "Which device is best for extending Wi-Fi signal to dead zones?",
+    options: [
+      "Router",
+      "Switch",
+      "Repeater/Range Extender",
+      "Modem"
+    ],
+    answer: "Repeater/Range Extender"
+  },
+  {
+    question: "What allows only approved devices to connect based on hardware address?",
+    options: [
+      "Channel bonding",
+      "SSID hiding",
+      "MAC filtering",
+      "DHCP reservation"
+    ],
+    answer: "MAC filtering"
+  },
+  {
+    question: "Which wireless technology is most used for short-range media remote controls?",
+    options: [
+      "Bluetooth",
+      "Wi-Fi",
+      "Infrared",
+      "ZigBee"
+    ],
+    answer: "Infrared"
+  },
+  {
+    question: "Which of the following is NOT a short-range wireless technology?",
+    options: [
+      "Bluetooth",
+      "Infrared",
+      "NFC",
+      "Satellite"
+    ],
+    answer: "Satellite"
+  }
+]
+    };
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'networkCables': 'Network Cables & Connectors',
+        'networkTools': 'Network Tools & Testing',
+        'wirelessStandards': 'Wireless Technologies & Standards',
+        'wirelessDevices': 'Wireless Devices & Short-Range Wireless'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
