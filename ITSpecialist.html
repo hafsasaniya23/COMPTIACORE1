@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IT Specialist Role & Troubleshooting Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #2c3e50, #3498db);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #3e8e41;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #e68900;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #9C27B0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #7B1FA2;
+    }
+  </style>
+</head>
+<body>
+<h1>IT Specialist Role & Troubleshooting Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('itSpecialistRole')">Role of IT Specialist</button>
+  <button class="topic-btn" onclick="startQuiz('troubleshootingMethodology')">Troubleshooting Methodology</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        itSpecialistRole: [
+            {
+                question: "What is the primary role of an IT Specialist?",
+                options: ["To develop software applications", "To manage and maintain an organization's IT infrastructure", "To design marketing materials", "To handle human resources tasks"],
+                answer: "To manage and maintain an organization's IT infrastructure"
+            },
+            {
+                question: "Which of the following is a key responsibility of an IT Specialist?",
+                options: ["Accounting", "Network administration", "Sales", "Manufacturing"],
+                answer: "Network administration"
+            },
+            {
+                question: "What is the first step an IT Specialist should take when a user reports a problem?",
+                options: ["Immediately reinstall the operating system", "Ask clarifying questions to understand the issue", "Replace the user's computer", "Ignore the problem if it seems minor"],
+                answer: "Ask clarifying questions to understand the issue"
+            },
+            {
+                question: "Which skill is most important for an IT Specialist?",
+                options: ["Graphic design", "Programming", "Problem-solving", "Public speaking"],
+                answer: "Problem-solving"
+            },
+            {
+                question: "What is the purpose of documentation in IT support?",
+                options: ["To create more work", "To provide a reference for future issues and solutions", "To impress management", "To fill up server space"],
+                answer: "To provide a reference for future issues and solutions"
+            },
+            {
+                question: "Which of the following is a common task for an IT Specialist?",
+                options: ["Setting up user accounts and permissions", "Designing buildings", "Cooking meals", "Driving company vehicles"],
+                answer: "Setting up user accounts and permissions"
+            },
+            {
+                question: "What is the role of an IT Specialist in security?",
+                options: ["To ignore security threats", "To implement and maintain security measures", "To create security vulnerabilities", "To share passwords with users"],
+                answer: "To implement and maintain security measures"
+            },
+            {
+                question: "Which of the following best describes customer service in IT support?",
+                options: ["Being rude to users to show authority", "Providing helpful and respectful assistance to users", "Avoiding user questions", "Making users solve their own problems"],
+                answer: "Providing helpful and respectful assistance to users"
+            },
+            {
+                question: "What is the purpose of IT policies in an organization?",
+                options: ["To restrict employee productivity", "To provide guidelines for acceptable use of IT resources", "To create confusion", "To eliminate the need for IT support"],
+                answer: "To provide guidelines for acceptable use of IT resources"
+            },
+            {
+                question: "Which of the following is a key skill for communicating with non-technical users?",
+                options: ["Using technical jargon", "Explaining concepts in simple terms", "Avoiding communication", "Speaking as quickly as possible"],
+                answer: "Explaining concepts in simple terms"
+            },
+            {
+                question: "What is the role of an IT Specialist in disaster recovery?",
+                options: ["To create panic", "To develop and implement plans for data recovery and system restoration", "To delete backup data", "To ignore potential disasters"],
+                answer: "To develop and implement plans for data recovery and system restoration"
+            },
+            {
+                question: "Which of the following is an important aspect of IT professionalism?",
+                options: ["Arriving late to appointments", "Keeping user information confidential", "Sharing passwords with colleagues", "Ignoring user requests"],
+                answer: "Keeping user information confidential"
+            },
+            {
+                question: "What is the purpose of IT training for users?",
+                options: ["To waste time", "To help users use technology effectively and efficiently", "To make users feel incompetent", "To create more work for IT staff"],
+                answer: "To help users use technology effectively and efficiently"
+            },
+            {
+                question: "Which of the following is a common responsibility of an IT Specialist regarding hardware?",
+                options: ["Designing computer chips", "Installing and maintaining computer equipment", "Manufacturing monitors", "Selling computers"],
+                answer: "Installing and maintaining computer equipment"
+            },
+            {
+                question: "What is the role of an IT Specialist in software management?",
+                options: ["To write all software for the organization", "To install, configure, and update software applications", "To avoid using software", "To delete all software from computers"],
+                answer: "To install, configure, and update software applications"
+            }
+        ],
+        troubleshootingMethodology: [
+            {
+                question: "What is the first step in the troubleshooting methodology?",
+                options: ["Implement a solution", "Identify the problem", "Document the solution", "Verify full system functionality"],
+                answer: "Identify the problem"
+            },
+            {
+                question: "After identifying a problem, what is the next step in troubleshooting?",
+                options: ["Establish a theory of probable cause", "Implement a solution", "Document the solution", "Verify full system functionality"],
+                answer: "Establish a theory of probable cause"
+            },
+            {
+                question: "What is the purpose of establishing a theory of probable cause in troubleshooting?",
+                options: ["To blame someone for the problem", "To determine the most likely cause of the issue", "To avoid fixing the problem", " To create more work"],
+                answer: "To determine the most likely cause of the issue"
+            },
+            {
+                question: "After establishing a theory of probable cause, what should you do next?",
+                options: ["Test the theory to determine the cause", "Implement a solution", "Document the solution", "Verify full system functionality"],
+                answer: "Test the theory to determine the cause"
+            },
+            {
+                question: "If testing your theory doesn't confirm the cause, what should you do next?",
+                options: ["Give up", "Establish a new theory or escalate", "Implement a random solution", "Document the failure"],
+                answer: "Establish a new theory or escalate"
+            },
+            {
+                question: "Once you've confirmed the cause of the problem, what is the next step?",
+                options: ["Establish a new theory", "Implement a solution", "Document the solution", "Verify full system functionality"],
+                answer: "Implement a solution"
+            },
+            {
+                question: "After implementing a solution, what should you do?",
+                options: ["Verify full system functionality", "Document the solution", "Establish a new theory", "Test the theory again"],
+                answer: "Verify full system functionality"
+            },
+            {
+                question: "What is the final step in the troubleshooting methodology?",
+                options: ["Implement a solution", "Verify full system functionality", "Document findings, actions, and outcomes", "Establish a theory of probable cause"],
+                answer: "Document findings, actions, and outcomes"
+            },
+            {
+                question: "Why is documentation important in troubleshooting?",
+                options: ["It creates unnecessary paperwork", "It provides a record for future reference and helps others", "It wastes time", "It's not important"],
+                answer: "It provides a record for future reference and helps others"
+            },
+            {
+                question: "What is the purpose of verifying full system functionality after implementing a solution?",
+                options: ["To ensure the problem is completely resolved and no new issues were introduced", " To create more work", "To test the user's patience", "To avoid documentation"],
+                answer: "To ensure the problem is completely resolved and no new issues were introduced"
+            },
+            {
+                question: "Which of the following is a key principle of effective troubleshooting?",
+                options: ["Start with the most complex solution", "Use a systematic approach", "Ignore user input", "Make random changes"],
+                answer: "Use a systematic approach"
+            },
+            {
+                question: "What is the purpose of asking questions during the identification phase of troubleshooting?",
+                options: ["To confuse the user", "To gather information about the problem", "To waste time", "To show off your knowledge"],
+                answer: "To gather information about the problem"
+            },
+            {
+                question: "When should you escalate a problem during troubleshooting?",
+                options: ["Immediately without trying anything", "When you've exhausted your knowledge and resources", "Never", "Only on Mondays"],
+                answer: "When you've exhausted your knowledge and resources"
+            },
+            {
+                question: "What is the purpose of replicating the problem during troubleshooting?",
+                options: ["To confirm the issue exists and understand its conditions", "To make the problem worse", "To blame the user", "To avoid fixing it"],
+                answer: "To confirm the issue exists and understand its conditions"
+            },
+            {
+                question: "Which of the following is an important consideration when implementing a solution?",
+                options: ["Choose the most expensive option", "Consider the impact on users and systems", "Implement without testing", "Make changes without informing users"],
+                answer: "Consider the impact on users and systems"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'itSpecialistRole': 'Role of IT Specialist',
+        'troubleshootingMethodology': 'Troubleshooting Methodology'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
