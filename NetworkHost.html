@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Troubleshooting & Host Services Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+      color: #333;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      border-radius: 2px;
+    }
+    
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 0 auto 40px auto;
+      max-width: 1200px;
+    }
+    
+    button.topic-btn {
+      padding: 18px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button.topic-btn:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+    
+    button.topic-btn:hover:before {
+      transform: translateX(0);
+    }
+    
+    button.topic-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.25);
+    }
+    
+    .btn-wired { background: linear-gradient(45deg, #0f2027, #203a43, #2c5364); }
+    .btn-wireless { background: linear-gradient(45deg, #4b6cb7, #182848); }
+    .btn-file { background: linear-gradient(45deg, #11998e, #38ef7d); }
+    .btn-print { background: linear-gradient(45deg, #fc4a1a, #f7b733); }
+    .btn-web { background: linear-gradient(45deg, #56ab2f, #a8e063); }
+    
+    .quiz-container {
+      max-width: 900px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quiz-container:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe, #4facfe);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    
+    .question {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-weight: 600;
+      line-height: 1.4;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .question-count {
+      text-align: right;
+      font-size: 15px;
+      color: #7f8c8d;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: right;
+    }
+    
+    .attempts {
+      text-align: left;
+      font-size: 15px;
+      color: #7f8c8d;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: left;
+    }
+    
+    .clear-float {
+      clear: both;
+    }
+    
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 14px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .options button:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .options button.correct {
+      background: linear-gradient(45deg, #56ab2f, #a8e063);
+      border-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .feedback {
+      font-weight: bold;
+      margin: 20px 0;
+      min-height: 30px;
+      font-size: 18px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .next-btn {
+      display: none;
+      margin: 25px auto 0 auto;
+      padding: 14px 32px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .next-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .quiz-complete {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .quiz-complete h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    
+    .quiz-complete p {
+      font-size: 18px;
+      color: #7f8c8d;
+      margin-bottom: 30px;
+    }
+    
+    .quiz-complete button {
+      margin: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quiz-complete button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #f46b45, #eea849);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #5f27cd, #341f97);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    
+    .home-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+<h1>Network Troubleshooting & Host Services Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn btn-wired" onclick="startQuiz('wiredIssues')">Wired Issues</button>
+  <button class="topic-btn btn-wireless" onclick="startQuiz('wirelessIssues')">Wireless Issues</button>
+  <button class="topic-btn btn-file" onclick="startQuiz('fileServers')">File Servers</button>
+  <button class="topic-btn btn-print" onclick="startQuiz('printServers')">Print Servers</button>
+  <button class="topic-btn btn-web" onclick="startQuiz('webAuthServers')">Web & Authentication Servers</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="clear-float"></div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        wiredIssues: [
+            {
+                question: "What is the first step in troubleshooting a wired network connection?",
+                options: ["Replace the network card", "Check physical connections", "Update drivers", "Reinstall the operating system"],
+                answer: "Check physical connections"
+            },
+            {
+                question: "Which tool is used to test network connectivity between devices?",
+                options: ["ipconfig", "ping", "tracert", "netstat"],
+                answer: "ping"
+            },
+            {
+                question: "What does a link light on a network interface indicate?",
+                options: ["The device is connected to a network", "Data is being transmitted", "The device has an IP address", "The device is powered on"],
+                answer: "The device is connected to a network"
+            },
+            {
+                question: "Which command is used to display the IP configuration on a Windows computer?",
+                options: ["ping", "ipconfig", "tracert", "netstat"],
+                answer: "ipconfig"
+            },
+            {
+                question: "What is the most common cause of a slow wired network connection?",
+                options: ["Faulty network card", "Network congestion", "Outdated drivers", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which cable type is most susceptible to electromagnetic interference?",
+                options: ["Fiber optic", "STP", "UTP", "Coaxial"],
+                answer: "UTP"
+            },
+            {
+                question: "What is the maximum length of a Cat 6 Ethernet cable?",
+                options: ["50 meters", "100 meters", "185 meters", "500 meters"],
+                answer: "100 meters"
+            },
+            {
+                question: "Which tool is used to check for cable continuity?",
+                options: ["Cable tester", "Multimeter", "Tone generator", "Crimper"],
+                answer: "Cable tester"
+            },
+            {
+                question: "What is the purpose of a loopback plug?",
+                options: ["To extend cable length", "To test network interfaces", "To terminate cables", "To connect to the internet"],
+                answer: "To test network interfaces"
+            },
+            {
+                question: "Which protocol is used to automatically assign IP addresses?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "DHCP"
+            },
+            {
+                question: "What is the purpose of a default gateway?",
+                options: ["To assign IP addresses", "To route traffic outside the local network", "To resolve domain names", "To filter content"],
+                answer: "To route traffic outside the local network"
+            },
+            {
+                question: "Which command is used to trace the route packets take to a destination?",
+                options: ["ping", "ipconfig", "tracert", "netstat"],
+                answer: "tracert"
+            },
+            {
+                question: "What is the most common cause of a physical connection failure?",
+                options: ["Faulty cable", "Incorrect IP configuration", "DNS server failure", "Firewall blocking"],
+                answer: "Faulty cable"
+            },
+            {
+                question: "Which tool is used to locate cables in walls or ceilings?",
+                options: ["Cable tester", "Tone generator and probe", "Multimeter", "Crimper"],
+                answer: "Tone generator and probe"
+            },
+            {
+                question: "What is the purpose of a switch in a wired network?",
+                options: ["To connect different networks", "To connect devices within the same network", "To assign IP addresses", "To filter content"],
+                answer: "To connect devices within the same network"
+            },
+            {
+                question: "Which command is used to display active network connections on a Windows computer?",
+                options: ["ping", "ipconfig", "tracert", "netstat"],
+                answer: "netstat"
+            },
+            {
+                question: "What is the purpose of a firewall in a wired network?",
+                options: ["To increase speed", "To filter incoming and outgoing traffic", "To assign IP addresses", "To resolve domain names"],
+                answer: "To filter incoming and outgoing traffic"
+            },
+            {
+                question: "Which tool is used to measure voltage in a network cable?",
+                options: ["Cable tester", "Tone generator", "Multimeter", "Crimper"],
+                answer: "Multimeter"
+            },
+            {
+                question: "What is the most common cause of intermittent connection issues?",
+                options: ["Faulty cable", "Network congestion", "Outdated drivers", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which protocol is used to resolve IP addresses to MAC addresses?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "ARP"
+            }
+        ],
+        wirelessIssues: [
+            {
+                question: "What is the first step in troubleshooting a wireless network connection?",
+                options: ["Replace the wireless adapter", "Check if wireless is enabled", "Update drivers", "Reinstall the operating system"],
+                answer: "Check if wireless is enabled"
+            },
+            {
+                question: "Which frequency band is more prone to interference?",
+                options: ["2.4 GHz", "5 GHz", "6 GHz", "900 MHz"],
+                answer: "2.4 GHz"
+            },
+            {
+                question: "What is the most common cause of weak wireless signal?",
+                options: ["Outdated drivers", "Distance from access point", "Network congestion", "Firewall blocking"],
+                answer: "Distance from access point"
+            },
+            {
+                question: "Which device is used to extend the range of a wireless network?",
+                options: ["Switch", "Router", "Range extender", "Hub"],
+                answer: "Range extender"
+            },
+            {
+                question: "What is the purpose of a wireless channel?",
+                options: ["To encrypt data", "To reduce interference between networks", "To increase speed", "To assign IP addresses"],
+                answer: "To reduce interference between networks"
+            },
+            {
+                question: "Which security protocol is recommended for wireless networks?",
+                options: ["WEP", "WPA", "WPA2", "WPA3"],
+                answer: "WPA3"
+            },
+            {
+                question: "What is the most common cause of intermittent wireless connection?",
+                options: ["Interference from other devices", "Outdated drivers", "Network congestion", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which tool is used to analyze wireless networks?",
+                options: ["ipconfig", "ping", "Wi-Fi analyzer", "tracert"],
+                answer: "Wi-Fi analyzer"
+            },
+            {
+                question: "What is the purpose of a wireless access point?",
+                options: ["To connect different networks", "To extend a wireless network", "To assign IP addresses", "To filter content"],
+                answer: "To extend a wireless network"
+            },
+            {
+                question: "Which wireless standard supports the fastest speeds?",
+                options: ["802.11n", "802.11ac", "802.11ax", "802.11g"],
+                answer: "802.11ax"
+            },
+            {
+                question: "What is the most common cause of wireless connection drops?",
+                options: ["Interference", "Distance from access point", "Outdated drivers", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which feature allows a wireless network to prioritize certain types of traffic?",
+                options: ["WMM", "WPS", "WEP", "WPA"],
+                answer: "WMM"
+            },
+            {
+                question: "What is the purpose of a wireless site survey?",
+                options: ["To encrypt data", "To plan wireless network coverage", "To assign IP addresses", "To filter content"],
+                answer: "To plan wireless network coverage"
+            },
+            {
+                question: "Which device is used to connect wireless devices to a wired network?",
+                options: ["Switch", "Router", "Access point", "Hub"],
+                answer: "Access point"
+            },
+            {
+                question: "What is the most common cause of slow wireless speeds?",
+                options: ["Interference", "Network congestion", "Distance from access point", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which wireless technology is used for short-range device connections?",
+                options: ["Wi-Fi", "Bluetooth", "NFC", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of MAC filtering in a wireless network?",
+                options: ["To encrypt data", "To allow only specific devices to connect", "To increase speed", "To extend range"],
+                answer: "To allow only specific devices to connect"
+            },
+            {
+                question: "Which wireless standard operates in the 5 GHz band?",
+                options: ["802.11b", "802.11g", "802.11a", "802.11n"],
+                answer: "802.11a"
+            },
+            {
+                question: "What is the purpose of a wireless repeater?",
+                options: ["To encrypt data", "To extend the range of a wireless network", "To assign IP addresses", "To filter content"],
+                answer: "To extend the range of a wireless network"
+            },
+            {
+                question: "Which feature allows a wireless network to automatically select the best channel?",
+                options: ["WMM", "Auto channel selection", "WPS", "WEP"],
+                answer: "Auto channel selection"
+            }
+        ],
+        fileServers: [
+            {
+                question: "What is the primary purpose of a file server?",
+                options: ["To host websites", "To store and manage files for network users", "To manage print jobs", "To authenticate users"],
+                answer: "To store and manage files for network users"
+            },
+            {
+                question: "Which protocol is commonly used for file sharing in Windows networks?",
+                options: ["FTP", "SFTP", "SMB/CIFS", "NFS"],
+                answer: "SMB/CIFS"
+            },
+            {
+                question: "What is the purpose of file permissions on a file server?",
+                options: ["To encrypt files", "To control access to files and folders", "To compress files", "To backup files"],
+                answer: "To control access to files and folders"
+            },
+            {
+                question: "Which command is used to map a network drive in Windows?",
+                options: ["net use", "net share", "net view", "net user"],
+                answer: "net use"
+            },
+            {
+                question: "What is the purpose of file versioning?",
+                options: ["To encrypt files", "To keep multiple versions of a file", "To compress files", "To backup files"],
+                answer: "To keep multiple versions of a file"
+            },
+            {
+                question: "Which protocol is commonly used for secure file transfers?",
+                options: ["FTP", "HTTP", "SFTP", "SMB"],
+                answer: "SFTP"
+            },
+            {
+                question: "What is the purpose of file locking?",
+                options: ["To encrypt files", "To prevent multiple users from editing a file simultaneously", "To compress files", "To backup files"],
+                answer: "To prevent multiple users from editing a file simultaneously"
+            },
+            {
+                question: "Which feature allows users to recover previous versions of files?",
+                options: ["File versioning", "File compression", "File encryption", "File sharing"],
+                answer: "File versioning"
+            },
+            {
+                question: "What is the purpose of file compression?",
+                options: ["To encrypt files", "To reduce file size", "To backup files", "To share files"],
+                answer: "To reduce file size"
+            },
+            {
+                question: "Which protocol is commonly used for file sharing in Linux/Unix networks?",
+                options: ["FTP", "SFTP", "SMB/CIFS", "NFS"],
+                answer: "NFS"
+            },
+            {
+                question: "What is the purpose of file replication?",
+                options: ["To encrypt files", "To create copies of files on multiple servers", "To compress files", "To backup files"],
+                answer: "To create copies of files on multiple servers"
+            },
+            {
+                question: "Which command is used to share a folder in Windows?",
+                options: ["net use", "net share", "net view", "net user"],
+                answer: "net share"
+            },
+            {
+                question: "What is the purpose of file auditing?",
+                options: ["To encrypt files", "To track access to files and folders", "To compress files", "To backup files"],
+                answer: "To track access to files and folders"
+            },
+            {
+                question: "Which feature allows users to access files offline?",
+                options: ["Offline files", "File versioning", "File compression", "File sharing"],
+                answer: "Offline files"
+            },
+            {
+                question: "What is the purpose of file quotas?",
+                options: ["To encrypt files", "To limit the amount of disk space a user can use", "To compress files", "To backup files"],
+                answer: "To limit the amount of disk space a user can use"
+            },
+            {
+                question: "Which protocol is commonly used for anonymous file downloads?",
+                options: ["FTP", "SFTP", "SMB/CIFS", "NFS"],
+                answer: "FTP"
+            },
+            {
+                question: "What is the purpose of file encryption?",
+                options: ["To protect files from unauthorized access", "To reduce file size", "To backup files", "To share files"],
+                answer: "To protect files from unauthorized access"
+            },
+            {
+                question: "Which feature allows multiple users to collaborate on the same file?",
+                options: ["File versioning", "File compression", "File encryption", "File sharing"],
+                answer: "File sharing"
+            },
+            {
+                question: "What is the purpose of file archiving?",
+                options: ["To encrypt files", "To move infrequently used files to secondary storage", "To compress files", "To share files"],
+                answer: "To move infrequently used files to secondary storage"
+            },
+            {
+                question: "Which command is used to view shared folders in Windows?",
+                options: ["net use", "net share", "net view", "net user"],
+                answer: "net view"
+            }
+        ],
+        printServers: [
+            {
+                question: "What is the primary purpose of a print server?",
+                options: ["To host websites", "To manage network printers and print jobs", "To store files", "To authenticate users"],
+                answer: "To manage network printers and print jobs"
+            },
+            {
+                question: "Which protocol is commonly used for network printing?",
+                options: ["IPP", "HTTP", "FTP", "SMTP"],
+                answer: "IPP"
+            },
+            {
+                question: "What is the purpose of a print queue?",
+                options: ["To encrypt print jobs", "To hold print jobs until the printer is available", "To compress print jobs", "To backup print jobs"],
+                answer: "To hold print jobs until the printer is available"
+            },
+            {
+                question: "Which feature allows users to print from anywhere?",
+                options: ["Print queue", "Print spooler", "Cloud printing", "Print driver"],
+                answer: "Cloud printing"
+            },
+            {
+                question: "What is the purpose of a print driver?",
+                options: ["To encrypt print jobs", "To allow the computer to communicate with the printer", "To compress print jobs", "To backup print jobs"],
+                answer: "To allow the computer to communicate with the printer"
+            },
+            {
+                question: "Which component manages the print queue?",
+                options: ["Print driver", "Print spooler", "Print server", "Print monitor"],
+                answer: "Print spooler"
+            },
+            {
+                question: "What is the purpose of printer pooling?",
+                options: ["To encrypt print jobs", "To group multiple printers to act as a single printer", "To compress print jobs", "To backup print jobs"],
+                answer: "To group multiple printers to act as a single printer"
+            },
+            {
+                question: "Which feature allows users to manage their own print jobs?",
+                options: ["Print queue", "Print spooler", "Web-based printing", "Print driver"],
+                answer: "Web-based printing"
+            },
+            {
+                question: "What is the purpose of print permissions?",
+                options: ["To encrypt print jobs", "To control who can use a printer", "To compress print jobs", "To backup print jobs"],
+                answer: "To control who can use a printer"
+            },
+            {
+                question: "Which protocol is commonly used for printing over the Internet?",
+                options: ["IPP", "SMB", "FTP", "SMTP"],
+                answer: "IPP"
+            },
+            {
+                question: "What is the purpose of print auditing?",
+                options: ["To encrypt print jobs", "To track printer usage", "To compress print jobs", "To backup print jobs"],
+                answer: "To track printer usage"
+            },
+            {
+                question: "Which feature allows users to print to a printer without installing drivers?",
+                options: ["Print queue", "Print spooler", "Driverless printing", "Print pooling"],
+                answer: "Driverless printing"
+            },
+            {
+                question: "What is the purpose of print prioritization?",
+                options: ["To encrypt print jobs", "To ensure important print jobs are printed first", "To compress print jobs", "To backup print jobs"],
+                answer: "To ensure important print jobs are printed first"
+            },
+            {
+                question: "Which component converts documents into a format the printer can understand?",
+                options: ["Print driver", "Print spooler", "Print server", "Print monitor"],
+                answer: "Print driver"
+            },
+            {
+                question: "What is the purpose of print quotas?",
+                options: ["To encrypt print jobs", "To limit the number of pages a user can print", "To compress print jobs", "To backup print jobs"],
+                answer: "To limit the number of pages a user can print"
+            },
+            {
+                question: "Which feature allows users to print double-sided documents?",
+                options: ["Duplex printing", "Print pooling", "Print prioritization", "Print auditing"],
+                answer: "Duplex printing"
+            },
+            {
+                question: "What is the purpose of print monitoring?",
+                options: ["To encrypt print jobs", "To track printer status and performance", "To compress print jobs", "To backup print jobs"],
+                answer: "To track printer status and performance"
+            },
+            {
+                question: "Which feature allows users to print to a printer from a mobile device?",
+                options: ["Mobile printing", "Print pooling", "Print prioritization", "Print auditing"],
+                answer: "Mobile printing"
+            },
+            {
+                question: "What is the purpose of print scheduling?",
+                options: ["To encrypt print jobs", "To print documents at a specific time", "To compress print jobs", "To backup print jobs"],
+                answer: "To print documents at a specific time"
+            },
+            {
+                question: "Which protocol is commonly used for printing in Windows networks?",
+                options: ["IPP", "SMB", "FTP", "SMTP"],
+                answer: "SMB"
+            }
+        ],
+        webAuthServers: [
+            {
+                question: "What is the primary purpose of a web server?",
+                options: ["To store files", "To manage printers", "To host websites and web applications", "To authenticate users"],
+                answer: "To host websites and web applications"
+            },
+            {
+                question: "Which protocol is used for secure web browsing?",
+                options: ["HTTP", "HTTPS", "FTP", "SMTP"],
+                answer: "HTTPS"
+            },
+            {
+                question: "What is the primary purpose of an authentication server?",
+                options: ["To host websites", "To manage printers", "To store files", "To verify user identities"],
+                answer: "To verify user identities"
+            },
+            {
+                question: "Which protocol is commonly used for centralized authentication?",
+                options: ["LDAP", "HTTP", "FTP", "SMTP"],
+                answer: "LDAP"
+            },
+            {
+                question: "What is the purpose of a certificate on a web server?",
+                options: ["To increase speed", "To encrypt data and verify server identity", "To compress data", "To backup data"],
+                answer: "To encrypt data and verify server identity"
+            },
+            {
+                question: "Which authentication method uses username and password?",
+                options: ["Biometric", "Multi-factor", "Single-factor", "Certificate-based"],
+                answer: "Single-factor"
+            },
+            {
+                question: "What is the purpose of Active Directory?",
+                options: ["To host websites", "To manage printers", "To store files", "To provide centralized authentication and authorization"],
+                answer: "To provide centralized authentication and authorization"
+            },
+            {
+                question: "Which protocol is used for directory services?",
+                options: ["LDAP", "HTTP", "FTP", "SMTP"],
+                answer: "LDAP"
+            },
+            {
+                question: "What is the purpose of multi-factor authentication?",
+                options: ["To increase speed", "To provide additional security by requiring multiple forms of verification", "To compress data", "To backup data"],
+                answer: "To provide additional security by requiring multiple forms of verification"
+            },
+            {
+                question: "Which service is commonly used for single sign-on?",
+                options: ["Active Directory", "Web server", "File server", "Print server"],
+                answer: "Active Directory"
+            },
+            {
+                question: "What is the purpose of a firewall on a web server?",
+                options: ["To increase speed", "To filter incoming and outgoing traffic", "To compress data", "To backup data"],
+                answer: "To filter incoming and outgoing traffic"
+            },
+            {
+                question: "Which authentication method uses physical characteristics?",
+                options: ["Biometric", "Token-based", "Knowledge-based", "Certificate-based"],
+                answer: "Biometric"
+            },
+            {
+                question: "What is the purpose of a domain controller?",
+                options: ["To host websites", "To manage printers", "To store files", "To authenticate and authorize users in a domain"],
+                answer: "To authenticate and authorize users in a domain"
+            },
+            {
+                question: "Which protocol is used for secure remote authentication?",
+                options: ["RADIUS", "HTTP", "FTP", "SMTP"],
+                answer: "RADIUS"
+            },
+            {
+                question: "What is the purpose of OAuth?",
+                options: ["To host websites", "To manage printers", "To store files", "To allow third-party applications to access user data without sharing credentials"],
+                answer: "To allow third-party applications to access user data without sharing credentials"
+            },
+            {
+                question: "Which authentication method uses something you have?",
+                options: ["Biometric", "Token-based", "Knowledge-based", "Certificate-based"],
+                answer: "Token-based"
+            },
+            {
+                question: "What is the purpose of a reverse proxy on a web server?",
+                options: ["To increase speed", "To distribute incoming requests to multiple servers", "To compress data", "To backup data"],
+                answer: "To distribute incoming requests to multiple servers"
+            },
+            {
+                question: "Which service is commonly used for federated identity management?",
+                options: ["Active Directory Federation Services", "Web server", "File server", "Print server"],
+                answer: "Active Directory Federation Services"
+            },
+            {
+                question: "What is the purpose of a load balancer on a web server?",
+                options: ["To increase speed", "To distribute incoming requests to multiple servers", "To compress data", "To backup data"],
+                answer: "To distribute incoming requests to multiple servers"
+            },
+            {
+                question: "Which authentication method uses digital certificates?",
+                options: ["Biometric", "Token-based", "Knowledge-based", "Certificate-based"],
+                answer: "Certificate-based"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('feedback').style.backgroundColor = "transparent";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(76, 175, 80, 0.8)";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(244, 67, 54, 0.8)";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="clear-float"></div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'wiredIssues': 'Wired Issues',
+        'wirelessIssues': 'Wireless Issues',
+        'fileServers': 'File Servers',
+        'printServers': 'Print Servers',
+        'webAuthServers': 'Web & Authentication Servers'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>

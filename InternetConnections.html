@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Internet Connections & Protocols Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.5rem;
+    }
+    
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    
+    button.topic-btn {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    button.topic-btn:hover {
+      background-color: #ee5a52;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      display: none;
+      backdrop-filter: blur(5px);
+    }
+    
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    
+    .options button:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+    
+    .feedback {
+      font-weight: bold;
+      margin: 10px 0;
+      min-height: 24px;
+      font-size: 18px;
+    }
+    
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4ecdc4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .next-btn:hover {
+      background-color: #45b7b8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .quiz-complete {
+      text-align: center;
+    }
+    
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .quiz-complete button:hover {
+      background-color: #ee5a52;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #f7b731;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .back-btn:hover {
+      background-color: #f39c12;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #5f27cd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .home-btn:hover {
+      background-color: #4834d4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body>
+<h1>Internet Connections & Protocols Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('dsl')">DSL</button>
+  <button class="topic-btn" onclick="startQuiz('fiber')">Fiber</button>
+  <button class="topic-btn" onclick="startQuiz('routers')">Routers</button>
+  <button class="topic-btn" onclick="startQuiz('tcp')">TCP</button>
+  <button class="topic-btn" onclick="startQuiz('udp')">UDP</button>
+  <button class="topic-btn" onclick="startQuiz('vlan')">VLAN</button>
+  <button class="topic-btn" onclick="startQuiz('vpn')">VPN</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        dsl: [
+            {
+                question: "What does DSL stand for?",
+                options: ["Digital Subscriber Line", "Data Service Line", "Direct Service Link", "Digital System Line"],
+                answer: "Digital Subscriber Line"
+            },
+            {
+                question: "Which type of DSL offers the fastest download speeds?",
+                options: ["ADSL", "SDSL", "VDSL", "IDSL"],
+                answer: "VDSL"
+            },
+            {
+                question: "What is the maximum theoretical distance for DSL service from the central office?",
+                options: ["1,000 feet", "5,000 feet", "18,000 feet", "30,000 feet"],
+                answer: "18,000 feet"
+            },
+            {
+                question: "Which DSL technology provides equal upload and download speeds?",
+                options: ["ADSL", "SDSL", "VDSL", "RADSL"],
+                answer: "SDSL"
+            },
+            {
+                question: "What is the primary advantage of DSL over dial-up Internet?",
+                options: ["Lower cost", "Always-on connection", "Better security", "Simpler installation"],
+                answer: "Always-on connection"
+            },
+            {
+                question: "Which device is required to connect to a DSL service?",
+                options: ["Modem", "Switch", "Hub", "Bridge"],
+                answer: "Modem"
+            },
+            {
+                question: "What is the typical maximum download speed of ADSL2+?",
+                options: ["8 Mbps", "24 Mbps", "52 Mbps", "100 Mbps"],
+                answer: "24 Mbps"
+            },
+            {
+                question: "Which factor most affects the speed and quality of a DSL connection?",
+                options: ["Computer processor speed", "Distance from the central office", "Operating system", "Web browser"],
+                answer: "Distance from the central office"
+            },
+            {
+                question: "What is the purpose of a DSL filter?",
+                options: ["To increase speed", "To prevent interference with voice calls", "To encrypt data", "To reduce power consumption"],
+                answer: "To prevent interference with voice calls"
+            },
+            {
+                question: "Which DSL variant is designed for long distances but offers lower speeds?",
+                options: ["ADSL", "VDSL", "SDSL", "IDSL"],
+                answer: "IDSL"
+            },
+            {
+                question: "What is the typical upload speed of ADSL compared to its download speed?",
+                options: ["Faster", "Equal", "Slower", "Variable"],
+                answer: "Slower"
+            },
+            {
+                question: "Which technology is DSL considered a type of?",
+                options: ["Fiber optic", "Broadband over power lines", "Broadband over telephone lines", "Satellite"],
+                answer: "Broadband over telephone lines"
+            },
+            {
+                question: "What is the maximum theoretical download speed of VDSL2?",
+                options: ["24 Mbps", "52 Mbps", "100 Mbps", "200 Mbps"],
+                answer: "100 Mbps"
+            },
+            {
+                question: "Which DSL technology automatically adjusts speed based on line quality?",
+                options: ["ADSL", "SDSL", "VDSL", "RADSL"],
+                answer: "RADSL"
+            },
+            {
+                question: "What is the primary disadvantage of DSL compared to fiber optic Internet?",
+                options: ["Higher cost", "Slower speeds", "Less availability", "More complex installation"],
+                answer: "Slower speeds"
+            }
+        ],
+        fiber: [
+            {
+                question: "What is the primary advantage of fiber optic Internet over DSL?",
+                options: ["Lower cost", "Higher speeds and greater distance", "Simpler installation", "Better security"],
+                answer: "Higher speeds and greater distance"
+            },
+            {
+                question: "Which type of fiber optic cable is used for long-distance transmissions?",
+                options: ["Multi-mode fiber", "Single-mode fiber", "Plastic optical fiber", "Coaxial fiber"],
+                answer: "Single-mode fiber"
+            },
+            {
+                question: "What is the typical maximum speed of consumer fiber optic Internet?",
+                options: ["100 Mbps", "1 Gbps", "10 Gbps", "100 Gbps"],
+                answer: "1 Gbps"
+            },
+            {
+                question: "Which light source is typically used in single-mode fiber optic cables?",
+                options: ["LED", "Laser", "Incandescent", "Fluorescent"],
+                answer: "Laser"
+            },
+            {
+                question: "What is the primary disadvantage of fiber optic Internet?",
+                options: ["Slower speeds", "Higher cost and limited availability", "Security concerns", "Complex configuration"],
+                answer: "Higher cost and limited availability"
+            },
+            {
+                question: "Which connector type is commonly used with fiber optic cables?",
+                options: ["RJ-45", "SC", "BNC", "RJ-11"],
+                answer: "SC"
+            },
+            {
+                question: "What is the typical maximum distance for single-mode fiber without a repeater?",
+                options: ["1 km", "10 km", "50 km", "100 km"],
+                answer: "100 km"
+            },
+            {
+                question: "Which fiber optic cable type is typically used for shorter distances like within a building?",
+                options: ["Single-mode fiber", "Multi-mode fiber", "Plastic optical fiber", "Coaxial fiber"],
+                answer: "Multi-mode fiber"
+            },
+            {
+                question: "What is the primary cause of signal loss in fiber optic cables?",
+                options: ["Electromagnetic interference", "Attenuation and dispersion", "Crosstalk", "Impedance mismatch"],
+                answer: "Attenuation and dispersion"
+            },
+            {
+                question: "Which technology is used in Fiber to the Home (FTTH) installations?",
+                options: ["Active optical network", "Passive optical network", "Hybrid fiber-coaxial", "Digital subscriber line"],
+                answer: "Passive optical network"
+            },
+            {
+                question: "What is the purpose of an optical network terminal (ONT) in a fiber optic installation?",
+                options: ["To amplify the signal", "To convert optical signals to electrical signals", "To filter out noise", "To encrypt the data"],
+                answer: "To convert optical signals to electrical signals"
+            },
+            {
+                question: "Which fiber optic connector features a push-pull latching mechanism?",
+                options: ["SC", "ST", "LC", "MTRJ"],
+                answer: "LC"
+            },
+            {
+                question: "What is the typical core diameter of multi-mode fiber?",
+                options: ["9 microns", "50 or 62.5 microns", "100 microns", "200 microns"],
+                answer: "50 or 62.5 microns"
+            },
+            {
+                question: "Which device is used to test the continuity and quality of a fiber optic connection?",
+                options: ["Cable tester", "OTDR", "Multimeter", "Tone generator"],
+                answer: "OTDR"
+            },
+            {
+                question: "What is the primary advantage of fiber optic cables over copper cables?",
+                options: ["Lower cost", "Immunity to electromagnetic interference", "Easier installation", "Greater flexibility"],
+                answer: "Immunity to electromagnetic interference"
+            }
+        ],
+        routers: [
+            {
+                question: "What is the primary function of a router?",
+                options: ["To connect devices within the same network", "To forward data between different networks", "To assign IP addresses", "To filter content"],
+                answer: "To forward data between different networks"
+            },
+            {
+                question: "At which layer of the OSI model does a router primarily operate?",
+                options: ["Physical", "Data Link", "Network", "Transport"],
+                answer: "Network"
+            },
+            {
+                question: "What is the purpose of a routing table?",
+                options: ["To store MAC addresses", "To store information about network paths", "To assign IP addresses", "To filter traffic"],
+                answer: "To store information about network paths"
+            },
+            {
+                question: "Which protocol is used by routers to exchange routing information?",
+                options: ["HTTP", "FTP", "RIP", "DHCP"],
+                answer: "RIP"
+            },
+            {
+                question: "What is the default IP address of many home routers?",
+                options: ["192.168.0.1", "10.0.0.1", "172.16.0.1", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of NAT (Network Address Translation) in a router?",
+                options: ["To encrypt data", "To translate between public and private IP addresses", "To filter content", "To prioritize traffic"],
+                answer: "To translate between public and private IP addresses"
+            },
+            {
+                question: "Which feature allows a router to prioritize certain types of network traffic?",
+                options: ["NAT", "DHCP", "QoS", "DNS"],
+                answer: "QoS"
+            },
+            {
+                question: "What is the purpose of a default gateway?",
+                options: ["To assign IP addresses", "To provide DNS resolution", "To route traffic outside the local network", "To filter content"],
+                answer: "To route traffic outside the local network"
+            },
+            {
+                question: "Which routing protocol uses hop count as its metric?",
+                options: ["OSPF", "RIP", "EIGRP", "BGP"],
+                answer: "RIP"
+            },
+            {
+                question: "What is the purpose of a static route?",
+                options: ["To automatically learn network paths", "To manually configure a specific network path", "To filter traffic", "To encrypt data"],
+                answer: "To manually configure a specific network path"
+            },
+            {
+                question: "Which device is often combined with a router in home networks?",
+                options: ["Switch", "Hub", "Access point", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of a firewall in a router?",
+                options: ["To increase speed", "To filter incoming and outgoing traffic", "To assign IP addresses", "To provide wireless access"],
+                answer: "To filter incoming and outgoing traffic"
+            },
+            {
+                question: "Which routing protocol is considered a link-state protocol?",
+                options: ["RIP", "IGRP", "OSPF", "EIGRP"],
+                answer: "OSPF"
+            },
+            {
+                question: "What is the purpose of port forwarding in a router?",
+                options: ["To block unwanted traffic", "To direct external traffic to internal devices", "To prioritize certain types of traffic", "To encrypt data"],
+                answer: "To direct external traffic to internal devices"
+            },
+            {
+                question: "Which routing protocol is used on the Internet?",
+                options: ["RIP", "OSPF", "EIGRP", "BGP"],
+                answer: "BGP"
+            }
+        ],
+        tcp: [
+            {
+                question: "What does TCP stand for?",
+                options: ["Transmission Control Protocol", "Transfer Control Protocol", "Transmission Communication Protocol", "Transfer Communication Protocol"],
+                answer: "Transmission Control Protocol"
+            },
+            {
+                question: "At which layer of the OSI model does TCP operate?",
+                options: ["Physical", "Data Link", "Network", "Transport"],
+                answer: "Transport"
+            },
+            {
+                question: "Which feature distinguishes TCP from UDP?",
+                options: ["Faster transmission", "Connection-oriented and reliable delivery", "Smaller header size", "Better for streaming"],
+                answer: "Connection-oriented and reliable delivery"
+            },
+            {
+                question: "What is the purpose of the three-way handshake in TCP?",
+                options: ["To encrypt data", "To establish a connection", "To terminate a connection", "To prioritize traffic"],
+                answer: "To establish a connection"
+            },
+            {
+                question: "Which TCP flag is used to initiate a connection?",
+                options: ["ACK", "SYN", "FIN", "RST"],
+                answer: "SYN"
+            },
+            {
+                question: "What is the purpose of sequence numbers in TCP?",
+                options: ["To encrypt data", "To identify the application", "To reassemble segments in the correct order", "To compress data"],
+                answer: "To reassemble segments in the correct order"
+            },
+            {
+                question: "Which mechanism does TCP use to control the rate of data transmission?",
+                options: ["Encryption", "Flow control", "Compression", "Prioritization"],
+                answer: "Flow control"
+            },
+            {
+                question: "What is the purpose of the TCP window size?",
+                options: ["To encrypt data", "To specify the amount of data that can be sent before acknowledgment", "To identify the application", "To compress data"],
+                answer: "To specify the amount of data that can be sent before acknowledgment"
+            },
+            {
+                question: "Which TCP flag is used to acknowledge receipt of data?",
+                options: ["SYN", "ACK", "FIN", "RST"],
+                answer: "ACK"
+            },
+            {
+                question: "What is the purpose of TCP congestion control?",
+                options: ["To encrypt data", "To prevent network congestion by adjusting transmission rate", "To prioritize traffic", "To compress data"],
+                answer: "To prevent network congestion by adjusting transmission rate"
+            },
+            {
+                question: "Which TCP flag is used to terminate a connection?",
+                options: ["SYN", "ACK", "FIN", "RST"],
+                answer: "FIN"
+            },
+            {
+                question: "What is the well-known port number for HTTP?",
+                options: ["21", "23", "80", "443"],
+                answer: "80"
+            },
+            {
+                question: "What is the purpose of TCP checksum?",
+                options: ["To encrypt data", "To detect errors in the TCP segment", "To compress data", "To identify the application"],
+                answer: "To detect errors in the TCP segment"
+            },
+            {
+                question: "Which TCP mechanism is used to recover from lost segments?",
+                options: ["Encryption", "Retransmission", "Compression", "Prioritization"],
+                answer: "Retransmission"
+            },
+            {
+                question: "What is the well-known port number for HTTPS?",
+                options: ["21", "23", "80", "443"],
+                answer: "443"
+            }
+        ],
+        udp: [
+            {
+                question: "What does UDP stand for?",
+                options: ["User Datagram Protocol", "User Data Protocol", "Universal Datagram Protocol", "Universal Data Protocol"],
+                answer: "User Datagram Protocol"
+            },
+            {
+                question: "At which layer of the OSI model does UDP operate?",
+                options: ["Physical", "Data Link", "Network", "Transport"],
+                answer: "Transport"
+            },
+            {
+                question: "Which feature distinguishes UDP from TCP?",
+                options: ["Connection-oriented and reliable delivery", "Faster transmission with no guarantee of delivery", "Larger header size", "Better for file transfers"],
+                answer: "Faster transmission with no guarantee of delivery"
+            },
+            {
+                question: "What is the primary advantage of UDP over TCP?",
+                options: ["Reliability", "Speed and lower overhead", "Security", "Error correction"],
+                answer: "Speed and lower overhead"
+            },
+            {
+                question: "Which type of applications typically use UDP?",
+                options: ["Web browsing", "File transfers", "Real-time streaming and gaming", "Email"],
+                answer: "Real-time streaming and gaming"
+            },
+            {
+                question: "What is the size of the UDP header?",
+                options: ["8 bytes", "20 bytes", "32 bytes", "64 bytes"],
+                answer: "8 bytes"
+            },
+            {
+                question: "Which mechanism does UDP use for error checking?",
+                options: ["Retransmission", "Checksum", "Acknowledgments", "Sequence numbers"],
+                answer: "Checksum"
+            },
+            {
+                question: "What is the well-known port number for DNS?",
+                options: ["21", "53", "80", "443"],
+                answer: "53"
+            },
+            {
+                question: "Which of the following is a characteristic of UDP?",
+                options: ["Connection-oriented", "Reliable delivery", "Stateless", "Flow control"],
+                answer: "Stateless"
+            },
+            {
+                question: "What is the primary disadvantage of UDP compared to TCP?",
+                options: ["Slower speed", "No guarantee of delivery or order", "Larger header size", "More complex implementation"],
+                answer: "No guarantee of delivery or order"
+            },
+            {
+                question: "Which protocol uses UDP for transport?",
+                options: ["HTTP", "FTP", "DHCP", "SMTP"],
+                answer: "DHCP"
+            },
+            {
+                question: "What is the well-known port number for SNMP?",
+                options: ["21", "53", "161", "443"],
+                answer: "161"
+            },
+            {
+                question: "Which of the following is not a feature of UDP?",
+                options: ["Low overhead", "Connectionless", "Reliable delivery", "Fast transmission"],
+                answer: "Reliable delivery"
+            },
+            {
+                question: "Which protocol uses UDP for VoIP communications?",
+                options: ["HTTP", "FTP", "RTP", "SMTP"],
+                answer: "RTP"
+            },
+            {
+                question: "What is the well-known port number for TFTP?",
+                options: ["21", "53", "69", "161"],
+                answer: "69"
+            }
+        ],
+        vlan: [
+            {
+                question: "What does VLAN stand for?",
+                options: ["Virtual Local Area Network", "Virtual LAN", "Virtual Link Area Network", "Virtual Local Access Network"],
+                answer: "Virtual Local Area Network"
+            },
+            {
+                question: "What is the primary purpose of VLANs?",
+                options: ["To increase network speed", "To logically segment a physical network", "To provide wireless access", "To encrypt data"],
+                answer: "To logically segment a physical network"
+            },
+            {
+                question: "Which IEEE standard defines VLANs?",
+                options: ["802.1Q", "802.11", "802.3", "802.1X"],
+                answer: "802.1Q"
+            },
+            {
+                question: "How is VLAN information added to an Ethernet frame?",
+                options: ["By adding a tag to the frame header", "By changing the source MAC address", "By modifying the IP header", "By adding a trailer to the frame"],
+                answer: "By adding a tag to the frame header"
+            },
+            {
+                question: "What is the primary advantage of using VLANs?",
+                options: ["Increased network speed", "Improved security and broadcast control", "Reduced cost", "Simplified configuration"],
+                answer: "Improved security and broadcast control"
+            },
+            {
+                question: "Which type of VLAN carries control traffic?",
+                options: ["Data VLAN", "Default VLAN", "Native VLAN", "Management VLAN"],
+                answer: "Management VLAN"
+            },
+            {
+                question: "What is the purpose of a trunk port in a VLAN configuration?",
+                options: ["To connect to an end device", "To carry traffic for multiple VLANs", "To provide power to devices", "To connect to a router"],
+                answer: "To carry traffic for multiple VLANs"
+            },
+            {
+                question: "Which protocol is used to automate VLAN configuration across multiple switches?",
+                options: ["STP", "VTP", "CDP", "LLDP"],
+                answer: "VTP"
+            },
+            {
+                question: "What is the purpose of the native VLAN?",
+                options: ["To carry management traffic", "To carry untagged traffic on a trunk port", "To provide Internet access", "To carry voice traffic"],
+                answer: "To carry untagged traffic on a trunk port"
+            },
+            {
+                question: "Which type of VLAN is used for voice traffic?",
+                options: ["Data VLAN", "Voice VLAN", "Management VLAN", "Native VLAN"],
+                answer: "Voice VLAN"
+            },
+            {
+                question: "What is the purpose of inter-VLAN routing?",
+                options: ["To increase network speed", "To allow communication between different VLANs", "To provide wireless access", "To encrypt data"],
+                answer: "To allow communication between different VLANs"
+            },
+            {
+                question: "Which device is typically used for inter-VLAN routing?",
+                options: ["Hub", "Switch", "Router", "Bridge"],
+                answer: "Router"
+            },
+            {
+                question: "What is the purpose of a private VLAN?",
+                options: ["To increase network speed", "To isolate devices within the same VLAN", "To provide wireless access", "To encrypt data"],
+                answer: "To isolate devices within the same VLAN"
+            },
+            {
+                question: "Which type of VLAN is typically used for initial switch configuration?",
+                options: ["Data VLAN", "Default VLAN", "Native VLAN", "Management VLAN"],
+                answer: "Management VLAN"
+            },
+            {
+                question: "What is the maximum number of VLANs that can be configured on a switch using 802.1Q?",
+                options: ["256", "1024", "4094", "8192"],
+                answer: "4094"
+            }
+        ],
+        vpn: [
+            {
+                question: "What does VPN stand for?",
+                options: ["Virtual Private Network", "Virtual Public Network", "Virtual Protected Network", "Virtual Personal Network"],
+                answer: "Virtual Private Network"
+            },
+            {
+                question: "What is the primary purpose of a VPN?",
+                options: ["To increase network speed", "To create a secure connection over a public network", "To provide wireless access", "To assign IP addresses"],
+                answer: "To create a secure connection over a public network"
+            },
+            {
+                question: "Which protocol is commonly used for secure VPN connections?",
+                options: ["HTTP", "FTP", "IPsec", "DHCP"],
+                answer: "IPsec"
+            },
+            {
+                question: "What is the purpose of tunneling in a VPN?",
+                options: ["To increase speed", "To encapsulate private data within public packets", "To compress data", "To prioritize traffic"],
+                answer: "To encapsulate private data within public packets"
+            },
+            {
+                question: "Which type of VPN is commonly used by remote workers to connect to a corporate network?",
+                options: ["Site-to-site VPN", "Remote access VPN", "Clientless VPN", "SSL VPN"],
+                answer: "Remote access VPN"
+            },
+            {
+                question: "Which protocol is used in SSL VPNs?",
+                options: ["IPsec", "SSL/TLS", "PPTP", "L2TP"],
+                answer: "SSL/TLS"
+            },
+            {
+                question: "What is the primary advantage of using a VPN?",
+                options: ["Increased speed", "Enhanced security and privacy", "Reduced cost", "Simpler configuration"],
+                answer: "Enhanced security and privacy"
+            },
+            {
+                question: "Which type of VPN connects entire networks to each other?",
+                options: ["Remote access VPN", "Site-to-site VPN", "Clientless VPN", "SSL VPN"],
+                answer: "Site-to-site VPN"
+            },
+            {
+                question: "What is the purpose of encryption in a VPN?",
+                options: ["To increase speed", "To protect data confidentiality", "To compress data", "To prioritize traffic"],
+                answer: "To protect data confidentiality"
+            },
+            {
+                question: "Which VPN protocol is known for its simplicity but lower security?",
+                options: ["IPsec", "SSL/TLS", "PPTP", "L2TP"],
+                answer: "PPTP"
+            },
+            {
+                question: "What is the purpose of a VPN client?",
+                options: ["To increase network speed", "To establish and maintain a VPN connection", "To assign IP addresses", "To filter content"],
+                answer: "To establish and maintain a VPN connection"
+            },
+            {
+                question: "Which VPN protocol does not require a dedicated client application?",
+                options: ["IPsec", "PPTP", "L2TP", "SSL VPN"],
+                answer: "SSL VPN"
+            },
+            {
+                question: "What is the purpose of a VPN concentrator?",
+                options: ["To increase network speed", "To manage multiple VPN connections", "To assign IP addresses", "To filter content"],
+                answer: "To manage multiple VPN connections"
+            },
+            {
+                question: "Which VPN protocol is often used in combination with IPsec for authentication?",
+                options: ["SSL/TLS", "PPTP", "L2TP", "GRE"],
+                answer: "L2TP"
+            },
+            {
+                question: "What is the primary disadvantage of using a VPN?",
+                options: ["Increased security", "Potential reduction in speed", "Simplified configuration", "Lower cost"],
+                answer: "Potential reduction in speed"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'dsl': 'DSL',
+        'fiber': 'Fiber',
+        'routers': 'Routers',
+        'tcp': 'TCP',
+        'udp': 'UDP',
+        'vlan': 'VLAN',
+        'vpn': 'VPN'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>

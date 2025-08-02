@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IP Addressing & Configuration Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(45deg, #ff6ec7, #7873f5, #4facfe, #00f2fe);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.5rem;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    
+    button.topic-btn {
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    button.topic-btn:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.2);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+    
+    button.topic-btn:hover:before {
+      transform: translateX(0);
+    }
+    
+    button.topic-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    
+    .btn-ipv4 { background: linear-gradient(45deg, #f093fb, #f5576c); }
+    .btn-ipv6 { background: linear-gradient(45deg, #4facfe, #00f2fe); }
+    .btn-dhcp { background: linear-gradient(45deg, #43e97b, #38f9d7); }
+    .btn-dns { background: linear-gradient(45deg, #fa709a, #fee140); }
+    .btn-static { background: linear-gradient(45deg, #30cfd0, #330867); }
+    
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: inline-block;
+
+    }
+    
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .options button:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .options button.correct {
+      background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+      border-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .feedback {
+      font-weight: bold;
+      margin: 15px 0;
+      min-height: 30px;
+      font-size: 18px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    
+    .next-btn {
+      display: none;
+      margin: 25px auto 0 auto;
+      padding: 12px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .next-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .quiz-complete {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .quiz-complete h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    
+    .quiz-complete button {
+      margin: 10px;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #ff6ec7, #7873f5);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quiz-complete button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #ff9a56, #ff6a88);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: inline-block;
+    
+    }
+    
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #5f27cd, #341f97);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    
+    .home-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .clear-float {
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+<h1>IP Addressing & Configuration Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn btn-ipv4" onclick="startQuiz('ipv4')">IPv4</button>
+  <button class="topic-btn btn-ipv6" onclick="startQuiz('ipv6')">IPv6</button>
+  <button class="topic-btn btn-dhcp" onclick="startQuiz('dhcp')">DHCP</button>
+  <button class="topic-btn btn-dns" onclick="startQuiz('dns')">DNS</button>
+  <button class="topic-btn btn-static" onclick="startQuiz('staticDynamic')">Static/Dynamic</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="clear-float"></div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        ipv4: [
+            {
+                question: "What is the maximum value of an octet in an IPv4 address?",
+                options: ["128", "255", "256", "512"],
+                answer: "255"
+            },
+            {
+                question: "Which class of IPv4 addresses supports the most hosts?",
+                options: ["Class A", "Class B", "Class C", "Class D"],
+                answer: "Class A"
+            },
+            {
+                question: "What is the default subnet mask for a Class C network?",
+                options: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"],
+                answer: "255.255.255.0"
+            },
+            {
+                question: "Which IPv4 address is reserved for loopback?",
+                options: ["0.0.0.0", "127.0.0.1", "192.168.0.1", "255.255.255.255"],
+                answer: "127.0.0.1"
+            },
+            {
+                question: "What is the purpose of subnetting in IPv4?",
+                options: ["To increase the number of available IP addresses", "To divide a large network into smaller subnetworks", "To encrypt network traffic", "To improve wireless signal strength"],
+                answer: "To divide a large network into smaller subnetworks"
+            },
+            {
+                question: "Which protocol is used to automatically assign IPv4 addresses?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "DHCP"
+            },
+            {
+                question: "What is the private IP address range for Class A networks?",
+                options: ["10.0.0.0 to 10.255.255.255", "172.16.0.0 to 172.31.255.255", "192.168.0.0 to 192.168.255.255", "169.254.0.0 to 169.254.255.255"],
+                answer: "10.0.0.0 to 10.255.255.255"
+            },
+            {
+                question: "Which IPv4 address class is used for multicast?",
+                options: ["Class A", "Class B", "Class C", "Class D"],
+                answer: "Class D"
+            },
+            {
+                question: "What is the purpose of NAT (Network Address Translation)?",
+                options: ["To encrypt data", "To translate between public and private IP addresses", "To assign MAC addresses", "To route traffic between VLANs"],
+                answer: "To translate between public and private IP addresses"
+            },
+            {
+                question: "Which tool is used to test connectivity between devices using IPv4?",
+                options: ["ping", "ipconfig", "tracert", "netstat"],
+                answer: "ping"
+            },
+            {
+                question: "What is the subnet mask for a /24 network in CIDR notation?",
+                options: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"],
+                answer: "255.255.255.0"
+            },
+            {
+                question: "Which IPv4 address range is reserved for APIPA (Automatic Private IP Addressing)?",
+                options: ["10.0.0.0 to 10.255.255.255", "172.16.0.0 to 172.31.255.255", "192.168.0.0 to 192.168.255.255", "169.254.0.0 to 169.254.255.255"],
+                answer: "169.254.0.0 to 169.254.255.255"
+            },
+            {
+                question: "What is the broadcast address for the network 192.168.1.0/24?",
+                options: ["192.168.1.0", "192.168.1.1", "192.168.1.255", "192.168.2.0"],
+                answer: "192.168.1.255"
+            },
+            {
+                question: "Which protocol is used to resolve IP addresses to MAC addresses?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "ARP"
+            },
+            {
+                question: "What is the purpose of the default gateway?",
+                options: ["To assign IP addresses", "To provide DNS resolution", "To route traffic outside the local network", "To filter content"],
+                answer: "To route traffic outside the local network"
+            },
+            {
+                question: "Which IPv4 address class supports up to 65,534 hosts per network?",
+                options: ["Class A", "Class B", "Class C", "Class D"],
+                answer: "Class B"
+            },
+            {
+                question: "What is the private IP address range for Class B networks?",
+                options: ["10.0.0.0 to 10.255.255.255", "172.16.0.0 to 172.31.255.255", "192.168.0.0 to 192.168.255.255", "169.254.0.0 to 169.254.255.255"],
+                answer: "172.16.0.0 to 172.31.255.255"
+            },
+            {
+                question: "Which command is used to display the IP configuration on a Windows computer?",
+                options: ["ping", "ipconfig", "tracert", "netstat"],
+                answer: "ipconfig"
+            },
+            {
+                question: "What is the purpose of a subnet mask?",
+                options: ["To encrypt data", "To identify the network portion of an IP address", "To assign MAC addresses", "To route traffic between VLANs"],
+                answer: "To identify the network portion of an IP address"
+            },
+            {
+                question: "Which IPv4 address is used for directed broadcast?",
+                options: ["0.0.0.0", "127.0.0.1", "The network ID with all host bits set to 1", "The network ID with all host bits set to 0"],
+                answer: "The network ID with all host bits set to 1"
+            }
+        ],
+        ipv6: [
+            {
+                question: "How many bits are in an IPv6 address?",
+                options: ["32", "64", "128", "256"],
+                answer: "128"
+            },
+            {
+                question: "What is the hexadecimal representation of the IPv6 loopback address?",
+                options: ["::1", "::", "0:0:0:0:0:0:0:1", "2000::1"],
+                answer: "::1"
+            },
+            {
+                question: "Which IPv6 address type is used for one-to-nearest communication?",
+                options: ["Unicast", "Multicast", "Anycast", "Broadcast"],
+                answer: "Anycast"
+            },
+            {
+                question: "What is the purpose of the dual-stack approach in IPv6 transition?",
+                options: ["To encrypt data", "To run both IPv4 and IPv6 simultaneously", "To translate between IPv4 and IPv6", "To tunnel IPv6 traffic over IPv4"],
+                answer: "To run both IPv4 and IPv6 simultaneously"
+            },
+            {
+                question: "Which IPv6 address type is used for one-to-many communication?",
+                options: ["Unicast", "Multicast", "Anycast", "Broadcast"],
+                answer: "Multicast"
+            },
+            {
+                question: "What is the prefix length for the default IPv6 route?",
+                options: ["/0", "/64", "/128", "::/0"],
+                answer: "::/0"
+            },
+            {
+                question: "Which IPv6 address type replaces broadcast in IPv4?",
+                options: ["Unicast", "Multicast", "Anycast", "Global"],
+                answer: "Multicast"
+            },
+            {
+                question: "What is the purpose of IPv6 address autoconfiguration?",
+                options: ["To encrypt data", "To automatically assign IPv6 addresses without a DHCP server", "To translate between IPv4 and IPv6", "To tunnel IPv6 traffic over IPv4"],
+                answer: "To automatically assign IPv6 addresses without a DHCP server"
+            },
+            {
+                question: "Which IPv6 transition mechanism allows IPv6 packets to be transmitted over IPv4 networks?",
+                options: ["Dual-stack", "Tunneling", "Translation", "NAT-PT"],
+                answer: "Tunneling"
+            },
+            {
+                question: "What is the hexadecimal representation of the IPv6 all-nodes multicast address?",
+                options: ["FF02::1", "FF02::2", "FF02::1:FF00:0/104", "FF05::1:3"],
+                answer: "FF02::1"
+            },
+            {
+                question: "Which IPv6 address type is globally routable on the Internet?",
+                options: ["Link-local", "Unique-local", "Global unicast", "Multicast"],
+                answer: "Global unicast"
+            },
+            {
+                question: "What is the prefix for IPv6 unique local addresses?",
+                options: ["2000::/3", "FC00::/7", "FE80::/10", "FF00::/8"],
+                answer: "FC00::/7"
+            },
+            {
+                question: "Which IPv6 transition mechanism translates IPv6 addresses to IPv4 addresses?",
+                options: ["Dual-stack", "Tunneling", "Translation", "NAT-PT"],
+                answer: "Translation"
+            },
+            {
+                question: "What is the purpose of the EUI-64 format in IPv6?",
+                options: ["To encrypt data", "To create the interface identifier portion of an IPv6 address", "To translate between IPv4 and IPv6", "To tunnel IPv6 traffic over IPv4"],
+                answer: "To create the interface identifier portion of an IPv6 address"
+            },
+            {
+                question: "Which command is used to display the IPv6 configuration on a Windows computer?",
+                options: ["ipconfig", "ipconfig /all", "ipv6config", "netsh interface ipv6 show address"],
+                answer: "ipconfig /all"
+            },
+            {
+                question: "What is the prefix for IPv6 link-local addresses?",
+                options: ["2000::/3", "FC00::/7", "FE80::/10", "FF00::/8"],
+                answer: "FE80::/10"
+            },
+            {
+                question: "Which IPv6 address type is used for communication within a single network segment?",
+                options: ["Link-local", "Unique-local", "Global unicast", "Multicast"],
+                answer: "Link-local"
+            },
+            {
+                question: "What is the purpose of IPv6 tunneling?",
+                options: ["To encrypt data", "To transmit IPv6 packets over IPv4 networks", "To translate between IPv4 and IPv6", "To assign IPv6 addresses"],
+                answer: "To transmit IPv6 packets over IPv4 networks"
+            },
+            {
+                question: "Which IPv6 address type is used for one-to-one communication?",
+                options: ["Unicast", "Multicast", "Anycast", "Broadcast"],
+                answer: "Unicast"
+            },
+            {
+                question: "What is the hexadecimal representation of the IPv6 unspecified address?",
+                options: ["::1", "::", "0:0:0:0:0:0:0:0", "2000::"],
+                answer: "::"
+            }
+        ],
+        dhcp: [
+            {
+                question: "What does DHCP stand for?",
+                options: ["Dynamic Host Configuration Protocol", "Dynamic Host Control Protocol", "Dynamic Host Computer Protocol", "Dynamic Hardware Configuration Protocol"],
+                answer: "Dynamic Host Configuration Protocol"
+            },
+            {
+                question: "Which port number is used by DHCP servers?",
+                options: ["53", "67", "68", "80"],
+                answer: "67"
+            },
+            {
+                question: "Which port number is used by DHCP clients?",
+                options: ["53", "67", "68", "80"],
+                answer: "68"
+            },
+            {
+                question: "What is the purpose of DHCP?",
+                options: ["To resolve domain names to IP addresses", "To automatically assign IP addresses and network configuration", "To translate between MAC and IP addresses", "To route traffic between networks"],
+                answer: "To automatically assign IP addresses and network configuration"
+            },
+            {
+                question: "Which DHCP message is sent by a client to discover available servers?",
+                options: ["DHCPDISCOVER", "DHCPOFFER", "DHCPREQUEST", "DHCPACK"],
+                answer: "DHCPDISCOVER"
+            },
+            {
+                question: "Which DHCP message is sent by a server in response to a client's discovery?",
+                options: ["DHCPDISCOVER", "DHCPOFFER", "DHCPREQUEST", "DHCPACK"],
+                answer: "DHCPOFFER"
+            },
+            {
+                question: "Which DHCP message is sent by a client to request an IP address?",
+                options: ["DHCPDISCOVER", "DHCPOFFER", "DHCPREQUEST", "DHCPACK"],
+                answer: "DHCPREQUEST"
+            },
+            {
+                question: "Which DHCP message is sent by a server to acknowledge a client's request?",
+                options: ["DHCPDISCOVER", "DHCPOFFER", "DHCPREQUEST", "DHCPACK"],
+                answer: "DHCPACK"
+            },
+            {
+                question: "What is the default lease duration for DHCP assignments in Windows Server?",
+                options: ["8 hours", "24 hours", "8 days", "30 days"],
+                answer: "8 days"
+            },
+            {
+                question: "Which DHCP option is used to specify the default gateway?",
+                options: ["Option 3", "Option 6", "Option 15", "Option 51"],
+                answer: "Option 3"
+            },
+            {
+                question: "Which DHCP option is used to specify DNS servers?",
+                options: ["Option 3", "Option 6", "Option 15", "Option 51"],
+                answer: "Option 6"
+            },
+            {
+                question: "What is the purpose of a DHCP reservation?",
+                options: ["To exclude IP addresses from being assigned", "To assign a specific IP address to a specific MAC address", "To increase the lease duration", "To assign multiple IP addresses to a single client"],
+                answer: "To assign a specific IP address to a specific MAC address"
+            },
+            {
+                question: "What is the purpose of a DHCP exclusion?",
+                options: ["To exclude IP addresses from being assigned", "To assign a specific IP address to a specific MAC address", "To increase the lease duration", "To assign multiple IP addresses to a single client"],
+                answer: "To exclude IP addresses from being assigned"
+            },
+            {
+                question: "Which protocol is used by DHCP clients to renew their lease?",
+                options: ["Unicast", "Broadcast", "Multicast", "Anycast"],
+                answer: "Unicast"
+            },
+            {
+                question: "What happens when a DHCP client's lease expires?",
+                options: ["The client immediately loses its IP address", "The client attempts to renew the lease", "The client is assigned a new IP address", "The client shuts down"],
+                answer: "The client attempts to renew the lease"
+            },
+            {
+                question: "Which DHCP option is used to specify the domain name?",
+                options: ["Option 3", "Option 6", "Option 15", "Option 51"],
+                answer: "Option 15"
+            },
+            {
+                question: "Which DHCP option is used to specify the lease duration?",
+                options: ["Option 3", "Option 6", "Option 15", "Option 51"],
+                answer: "Option 51"
+            },
+            {
+                question: "What is the purpose of DHCP relay agents?",
+                options: ["To forward DHCP requests between subnets", "To assign IP addresses to clients", "To resolve domain names to IP addresses", "To translate between MAC and IP addresses"],
+                answer: "To forward DHCP requests between subnets"
+            },
+            {
+                question: "Which command is used to release a DHCP lease on a Windows computer?",
+                options: ["ipconfig /release", "ipconfig /renew", "ipconfig /flushdns", "ipconfig /registerdns"],
+                answer: "ipconfig /release"
+            },
+            {
+                question: "Which command is used to renew a DHCP lease on a Windows computer?",
+                options: ["ipconfig /release", "ipconfig /renew", "ipconfig /flushdns", "ipconfig /registerdns"],
+                answer: "ipconfig /renew"
+            }
+        ],
+        dns: [
+            {
+                question: "What does DNS stand for?",
+                options: ["Domain Name System", "Domain Name Service", "Domain Name Server", "Domain Network System"],
+                answer: "Domain Name System"
+            },
+            {
+                question: "Which port number is used by DNS servers?",
+                options: ["53", "67", "80", "443"],
+                answer: "53"
+            },
+            {
+                question: "What is the purpose of DNS?",
+                options: ["To assign IP addresses", "To resolve domain names to IP addresses", "To translate between MAC and IP addresses", "To route traffic between networks"],
+                answer: "To resolve domain names to IP addresses"
+            },
+            {
+                question: "Which type of DNS record maps a domain name to an IP address?",
+                options: ["A", "AAAA", "CNAME", "MX"],
+                answer: "A"
+            },
+            {
+                question: "Which type of DNS record maps a domain name to an IPv6 address?",
+                options: ["A", "AAAA", "CNAME", "MX"],
+                answer: "AAAA"
+            },
+            {
+                question: "Which type of DNS record creates an alias for another domain name?",
+                options: ["A", "AAAA", "CNAME", "MX"],
+                answer: "CNAME"
+            },
+            {
+                question: "Which type of DNS record specifies mail servers for a domain?",
+                options: ["A", "AAAA", "CNAME", "MX"],
+                answer: "MX"
+            },
+            {
+                question: "What is the purpose of a reverse DNS lookup?",
+                options: ["To resolve a domain name to an IP address", "To resolve an IP address to a domain name", "To find the authoritative DNS server for a domain", "To cache DNS responses"],
+                answer: "To resolve an IP address to a domain name"
+            },
+            {
+                question: "Which DNS record type is used for reverse lookups?",
+                options: ["A", "AAAA", "PTR", "NS"],
+                answer: "PTR"
+            },
+            {
+                question: "Which DNS record type specifies authoritative name servers for a domain?",
+                options: ["A", "AAAA", "PTR", "NS"],
+                answer: "NS"
+            },
+            {
+                question: "What is the purpose of DNS caching?",
+                options: ["To encrypt DNS queries", "To store DNS responses to reduce query time", "To translate between IPv4 and IPv6", "To assign IP addresses"],
+                answer: "To store DNS responses to reduce query time"
+            },
+            {
+                question: "What is the root domain in the DNS hierarchy?",
+                options: [".", "root", "com", "www"],
+                answer: "."
+            },
+            {
+                question: "Which DNS record type contains text information?",
+                options: ["A", "AAAA", "TXT", "SOA"],
+                answer: "TXT"
+            },
+            {
+                question: "Which DNS record type contains administrative information about a zone?",
+                options: ["A", "AAAA", "TXT", "SOA"],
+                answer: "SOA"
+            },
+            {
+                question: "What is the purpose of conditional forwarding in DNS?",
+                options: ["To forward all DNS queries to a specific server", "To forward DNS queries for specific domains to specific servers", "To cache DNS responses", "To resolve domain names to IP addresses"],
+                answer: "To forward DNS queries for specific domains to specific servers"
+            },
+            {
+                question: "Which command is used to test DNS resolution on a Windows computer?",
+                options: ["ping", "ipconfig", "nslookup", "tracert"],
+                answer: "nslookup"
+            },
+            {
+                question: "What is the purpose of a DNS zone?",
+                options: ["To encrypt DNS queries", "To store DNS records for a specific domain", "To translate between IPv4 and IPv6", "To assign IP addresses"],
+                answer: "To store DNS records for a specific domain"
+            },
+            {
+                question: "Which type of DNS server hosts the original records for a domain?",
+                options: ["Primary", "Secondary", "Caching", "Forwarding"],
+                answer: "Primary"
+            },
+            {
+                question: "Which type of DNS server obtains zone data from another server?",
+                options: ["Primary", "Secondary", "Caching", "Forwarding"],
+                answer: "Secondary"
+            },
+            {
+                question: "What is the purpose of TTL in DNS records?",
+                options: ["To encrypt DNS queries", "To specify how long a record should be cached", "To translate between IPv4 and IPv6", "To assign IP addresses"],
+                answer: "To specify how long a record should be cached"
+            }
+        ],
+        staticDynamic: [
+            {
+                question: "What is a static IP address?",
+                options: ["An IP address that changes periodically", "An IP address that is manually assigned and does not change", "An IP address assigned by DHCP", "An IP address used for DNS"],
+                answer: "An IP address that is manually assigned and does not change"
+            },
+            {
+                question: "What is a dynamic IP address?",
+                options: ["An IP address that is manually assigned", "An IP address that changes periodically", "An IP address used for DNS", "An IP address that never changes"],
+                answer: "An IP address that changes periodically"
+            },
+            {
+                question: "Which protocol is used to assign dynamic IP addresses?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "DHCP"
+            },
+            {
+                question: "When would you use a static IP address?",
+                options: ["For a temporary connection", "For a server that needs a consistent address", "For a mobile device", "For a guest network"],
+                answer: "For a server that needs a consistent address"
+            },
+            {
+                question: "When would you use a dynamic IP address?",
+                options: ["For a server that needs a consistent address", "For a network printer", "For a desktop computer in a large network", "For a router"],
+                answer: "For a desktop computer in a large network"
+            },
+            {
+                question: "What is the primary advantage of using dynamic IP addresses?",
+                options: ["Consistent addressing", "Easier management and less configuration", "Better security", "Faster network performance"],
+                answer: "Easier management and less configuration"
+            },
+            {
+                question: "What is the primary advantage of using static IP addresses?",
+                options: ["Easier management", "Consistent addressing for devices that need it", "Better security", "Faster network performance"],
+                answer: "Consistent addressing for devices that need it"
+            },
+            {
+                question: "Which type of IP address is typically used for servers?",
+                options: ["Dynamic", "Static", "Temporary", "Random"],
+                answer: "Static"
+            },
+            {
+                question: "Which type of IP address is typically used for client computers?",
+                options: ["Dynamic", "Static", "Permanent", "Fixed"],
+                answer: "Dynamic"
+            },
+            {
+                question: "What is APIPA (Automatic Private IP Addressing)?",
+                options: ["A method of assigning static IP addresses", "A method of automatically assigning an IP address when DHCP is not available", "A method of resolving domain names", "A method of routing traffic"],
+                answer: "A method of automatically assigning an IP address when DHCP is not available"
+            },
+            {
+                question: "Which IP address range is used for APIPA?",
+                options: ["10.0.0.0 to 10.255.255.255", "172.16.0.0 to 172.31.255.255", "192.168.0.0 to 192.168.255.255", "169.254.0.0 to 169.254.255.255"],
+                answer: "169.254.0.0 to 169.254.255.255"
+            },
+            {
+                question: "What is the purpose of a DHCP reservation?",
+                options: ["To assign a dynamic IP address", "To assign a specific IP address to a specific MAC address", "To exclude IP addresses from being assigned", "To renew a lease"],
+                answer: "To assign a specific IP address to a specific MAC address"
+            },
+            {
+                question: "What is the purpose of a DHCP exclusion?",
+                options: ["To assign a dynamic IP address", "To assign a specific IP address to a specific MAC address", "To exclude IP addresses from being assigned", "To renew a lease"],
+                answer: "To exclude IP addresses from being assigned"
+            },
+            {
+                question: "Which command is used to configure a static IP address on a Windows computer?",
+                options: ["ipconfig", "netsh", "nslookup", "ping"],
+                answer: "netsh"
+            },
+            {
+                question: "Which network service is required for dynamic IP addressing?",
+                options: ["DNS", "DHCP", "ARP", "ICMP"],
+                answer: "DHCP"
+            },
+            {
+                question: "What happens when a DHCP client cannot reach a DHCP server?",
+                options: ["The client shuts down", "The client uses APIPA to assign itself an IP address", "The client uses a static IP address", "The client connects to the Internet anyway"],
+                answer: "The client uses APIPA to assign itself an IP address"
+            },
+            {
+                question: "What is the primary disadvantage of using static IP addresses?",
+                options: ["They change frequently", "They require manual configuration and management", "They are less secure", "They are slower"],
+                answer: "They require manual configuration and management"
+            },
+            {
+                question: "What is the primary disadvantage of using dynamic IP addresses?",
+                options: ["They require manual configuration", "They can change, making it harder to locate devices", "They are less secure", "They are slower"],
+                answer: "They can change, making it harder to locate devices"
+            },
+            {
+                question: "Which type of IP address is typically used for network infrastructure devices like routers?",
+                options: ["Dynamic", "Static", "Temporary", "Random"],
+                answer: "Static"
+            },
+            {
+                question: "What is the purpose of DHCP lease duration?",
+                options: ["To specify how long an IP address is assigned to a client", "To encrypt DHCP messages", "To translate between IPv4 and IPv6", "To resolve domain names"],
+                answer: "To specify how long an IP address is assigned to a client"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        feedback.style.backgroundColor = "rgba(76, 175, 80, 0.1)";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        feedback.style.backgroundColor = "rgba(244, 67, 54, 0.1)";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="clear-float"></div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'ipv4': 'IPv4',
+        'ipv6': 'IPv6',
+        'dhcp': 'DHCP',
+        'dns': 'DNS',
+        'staticDynamic': 'Static/Dynamic'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
