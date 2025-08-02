@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embedded & Internet Appliances Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1a2a6c, #2c3e50, #3498db);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+      color: #333;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      border-radius: 2px;
+    }
+    
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 0 auto 40px auto;
+      max-width: 1200px;
+    }
+    
+    button.topic-btn {
+      padding: 18px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button.topic-btn:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.1);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+    
+    button.topic-btn:hover:before {
+      transform: translateX(0);
+    }
+    
+    button.topic-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.25);
+    }
+    
+    .btn-proxy { background: linear-gradient(45deg, #1a2980, #26d0ce); }
+    .btn-utm { background: linear-gradient(45deg, #2c3e50, #3498db); }
+    .btn-load { background: linear-gradient(45deg, #3498db, #2ecc71); }
+    .btn-scada { background: linear-gradient(45deg, #e74c3c, #f39c12); }
+    .btn-iot { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+    
+    .quiz-container {
+      max-width: 900px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      display: none;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .quiz-container:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #3498db, #2ecc71, #3498db);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    
+    .question {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #2c3e50;
+      font-weight: 600;
+      line-height: 1.4;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .question-count {
+      text-align: right;
+      font-size: 15px;
+      color: #7f8c8d;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: right;
+    }
+    
+    .attempts {
+      text-align: left;
+      font-size: 15px;
+      color: #7f8c8d;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: rgba(0,0,0,0.05);
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: left;
+    }
+    
+    .clear-float {
+      clear: both;
+    }
+    
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 14px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #f8f9fa;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .options button:hover {
+      background-color: #e9ecef;
+      transform: translateX(5px);
+    }
+    
+    .options button.correct {
+      background: linear-gradient(45deg, #2ecc71, #27ae60);
+      border-color: #27ae60;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .feedback {
+      font-weight: bold;
+      margin: 20px 0;
+      min-height: 30px;
+      font-size: 18px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .next-btn {
+      display: none;
+      margin: 25px auto 0 auto;
+      padding: 14px 32px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .next-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .quiz-complete {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .quiz-complete h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    
+    .quiz-complete p {
+      font-size: 18px;
+      color: #7f8c8d;
+      margin-bottom: 30px;
+    }
+    
+    .quiz-complete button {
+      margin: 10px;
+      padding: 14px 28px;
+      background: linear-gradient(45deg, #3498db, #2ecc71);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .quiz-complete button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #e74c3c, #f39c12);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+    
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: linear-gradient(45deg, #9b59b6, #8e44ad);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    
+    .home-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+<h1>Embedded & Internet Appliances Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn btn-proxy" onclick="startQuiz('proxyServers')">Proxy Servers</button>
+  <button class="topic-btn btn-utm" onclick="startQuiz('utm')">UTM</button>
+  <button class="topic-btn btn-load" onclick="startQuiz('loadBalancers')">Load Balancers</button>
+  <button class="topic-btn btn-scada" onclick="startQuiz('scada')">SCADA</button>
+  <button class="topic-btn btn-iot" onclick="startQuiz('iotDevices')">IoT Devices</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="clear-float"></div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        proxyServers: [
+            {
+                question: "What is the primary function of a proxy server?",
+                options: ["To store files", "To act as an intermediary between clients and servers", "To manage printers", "To authenticate users"],
+                answer: "To act as an intermediary between clients and servers"
+            },
+            {
+                question: "Which type of proxy server caches web pages to improve performance?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Forward proxy"
+            },
+            {
+                question: "What is the purpose of a reverse proxy?",
+                options: ["To cache web pages for clients", "To protect and load balance servers", "To filter content", "To hide client IP addresses"],
+                answer: "To protect and load balance servers"
+            },
+            {
+                question: "Which protocol is commonly used by proxy servers?",
+                options: ["HTTP", "FTP", "SMTP", "POP3"],
+                answer: "HTTP"
+            },
+            {
+                question: "What is the primary advantage of using a proxy server?",
+                options: ["Increased bandwidth", "Improved security and performance", "Reduced latency", "Simplified configuration"],
+                answer: "Improved security and performance"
+            },
+            {
+                question: "Which type of proxy server does not modify requests or responses?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Transparent proxy"
+            },
+            {
+                question: "What is the purpose of content filtering in a proxy server?",
+                options: ["To cache web pages", "To block access to certain websites or content", "To hide client IP addresses", "To encrypt traffic"],
+                answer: "To block access to certain websites or content"
+            },
+            {
+                question: "Which proxy server type provides the highest level of anonymity?",
+                options: ["Transparent proxy", "Anonymous proxy", "High anonymity proxy", "Reverse proxy"],
+                answer: "High anonymity proxy"
+            },
+            {
+                question: "What is the purpose of SSL/TLS termination in a proxy server?",
+                options: ["To cache encrypted content", "To decrypt and inspect encrypted traffic", "To hide client IP addresses", "To filter content"],
+                answer: "To decrypt and inspect encrypted traffic"
+            },
+            {
+                question: "Which proxy server type is typically used by organizations to monitor and control internet usage?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Forward proxy"
+            },
+            {
+                question: "What is the purpose of caching in a proxy server?",
+                options: ["To encrypt traffic", "To store frequently accessed content for faster retrieval", "To hide client IP addresses", "To filter content"],
+                answer: "To store frequently accessed content for faster retrieval"
+            },
+            {
+                question: "Which proxy server type is typically used in front of web servers?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Reverse proxy"
+            },
+            {
+                question: "What is the purpose of a proxy server in a DMZ?",
+                options: ["To cache web pages", "To provide an additional layer of security", "To hide client IP addresses", "To filter content"],
+                answer: "To provide an additional layer of security"
+            },
+            {
+                question: "Which proxy server type does not reveal that it is a proxy?",
+                options: ["Transparent proxy", "Anonymous proxy", "High anonymity proxy", "Reverse proxy"],
+                answer: "High anonymity proxy"
+            },
+            {
+                question: "What is the purpose of load balancing in a reverse proxy?",
+                options: ["To cache web pages", "To distribute incoming requests across multiple servers", "To hide client IP addresses", "To filter content"],
+                answer: "To distribute incoming requests across multiple servers"
+            },
+            {
+                question: "Which proxy server type is typically used without client configuration?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Transparent proxy"
+            },
+            {
+                question: "What is the purpose of authentication in a proxy server?",
+                options: ["To cache web pages", "To verify the identity of users", "To hide client IP addresses", "To filter content"],
+                answer: "To verify the identity of users"
+            },
+            {
+                question: "Which proxy server type can be used to bypass geo-restrictions?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Forward proxy"
+            },
+            {
+                question: "What is the purpose of logging in a proxy server?",
+                options: ["To cache web pages", "To record internet usage for auditing and analysis", "To hide client IP addresses", "To filter content"],
+                answer: "To record internet usage for auditing and analysis"
+            },
+            {
+                question: "Which proxy server type is typically used to protect internal servers?",
+                options: ["Forward proxy", "Reverse proxy", "Transparent proxy", "High anonymity proxy"],
+                answer: "Reverse proxy"
+            }
+        ],
+        utm: [
+            {
+                question: "What does UTM stand for?",
+                options: ["Unified Threat Management", "Universal Threat Management", "Unified Traffic Management", "Universal Traffic Management"],
+                answer: "Unified Threat Management"
+            },
+            {
+                question: "What is the primary purpose of a UTM appliance?",
+                options: ["To cache web pages", "To provide multiple security functions in a single device", "To manage printers", "To authenticate users"],
+                answer: "To provide multiple security functions in a single device"
+            },
+            {
+                question: "Which security feature is typically included in a UTM appliance?",
+                options: ["Firewall", "Intrusion prevention system", "Gateway antivirus", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the advantage of using a UTM appliance over separate security devices?",
+                options: ["Lower cost", "Simplified management", "Better integration between security functions", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which UTM feature is used to block malicious websites?",
+                options: ["Firewall", "Intrusion prevention system", "Web filtering", "Gateway antivirus"],
+                answer: "Web filtering"
+            },
+            {
+                question: "What is the purpose of the intrusion prevention system (IPS) in a UTM appliance?",
+                options: ["To cache web pages", "To detect and prevent network attacks", "To manage printers", "To authenticate users"],
+                answer: "To detect and prevent network attacks"
+            },
+            {
+                question: "Which UTM feature is used to scan incoming and outgoing email for threats?",
+                options: ["Firewall", "Intrusion prevention system", "Web filtering", "Email filtering"],
+                answer: "Email filtering"
+            },
+            {
+                question: "What is the purpose of VPN support in a UTM appliance?",
+                options: ["To cache web pages", "To provide secure remote access", "To manage printers", "To authenticate users"],
+                answer: "To provide secure remote access"
+            },
+            {
+                question: "Which UTM feature is used to prevent data loss?",
+                options: ["Firewall", "Intrusion prevention system", "Web filtering", "Data loss prevention"],
+                answer: "Data loss prevention"
+            },
+            {
+                question: "What is the purpose of application control in a UTM appliance?",
+                options: ["To cache web pages", "To control the use of applications on the network", "To manage printers", "To authenticate users"],
+                answer: "To control the use of applications on the network"
+            },
+            {
+                question: "Which UTM feature is used to protect against malware?",
+                options: ["Firewall", "Intrusion prevention system", "Gateway antivirus", "Web filtering"],
+                answer: "Gateway antivirus"
+            },
+            {
+                question: "What is the purpose of the firewall in a UTM appliance?",
+                options: ["To cache web pages", "To filter network traffic based on security rules", "To manage printers", "To authenticate users"],
+                answer: "To filter network traffic based on security rules"
+            },
+            {
+                question: "Which UTM feature is used to control access to websites?",
+                options: ["Firewall", "Intrusion prevention system", "Web filtering", "Gateway antivirus"],
+                answer: "Web filtering"
+            },
+            {
+                question: "What is the purpose of the reporting and logging feature in a UTM appliance?",
+                options: ["To cache web pages", "To provide visibility into network activity and security events", "To manage printers", "To authenticate users"],
+                answer: "To provide visibility into network activity and security events"
+            },
+            {
+                question: "Which UTM feature is used to identify and block spam?",
+                options: ["Firewall", "Intrusion prevention system", "Web filtering", "Anti-spam"],
+                answer: "Anti-spam"
+            },
+            {
+                question: "What is the purpose of the content filtering feature in a UTM appliance?",
+                options: ["To cache web pages", "To block access to inappropriate or harmful content", "To manage printers", "To authenticate users"],
+                answer: "To block access to inappropriate or harmful content"
+            },
+            {
+                question: "Which UTM feature is used to protect against phishing attacks?",
+                options: ["Firewall", "Intrusion prevention system", "Anti-phishing", "Web filtering"],
+                answer: "Anti-phishing"
+            },
+            {
+                question: "What is the purpose of the network segmentation feature in a UTM appliance?",
+                options: ["To cache web pages", "To divide the network into smaller segments for improved security", "To manage printers", "To authenticate users"],
+                answer: "To divide the network into smaller segments for improved security"
+            },
+            {
+                question: "Which UTM feature is used to protect against zero-day threats?",
+                options: ["Firewall", "Intrusion prevention system", "Sandboxing", "Web filtering"],
+                answer: "Sandboxing"
+            },
+            {
+                question: "What is the purpose of the identity awareness feature in a UTM appliance?",
+                options: ["To cache web pages", "To identify users and devices on the network", "To manage printers", "To authenticate users"],
+                answer: "To identify users and devices on the network"
+            }
+        ],
+        loadBalancers: [
+            {
+                question: "What is the primary purpose of a load balancer?",
+                options: ["To cache web pages", "To distribute network traffic across multiple servers", "To manage printers", "To authenticate users"],
+                answer: "To distribute network traffic across multiple servers"
+            },
+            {
+                question: "Which load balancing algorithm distributes requests based on the current server load?",
+                options: ["Round robin", "Least connections", "IP hash", "Weighted round robin"],
+                answer: "Least connections"
+            },
+            {
+                question: "What is the purpose of health checks in a load balancer?",
+                options: ["To cache web pages", "To monitor the status of servers and direct traffic away from failed servers", "To manage printers", "To authenticate users"],
+                answer: "To monitor the status of servers and direct traffic away from failed servers"
+            },
+            {
+                question: "Which load balancing algorithm distributes requests sequentially to each server?",
+                options: ["Round robin", "Least connections", "IP hash", "Weighted round robin"],
+                answer: "Round robin"
+            },
+            {
+                question: "What is the purpose of session persistence in a load balancer?",
+                options: ["To cache web pages", "To ensure that requests from the same client are sent to the same server", "To manage printers", "To authenticate users"],
+                answer: "To ensure that requests from the same client are sent to the same server"
+            },
+            {
+                question: "Which load balancing algorithm distributes requests based on the client's IP address?",
+                options: ["Round robin", "Least connections", "IP hash", "Weighted round robin"],
+                answer: "IP hash"
+            },
+            {
+                question: "What is the purpose of SSL offloading in a load balancer?",
+                options: ["To cache web pages", "To handle SSL/TLS encryption and decryption on behalf of servers", "To manage printers", "To authenticate users"],
+                answer: "To handle SSL/TLS encryption and decryption on behalf of servers"
+            },
+            {
+                question: "Which load balancing algorithm distributes requests based on server capacity?",
+                options: ["Round robin", "Least connections", "IP hash", "Weighted round robin"],
+                answer: "Weighted round robin"
+            },
+            {
+                question: "What is the purpose of a global server load balancer?",
+                options: ["To cache web pages", "To distribute traffic across multiple data centers", "To manage printers", "To authenticate users"],
+                answer: "To distribute traffic across multiple data centers"
+            },
+            {
+                question: "Which type of load balancer operates at Layer 4 of the OSI model?",
+                options: ["Layer 4 load balancer", "Layer 7 load balancer", "Global server load balancer", "Application load balancer"],
+                answer: "Layer 4 load balancer"
+            },
+            {
+                question: "What is the purpose of content-based routing in a load balancer?",
+                options: ["To cache web pages", "To direct requests based on the content of the request", "To manage printers", "To authenticate users"],
+                answer: "To direct requests based on the content of the request"
+            },
+            {
+                question: "Which type of load balancer operates at Layer 7 of the OSI model?",
+                options: ["Layer 4 load balancer", "Layer 7 load balancer", "Global server load balancer", "Network load balancer"],
+                answer: "Layer 7 load balancer"
+            },
+            {
+                question: "What is the purpose of connection pooling in a load balancer?",
+                options: ["To cache web pages", "To reuse existing connections to reduce overhead", "To manage printers", "To authenticate users"],
+                answer: "To reuse existing connections to reduce overhead"
+            },
+            {
+                question: "Which load balancing technique uses DNS to distribute traffic?",
+                options: ["Round robin", "Least connections", "DNS load balancing", "Weighted round robin"],
+                answer: "DNS load balancing"
+            },
+            {
+                question: "What is the purpose of rate limiting in a load balancer?",
+                options: ["To cache web pages", "To control the rate of incoming requests", "To manage printers", "To authenticate users"],
+                answer: "To control the rate of incoming requests"
+            },
+            {
+                question: "Which load balancing technique uses multiple load balancers for redundancy?",
+                options: ["Active-passive", "Active-active", "DNS load balancing", "Global server load balancing"],
+                answer: "Active-active"
+            },
+            {
+                question: "What is the purpose of caching in a load balancer?",
+                options: ["To store frequently accessed content for faster retrieval", "To distribute traffic across multiple servers", "To manage printers", "To authenticate users"],
+                answer: "To store frequently accessed content for faster retrieval"
+            },
+            {
+                question: "Which load balancing technique uses a primary load balancer and a backup load balancer?",
+                options: ["Active-passive", "Active-active", "DNS load balancing", "Global server load balancing"],
+                answer: "Active-passive"
+            },
+            {
+                question: "What is the purpose of compression in a load balancer?",
+                options: ["To reduce the size of data before transmission", "To distribute traffic across multiple servers", "To manage printers", "To authenticate users"],
+                answer: "To reduce the size of data before transmission"
+            },
+            {
+                question: "Which load balancing technique distributes traffic based on geographic location?",
+                options: ["Round robin", "Least connections", "Geographic load balancing", "Weighted round robin"],
+                answer: "Geographic load balancing"
+            }
+        ],
+        scada: [
+            {
+                question: "What does SCADA stand for?",
+                options: ["Supervisory Control and Data Acquisition", "System Control and Data Acquisition", "Supervisory Control and Data Analysis", "System Control and Data Analysis"],
+                answer: "Supervisory Control and Data Acquisition"
+            },
+            {
+                question: "What is the primary purpose of SCADA systems?",
+                options: ["To manage printers", "To monitor and control industrial processes", "To authenticate users", "To cache web pages"],
+                answer: "To monitor and control industrial processes"
+            },
+            {
+                question: "Which component of a SCADA system collects data from sensors and instruments?",
+                options: ["MTU", "RTU", "HMI", "PLC"],
+                answer: "RTU"
+            },
+            {
+                question: "What is the purpose of the Human-Machine Interface (HMI) in a SCADA system?",
+                options: ["To collect data", "To provide a graphical interface for operators", "To control processes", "To communicate with devices"],
+                answer: "To provide a graphical interface for operators"
+            },
+            {
+                question: "Which component of a SCADA system is used to control industrial processes?",
+                options: ["MTU", "RTU", "HMI", "PLC"],
+                answer: "PLC"
+            },
+            {
+                question: "What is the purpose of the Master Terminal Unit (MTU) in a SCADA system?",
+                options: ["To collect data", "To provide a graphical interface", "To control processes", "To communicate with RTUs and PLCs"],
+                answer: "To communicate with RTUs and PLCs"
+            },
+            {
+                question: "Which communication protocol is commonly used in SCADA systems?",
+                options: ["HTTP", "Modbus", "FTP", "SMTP"],
+                answer: "Modbus"
+            },
+            {
+                question: "What is the primary security concern with SCADA systems?",
+                options: ["High cost", "Complexity", "Vulnerability to cyber attacks", "Limited functionality"],
+                answer: "Vulnerability to cyber attacks"
+            },
+            {
+                question: "Which type of network is commonly used for SCADA systems?",
+                options: ["LAN", "WAN", "Internet", "Proprietary industrial networks"],
+                answer: "Proprietary industrial networks"
+            },
+            {
+                question: "What is the purpose of data historians in SCADA systems?",
+                options: ["To collect real-time data", "To store historical data for analysis", "To control processes", "To provide a graphical interface"],
+                answer: "To store historical data for analysis"
+            },
+            {
+                question: "Which component of a SCADA system converts sensor signals to digital data?",
+                options: ["MTU", "RTU", "HMI", "PLC"],
+                answer: "RTU"
+            },
+            {
+                question: "What is the purpose of alarms in SCADA systems?",
+                options: ["To collect data", "To notify operators of abnormal conditions", "To control processes", "To provide a graphical interface"],
+                answer: "To notify operators of abnormal conditions"
+            },
+            {
+                question: "Which communication protocol is designed for SCADA systems and industrial automation?",
+                options: ["HTTP", "Modbus", "DNP3", "FTP"],
+                answer: "DNP3"
+            },
+            {
+                question: "What is the purpose of redundancy in SCADA systems?",
+                options: ["To reduce cost", "To improve reliability and availability", "To simplify configuration", "To increase speed"],
+                answer: "To improve reliability and availability"
+            },
+            {
+                question: "Which component of a SCADA system executes control logic?",
+                options: ["MTU", "RTU", "HMI", "PLC"],
+                answer: "PLC"
+            },
+            {
+                question: "What is the purpose of trends in SCADA systems?",
+                options: ["To collect real-time data", "To display historical data in graphical format", "To control processes", "To provide a graphical interface"],
+                answer: "To display historical data in graphical format"
+            },
+            {
+                question: "Which security measure is important for SCADA systems?",
+                options: ["Firewalls", "Intrusion detection systems", "Network segmentation", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of the SCADA server?",
+                options: ["To collect data", "To provide a graphical interface", "To control processes", "To manage the SCADA system"],
+                answer: "To manage the SCADA system"
+            },
+            {
+                question: "Which communication protocol is commonly used for SCADA systems in the electrical power industry?",
+                options: ["HTTP", "Modbus", "DNP3", "IEC 61850"],
+                answer: "IEC 61850"
+            },
+            {
+                question: "What is the purpose of remote terminal units (RTUs) in SCADA systems?",
+                options: ["To provide a graphical interface", "To control processes", "To collect data from remote sites", "To manage the SCADA system"],
+                answer: "To collect data from remote sites"
+            }
+        ],
+        iotDevices: [
+            {
+                question: "What does IoT stand for?",
+                options: ["Internet of Things", "Internet of Tools", "Internet of Technology", "Internet of Terminals"],
+                answer: "Internet of Things"
+            },
+            {
+                question: "What is the primary characteristic of IoT devices?",
+                options: ["Large size", "High cost", "Connectivity to the internet", "Complex configuration"],
+                answer: "Connectivity to the internet"
+            },
+            {
+                question: "Which communication protocol is commonly used for IoT devices?",
+                options: ["HTTP", "MQTT", "FTP", "SMTP"],
+                answer: "MQTT"
+            },
+            {
+                question: "What is the purpose of IoT gateways?",
+                options: ["To provide internet connectivity", "To connect IoT devices to the internet and other networks", "To store data", "To authenticate users"],
+                answer: "To connect IoT devices to the internet and other networks"
+            },
+            {
+                question: "Which wireless technology is commonly used for IoT devices?",
+                options: ["Wi-Fi", "Bluetooth", "Zigbee", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the primary security concern with IoT devices?",
+                options: ["High cost", "Limited functionality", "Vulnerability to cyber attacks", "Complex configuration"],
+                answer: "Vulnerability to cyber attacks"
+            },
+            {
+                question: "Which protocol is designed for low-power, low-data-rate IoT devices?",
+                options: ["HTTP", "MQTT", "Zigbee", "LoRaWAN"],
+                answer: "LoRaWAN"
+            },
+            {
+                question: "What is the purpose of edge computing in IoT?",
+                options: ["To store data in the cloud", "To process data closer to the source", "To provide internet connectivity", "To authenticate users"],
+                answer: "To process data closer to the source"
+            },
+            {
+                question: "Which technology is used to uniquely identify IoT devices?",
+                options: ["IP addresses", "MAC addresses", "RFID", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of IoT platforms?",
+                options: ["To provide internet connectivity", "To manage and analyze data from IoT devices", "To store data", "To authenticate users"],
+                answer: "To manage and analyze data from IoT devices"
+            },
+            {
+                question: "Which wireless technology is designed for low-power IoT devices?",
+                options: ["Wi-Fi", "Bluetooth", "Zigbee", "5G"],
+                answer: "Zigbee"
+            },
+            {
+                question: "What is the purpose of sensors in IoT devices?",
+                options: ["To provide internet connectivity", "To collect data from the environment", "To store data", "To authenticate users"],
+                answer: "To collect data from the environment"
+            },
+            {
+                question: "Which protocol is used for secure communication in IoT devices?",
+                options: ["HTTP", "MQTT", "TLS", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of actuators in IoT devices?",
+                options: ["To provide internet connectivity", "To collect data from the environment", "To perform actions based on data", "To store data"],
+                answer: "To perform actions based on data"
+            },
+            {
+                question: "Which technology is used for long-range IoT communication?",
+                options: ["Wi-Fi", "Bluetooth", "Zigbee", "LoRaWAN"],
+                answer: "LoRaWAN"
+            },
+            {
+                question: "What is the purpose of fog computing in IoT?",
+                options: ["To store data in the cloud", "To process data at the edge of the network", "To provide internet connectivity", "To authenticate users"],
+                answer: "To process data at the edge of the network"
+            },
+            {
+                question: "Which security measure is important for IoT devices?",
+                options: ["Strong passwords", "Regular firmware updates", "Network segmentation", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of IoT analytics?",
+                options: ["To provide internet connectivity", "To analyze data from IoT devices to gain insights", "To store data", "To authenticate users"],
+                answer: "To analyze data from IoT devices to gain insights"
+            },
+            {
+                question: "Which wireless technology is commonly used for smart home IoT devices?",
+                options: ["Wi-Fi", "Zigbee", "Z-Wave", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "What is the purpose of device management in IoT?",
+                options: ["To provide internet connectivity", "To monitor, configure, and update IoT devices", "To store data", "To authenticate users"],
+                answer: "To monitor, configure, and update IoT devices"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('feedback').style.backgroundColor = "transparent";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(46, 204, 113, 0.8)";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(231, 76, 60, 0.8)";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="clear-float"></div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'proxyServers': 'Proxy Servers',
+        'utm': 'UTM',
+        'loadBalancers': 'Load Balancers',
+        'scada': 'SCADA',
+        'iotDevices': 'IoT Devices'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
