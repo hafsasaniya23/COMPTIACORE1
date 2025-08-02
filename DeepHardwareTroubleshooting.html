@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deep Hardware Troubleshooting Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(to right, #536976, #292E49);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+    button.topic-btn:hover {
+      background-color: #3e8e41;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      transition: background-color 0.2s;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .next-btn:hover {
+      background-color: #0b7dda;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #3e8e41;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF9800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #e68900;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #9C27B0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #7B1FA2;
+    }
+  </style>
+</head>
+<body>
+<h1>Deep Hardware Troubleshooting Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('osErrors')">OS Errors</button>
+  <button class="topic-btn" onclick="startQuiz('raid')">RAID</button>
+  <button class="topic-btn" onclick="startQuiz('display')">Display</button>
+  <button class="topic-btn" onclick="startQuiz('gpuTroubleshooting')">GPU Troubleshooting</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+
+<script>
+    const quizData = {
+        osErrors: [
+            {
+                question: "Which Windows tool is used to check for corrupted system files?",
+                options: ["Task Manager", "System Configuration", "System File Checker", "Disk Cleanup"],
+                answer: "System File Checker"
+            },
+            {
+                question: "What does the Blue Screen of Death (BSOD) indicate?",
+                options: ["A software update is available", "The system encountered a critical error", "The computer is shutting down", "A virus has been detected"],
+                answer: "The system encountered a critical error"
+            },
+            {
+                question: "Which command is used to check the hard drive for errors in Windows?",
+                options: ["chkdsk", "sfc", "defrag", "format"],
+                answer: "chkdsk"
+            },
+            {
+                question: "What is the first step in troubleshooting a computer that won't boot?",
+                options: ["Reinstall the operating system", "Check physical connections", "Run a virus scan", "Update drivers"],
+                answer: "Check physical connections"
+            },
+            {
+                question: "Which log file contains information about system crashes in Windows?",
+                options: ["AppEvent.Evt", "SysEvent.Evt", "Memory.dmp", "Setupapi.log"],
+                answer: "Memory.dmp"
+            },
+            {
+                question: "What does the error code 0x80070057 typically indicate in Windows?",
+                options: ["Driver failure", "Parameter is incorrect", "Memory error", "Disk full"],
+                answer: "Parameter is incorrect"
+            },
+            {
+                question: "Which Windows feature allows you to restore system files to a previous point in time?",
+                options: ["System Restore", "File History", "Backup and Restore", "Recovery Drive"],
+                answer: "System Restore"
+            },
+            {
+                question: "What is the purpose of Safe Mode in Windows?",
+                options: ["To run antivirus scans", "To start the system with minimal drivers and services", "To repair corrupted files", "To update drivers"],
+                answer: "To start the system with minimal drivers and services"
+            },
+            {
+                question: "Which tool is used to manage startup programs in Windows?",
+                options: ["Task Manager", "Device Manager", "System Configuration", "Control Panel"],
+                answer: "Task Manager"
+            },
+            {
+                question: "What does the error 'NTLDR is missing' indicate?",
+                options: ["Memory failure", "Hard drive boot sector issue", "Corrupted registry", "Driver conflict"],
+                answer: "Hard drive boot sector issue"
+            },
+            {
+                question: "Which command is used to repair the Master Boot Record (MBR) in Windows?",
+                options: ["fixmbr", "bootrec /fixmbr", "bootcfg /rebuild", "fdisk /mbr"],
+                answer: "bootrec /fixmbr"
+            },
+            {
+                question: "What is the purpose of the Windows Recovery Environment (WinRE)?",
+                options: ["To install updates", "To troubleshoot and repair system issues", "To optimize performance", "To manage user accounts"],
+                answer: "To troubleshoot and repair system issues"
+            },
+            {
+                question: "Which tool is used to view and manage system events in Windows?",
+                options: ["Task Manager", "Event Viewer", "Resource Monitor", "Performance Monitor"],
+                answer: "Event Viewer"
+            },
+            {
+                question: "What does the error 'Bootmgr is missing' indicate?",
+                options: ["Memory failure", "Hard drive boot sector issue", "Corrupted registry", "Driver conflict"],
+                answer: "Hard drive boot sector issue"
+            },
+            {
+                question: "Which Windows feature can be used to create a backup of the entire system?",
+                options: ["File History", "System Restore", "System Image Backup", "Recovery Drive"],
+                answer: "System Image Backup"
+            }
+        ],
+        raid: [
+            {
+                question: "What does RAID stand for?",
+                options: ["Redundant Array of Independent Disks", "Redundant Array of Inexpensive Disks", "Reliable Array of Independent Disks", "Redundant Access of Independent Disks"],
+                answer: "Redundant Array of Independent Disks"
+            },
+            {
+                question: "Which RAID level provides disk mirroring?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 1"
+            },
+            {
+                question: "What is the primary purpose of RAID?",
+                options: ["To increase disk capacity", "To improve performance and/or provide fault tolerance", "To reduce power consumption", "To simplify disk management"],
+                answer: "To improve performance and/or provide fault tolerance"
+            },
+            {
+                question: "Which RAID level uses striping with parity?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 5"
+            },
+            {
+                question: "What is the minimum number of disks required for RAID 5?",
+                options: ["1", "2", "3", "4"],
+                answer: "3"
+            },
+            {
+                question: "Which RAID level provides no fault tolerance?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 0"
+            },
+            {
+                question: "What is the primary advantage of RAID 10?",
+                options: ["High capacity", "High performance and fault tolerance", "Low cost", "Simplicity"],
+                answer: "High performance and fault tolerance"
+            },
+            {
+                question: "Which RAID level uses disk striping?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 0"
+            },
+            {
+                question: "What is the minimum number of disks required for RAID 1?",
+                options: ["1", "2", "3", "4"],
+                answer: "2"
+            },
+            {
+                question: "Which RAID level is also known as striping of mirrors?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 10"
+            },
+            {
+                question: "What is the primary disadvantage of RAID 5?",
+                options: ["High cost", "Poor performance", "Slow write speeds due to parity calculation", "Complex configuration"],
+                answer: "Slow write speeds due to parity calculation"
+            },
+            {
+                question: "Which RAID level requires an even number of disks?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"],
+                answer: "RAID 10"
+            },
+            {
+                question: "What is the purpose of hot swapping in RAID?",
+                options: ["To improve performance", "To replace failed disks without shutting down the system", "To increase capacity", "To reduce power consumption"],
+                answer: "To replace failed disks without shutting down the system"
+            },
+            {
+                question: "Which RAID level uses block-level striping with distributed parity?",
+                options: ["RAID 0", "RAID 1", "RAID 5", "RAID 6"],
+                answer: "RAID 5"
+            },
+            {
+                question: "What is the primary advantage of hardware RAID over software RAID?",
+                options: ["Lower cost", "Better performance and less CPU overhead", "Easier configuration", "Greater compatibility"],
+                answer: "Better performance and less CPU overhead"
+            }
+        ],
+        display: [
+            {
+                question: "What is the most common cause of a blank screen on a computer?",
+                options: ["Hard drive failure", "Loose cable connections", "RAM failure", "Operating system corruption"],
+                answer: "Loose cable connections"
+            },
+            {
+                question: "Which resolution is considered Full HD?",
+                options: ["1280x720", "1366x768", "1920x1080", "2560x1440"],
+                answer: "1920x1080"
+            },
+            {
+                question: "What does the term 'pixelation' refer to in display issues?",
+                options: ["Flickering screen", "Distorted image where individual pixels are visible", "Color distortion", "Screen tearing"],
+                answer: "Distorted image where individual pixels are visible"
+            },
+            {
+                question: "Which video interface provides the highest quality digital signal?",
+                options: ["VGA", "DVI", "HDMI", "DisplayPort"],
+                answer: "DisplayPort"
+            },
+            {
+                question: "What is the refresh rate of a typical monitor?",
+                options: ["30Hz", "60Hz", "120Hz", "240Hz"],
+                answer: "60Hz"
+            },
+            {
+                question: "Which display technology is known for its high contrast ratio and deep blacks?",
+                options: ["LCD", "LED", "OLED", "CRT"],
+                answer: "OLED"
+            },
+            {
+                question: "What is the purpose of the aspect ratio in a display?",
+                options: ["To determine the brightness", "To define the proportional relationship between width and height", "To set the refresh rate", "To control color accuracy"],
+                answer: "To define the proportional relationship between width and height"
+            },
+            {
+                question: "Which tool is used to calibrate a monitor for color accuracy?",
+                options: ["Device Manager", "Display Calibration Tool", "Color Management", "Display Settings"],
+                answer: "Display Calibration Tool"
+            },
+            {
+                question: "What is the primary cause of screen flickering?",
+                options: ["Incorrect resolution", "Loose cable", "Faulty graphics driver", "All of the above"],
+                answer: "All of the above"
+            },
+            {
+                question: "Which display port type is commonly used for connecting external monitors to laptops?",
+                options: ["VGA", "DVI", "HDMI", "USB-C"],
+                answer: "USB-C"
+            },
+            {
+                question: "What is the purpose of a display adapter?",
+                options: ["To increase brightness", "To convert video signals from one format to another", "To improve color accuracy", "To reduce power consumption"],
+                answer: "To convert video signals from one format to another"
+            },
+            {
+                question: "Which display issue is characterized by horizontal lines across the screen?",
+                options: ["Dead pixels", "Screen tearing", "Stuck pixels", "Artifacts"],
+                answer: "Artifacts"
+            },
+            {
+                question: "What is the primary function of the inverter in an LCD display?",
+                options: ["To process video signals", "To provide power to the backlight", "To control color temperature", "To adjust refresh rate"],
+                answer: "To provide power to the backlight"
+            },
+            {
+                question: "Which display technology uses liquid crystals to modulate light?",
+                options: ["CRT", "LCD", "OLED", "Plasma"],
+                answer: "LCD"
+            },
+            {
+                question: "What is the primary cause of dead pixels on a display?",
+                options: ["Software issue", "Driver problem", "Manufacturing defect", "Improper resolution"],
+                answer: "Manufacturing defect"
+            }
+        ],
+        gpuTroubleshooting: [
+            {
+                question: "What is the most common symptom of a failing GPU?",
+                options: ["Slow boot time", "Artifacts on screen", "No sound", "Slow internet"],
+                answer: "Artifacts on screen"
+            },
+            {
+                question: "Which tool is used to monitor GPU temperature?",
+                options: ["Task Manager", "Device Manager", "GPU-Z", "MSConfig"],
+                answer: "GPU-Z"
+            },
+            {
+                question: "What is the primary cause of GPU overheating?",
+                options: ["Outdated drivers", "Dust accumulation on heatsink and fan", "Insufficient power supply", "Incorrect BIOS settings"],
+                answer: "Dust accumulation on heatsink and fan"
+            },
+            {
+                question: "Which error message is commonly associated with GPU failure?",
+                options: ["No bootable device", "Device not recognized", "Display driver stopped responding", "File not found"],
+                answer: "Display driver stopped responding"
+            },
+            {
+                question: "What is the purpose of thermal paste on a GPU?",
+                options: ["To improve electrical conductivity", "To improve heat transfer between GPU and heatsink", "To prevent corrosion", "To reduce noise"],
+                answer: "To improve heat transfer between GPU and heatsink"
+            },
+            {
+                question: "Which component on a GPU is responsible for processing graphics data?",
+                options: ["VRAM", "GPU core", "Fan", "Heatsink"],
+                answer: "GPU core"
+            },
+            {
+                question: "What is the primary function of VRAM on a graphics card?",
+                options: ["To store the operating system", "To store textures and frame buffers", "To process data", "To control the fan speed"],
+                answer: "To store textures and frame buffers"
+            },
+            {
+                question: "Which tool is used to benchmark GPU performance?",
+                options: ["CPU-Z", "GPU-Z", "3DMark", "CrystalDiskMark"],
+                answer: "3DMark"
+            },
+            {
+                question: "What is the most common cause of screen tearing?",
+                options: ["Faulty monitor", "Outdated drivers", "VSync disabled", "Incorrect resolution"],
+                answer: "VSync disabled"
+            },
+            {
+                question: "Which GPU feature allows multiple graphics cards to work together?",
+                options: ["SLI", "VSync", "Overclocking", "Throttling"],
+                answer: "SLI"
+            },
+            {
+                question: "What is the primary purpose of a GPU driver?",
+                options: ["To cool the GPU", "To allow the operating system to communicate with the GPU", "To increase VRAM", "To improve power efficiency"],
+                answer: "To allow the operating system to communicate with the GPU"
+            },
+            {
+                question: "Which symptom indicates insufficient power supply to the GPU?",
+                options: ["Artifacts on screen", "System shutdown under load", "No display output", "Blue screen of death"],
+                answer: "System shutdown under load"
+            },
+            {
+                question: "What is the purpose of GPU overclocking?",
+                options: ["To reduce power consumption", "To increase performance", "To improve cooling", "To extend lifespan"],
+                answer: "To increase performance"
+            },
+            {
+                question: "Which GPU technology dynamically adjusts clock speeds based on temperature and power consumption?",
+                options: ["SLI", "Overclocking", "GPU Boost", "VSync"],
+                answer: "GPU Boost"
+            },
+            {
+                question: "What is the primary risk of excessive GPU overclocking?",
+                options: ["Reduced performance", "Increased power consumption", "Hardware damage", "Driver instability"],
+                answer: "Hardware damage"
+            }
+        ]
+    };
+    
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'osErrors': 'OS Errors',
+        'raid': 'RAID',
+        'display': 'Display',
+        'gpuTroubleshooting': 'GPU Troubleshooting'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
