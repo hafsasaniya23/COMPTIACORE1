@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Network Troubleshooting & Host Services Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+      min-height: 100vh;
+      color: #333;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #000;
+      font-size: 2.8rem;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: #000;
+      border-radius: 2px;
+    }
+    
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 0 auto 40px auto;
+      max-width: 1200px;
+    }
+    
+    button.topic-btn {
+      padding: 18px 24px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      color: #000;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    button.topic-btn:hover {
+      background: #e0e0e0;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .quiz-container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: none;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ddd;
+    }
+    
+    .quiz-container:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: #000;
+    }
+    
+    .question {
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #000;
+      font-weight: 600;
+      line-height: 1.4;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .question-count {
+      text-align: right;
+      font-size: 15px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: #f0f0f0;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: right;
+    }
+    
+    .attempts {
+      text-align: left;
+      font-size: 15px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 15px;
+      font-weight: 500;
+      background: #f0f0f0;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+      float: left;
+    }
+    
+    .clear-float {
+      clear: both;
+    }
+    
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 14px;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #fff;
+      transition: all 0.2s;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .options button:hover {
+      background-color: #f5f5f5;
+      transform: translateX(5px);
+    }
+    
+    .options button.correct {
+      background: #e0e0e0;
+      border-color: #999;
+      color: #000;
+      font-weight: bold;
+    }
+    
+    .feedback {
+      font-weight: bold;
+      margin: 20px 0;
+      min-height: 30px;
+      font-size: 18px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .next-btn {
+      display: none;
+      margin: 25px auto 0 auto;
+      padding: 14px 32px;
+      font-size: 18px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .next-btn:hover {
+      background: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    }
+    
+    .quiz-complete {
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .quiz-complete h2 {
+      color: #000;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+    
+    .quiz-complete p {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    
+    .quiz-complete button {
+      margin: 10px;
+      padding: 14px 28px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .quiz-complete button:hover {
+      background: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    }
+    
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 10px 20px;
+      background: #666;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .back-btn:hover {
+      background: #333;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    }
+    
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 100;
+    }
+    
+    .home-btn:hover {
+      background: #000;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    }
+  </style>
+</head>
+<body>
+<h1>Network Troubleshooting & Host Services Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('networkQuiz')">Common Network Issues</button>
+  <button class="topic-btn" onclick="startQuiz('toolsQuiz')">Troubleshooting Tools & Commands</button>
+  <button class="topic-btn" onclick="startQuiz('troubleshootingProcessQuiz')">Structured Troubleshooting Process</button>
+  <button class="topic-btn" onclick="startQuiz('networkServiceQuiz')">Wired & Wireless Network Service Issues</button>
+  <button class="topic-btn" onclick="startQuiz('serverRolesQuiz')">Network Server Types & Roles</button>
+  <button class="topic-btn" onclick="startQuiz('serverAccessQuiz')">Troubleshooting Server Access</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="clear-float"></div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+        networkQuiz: [
+    {
+        question: "What is a common symptom of a damaged network cable?",
+        options: ["High CPU usage", "Intermittent connectivity", "Loud fan noise", "Blue screen errors"],
+        answer: "Intermittent connectivity"
+    },
+    {
+        question: "Which command would help diagnose a failing Network Interface Card (NIC)?",
+        options: ["ipconfig /all", "ping 127.0.0.1", "tracert google.com", "nslookup microsoft.com"],
+        answer: "ping 127.0.0.1"
+    },
+    {
+        question: "What error message typically indicates an IP conflict?",
+        options: ["'Network cable unplugged'", "'IP address is already in use'", "'DNS server not responding'", "'Limited connectivity'"],
+        answer: "'IP address is already in use'"
+    },
+    {
+        question: "What does a 'Limited connectivity' error usually indicate?",
+        options: ["The device has connected to the network but cannot reach the internet", "The network cable is completely disconnected", "The Wi-Fi is turned off", "The router is powered off"],
+        answer: "The device has connected to the network but cannot reach the internet"
+    },
+    {
+        question: "Which of the following is least likely to cause slow network transfer speeds?",
+        options: ["Network congestion", "Outdated NIC drivers", "Full hard drive", "Incorrect DNS settings"],
+        answer: "Full hard drive"
+    },
+    {
+        question: "What is the most common cause of intermittent network connectivity?",
+        options: ["Virus infection", "Insufficient RAM", "Loose cable connections", "Outdated browser"],
+        answer: "Loose cable connections"
+    },
+    {
+        question: "Which symptom would most likely indicate an incorrect gateway configuration?",
+        options: ["Cannot access local network resources", "Cannot access internet but local network works", "Cannot print to local network printer", "Cannot access shared files"],
+        answer: "Cannot access internet but local network works"
+    },
+    {
+        question: "What should you check first when you see 'SSID not found' for a wireless network?",
+        options: ["The device's wireless adapter", "The router's broadcast settings", "The device's IP configuration", "The firewall settings"],
+        answer: "The router's broadcast settings"
+    },
+    {
+        question: "What is typically the best solution for weak Wi-Fi signal strength?",
+        options: ["Change the Wi-Fi channel", "Reboot the computer", "Update network drivers", "Move closer to the access point or install a repeater"],
+        answer: "Move closer to the access point or install a repeater"
+    },
+    {
+        question: "Which tool is best for measuring network latency?",
+        options: ["ipconfig", "ping", "netstat", "tracert"],
+        answer: "ping"
+    },
+    {
+        question: "What type of cable is most commonly used for wired Ethernet connections?",
+        options: ["Coaxial", "Fiber optic", "Twisted pair (Cat5e/6)", "USB"],
+        answer: "Twisted pair (Cat5e/6)"
+    },
+    {
+        question: "How can you resolve an IP conflict on a Windows computer?",
+        options: ["Restart the computer", "Run 'ipconfig /release' and 'ipconfig /renew'", "Disable and enable the network adapter", "Update the network drivers"],
+        answer: "Run 'ipconfig /release' and 'ipconfig /renew'"
+    },
+    {
+        question: "What is the primary difference between 2.4GHz and 5GHz Wi-Fi frequencies?",
+        options: ["5GHz is always faster", "2.4GHz has better range but slower speeds, 5GHz has faster speeds but shorter range", "5GHz penetrates walls better", "2.4GHz is newer technology"],
+        answer: "2.4GHz has better range but slower speeds, 5GHz has faster speeds but shorter range"
+    },
+    {
+        question: "Which network setting would prevent a device from accessing the internet by name but not by IP address?",
+        options: ["Incorrect subnet mask", "Incorrect default gateway", "Incorrect DNS server", "Incorrect IP address"],
+        answer: "Incorrect DNS server"
+    },
+    {
+        question: "When troubleshooting network issues, what is typically the best first step?",
+        options: ["Update all network drivers", "Check physical connections and restart devices", "Run a virus scan", "Change IP configuration"],
+        answer: "Check physical connections and restart devices"
+    }
+],
+        toolsQuiz:[
+    {
+        question: "Which command would you use to verify basic network connectivity to another device?",
+        options: ["ipconfig", "nslookup", "ping", "netstat"],
+        answer: "ping"
+    },
+    {
+        question: "What does the 'tracert' command help diagnose?",
+        options: ["DNS resolution issues", "Packet loss at each hop", "Active network connections", "IP configuration conflicts"],
+        answer: "Packet loss at each hop"
+    },
+    {
+        question: "Which tool would you use to identify if a network cable is physically damaged?",
+        options: ["Wi-Fi analyzer", "Loopback plug", "Cable tester", "Pathping"],
+        answer: "Cable tester"
+    },
+    {
+        question: "What information does 'ipconfig /all' display in Windows?",
+        options: ["Active TCP connections", "DNS cache contents", "Full IP configuration details", "Network route statistics"],
+        answer: "Full IP configuration details"
+    },
+    {
+        question: "Which command is used to troubleshoot NetBIOS over TCP/IP issues?",
+        options: ["nbtstat", "nslookup", "tracert", "netstat"],
+        answer: "nbtstat"
+    },
+    {
+        question: "What is the primary purpose of a loopback plug?",
+        options: ["Test Wi-Fi signal strength", "Verify NIC functionality", "Trace cable paths", "Analyze network traffic"],
+        answer: "Verify NIC functionality"
+    },
+    {
+        question: "Which command combines features of ping and tracert?",
+        options: ["Pathping", "Nslookup", "Netstat", "Nbtstat"],
+        answer: "Pathping"
+    },
+    {
+        question: "What does 'nslookup' primarily help troubleshoot?",
+        options: ["IP conflicts", "DNS resolution failures", "Network latency", "Physical connection issues"],
+        answer: "DNS resolution failures"
+    },
+    {
+        question: "Which tool would you use to detect Wi-Fi channel interference?",
+        options: ["Cable tester", "Loopback plug", "Wi-Fi analyzer", "Pathping"],
+        answer: "Wi-Fi analyzer"
+    },
+    {
+        question: "What does 'netstat -an' display?",
+        options: ["Network interface statistics", "All active connections with numerical addresses", "Routing table information", "DNS query responses"],
+        answer: "All active connections with numerical addresses"
+    },
+    {
+        question: "Which command would you use to find the MAC address of your network card?",
+        options: ["ping localhost", "ipconfig /all", "tracert -d", "nslookup"],
+        answer: "ipconfig /all"
+    },
+    {
+        question: "What is the main advantage of 'pathping' over 'tracert'?",
+        options: ["Shows DNS names", "Provides latency and loss statistics per hop", "Works without network access", "Displays MAC addresses"],
+        answer: "Provides latency and loss statistics per hop"
+    },
+    {
+        question: "Which tool helps identify rogue wireless access points?",
+        options: ["Cable tester", "Loopback plug", "Wi-Fi analyzer", "Nbtstat"],
+        answer: "Wi-Fi analyzer"
+    },
+    {
+        question: "What does 'ping 127.0.0.1' test?",
+        options: ["Internet connectivity", "Local NIC functionality", "Default gateway response", "DNS server availability"],
+        answer: "Local NIC functionality"
+    },
+    {
+        question: "Which command would you use to view the routing table on a Linux system?",
+        options: ["ifconfig", "traceroute", "nslookup", "route"],
+        answer: "route"
+    }
+],
+        troubleshootingProcessQuiz:[
+    {
+        question: "What is the FIRST step in the structured troubleshooting process?",
+        options: [
+            "Establish a theory of cause",
+            "Identify the problem",
+            "Test the theory",
+            "Document findings"
+        ],
+        answer: "Identify the problem"
+    },
+    {
+        question: "Which activity is part of the 'Identify the problem' step?",
+        options: [
+            "Implementing a solution",
+            "Gathering information from users",
+            "Verifying full functionality",
+            "Creating documentation"
+        ],
+        answer: "Gathering information from users"
+    },
+    {
+        question: "What should you do immediately after establishing a theory of cause?",
+        options: [
+            "Document your findings",
+            "Verify full functionality",
+            "Test the theory",
+            "Implement a solution"
+        ],
+        answer: "Test the theory"
+    },
+    {
+        question: "Why is duplicating the issue important during problem identification?",
+        options: [
+            "It proves the user is incompetent",
+            "It confirms the problem exists and helps understand symptoms",
+            "It automatically fixes the issue",
+            "It satisfies documentation requirements"
+        ],
+        answer: "It confirms the problem exists and helps understand symptoms"
+    },
+    {
+        question: "What is the primary purpose of establishing a theory of cause?",
+        options: [
+            "To assign blame to someone",
+            "To create a hypothesis about what's causing the problem",
+            "To skip testing procedures",
+            "To prepare documentation"
+        ],
+        answer: "To create a hypothesis about what's causing the problem"
+    },
+    {
+        question: "Which step comes BEFORE implementing a solution?",
+        options: [
+            "Verifying full functionality",
+            "Documenting findings",
+            "Establishing a plan",
+            "Testing the theory"
+        ],
+        answer: "Establishing a plan"
+    },
+    {
+        question: "What should you do after implementing a solution?",
+        options: [
+            "Immediately document findings",
+            "Verify full functionality",
+            "Establish a new theory",
+            "Gather more information"
+        ],
+        answer: "Verify full functionality"
+    },
+    {
+        question: "Why is documenting findings the FINAL step?",
+        options: [
+            "It's the least important step",
+            "It ensures knowledge is preserved for future issues",
+            "It's required by all organizations",
+            "It helps avoid implementing solutions"
+        ],
+        answer: "It ensures knowledge is preserved for future issues"
+    },
+    {
+        question: "What is a common mistake when establishing a theory of cause?",
+        options: [
+            "Considering multiple possibilities",
+            "Jumping to conclusions without evidence",
+            "Asking too many questions",
+            "Documenting potential causes"
+        ],
+        answer: "Jumping to conclusions without evidence"
+    },
+    {
+        question: "Which activity occurs during the 'Test the theory' step?",
+        options: [
+            "Creating backup plans",
+            "Isolating variables to confirm or deny the hypothesis",
+            "Writing incident reports",
+            "Training users on solutions"
+        ],
+        answer: "Isolating variables to confirm or deny the hypothesis"
+    },
+    {
+        question: "What should you do if your initial theory is proven wrong during testing?",
+        options: [
+            "Document the failure and stop troubleshooting",
+            "Implement a solution anyway",
+            "Revise your theory or establish a new one",
+            "Blame the user for incorrect information"
+        ],
+        answer: "Revise your theory or establish a new one"
+    },
+    {
+        question: "What is the main goal of the 'Verify full functionality' step?",
+        options: [
+            "To prove the solution was expensive",
+            "To confirm the original issue is resolved and no new problems exist",
+            "To create documentation",
+            "To establish a new theory"
+        ],
+        answer: "To confirm the original issue is resolved and no new problems exist"
+    },
+    {
+        question: "Which information should be included in documentation?",
+        options: [
+            "Only the final solution",
+            "Problem description, steps taken, solution, and prevention measures",
+            "User contact information only",
+            "Hardware specifications only"
+        ],
+        answer: "Problem description, steps taken, solution, and prevention measures"
+    },
+    {
+        question: "What is the purpose of establishing a plan before implementing a solution?",
+        options: [
+            "To delay the resolution process",
+            "To ensure the solution is safe, effective, and has minimal impact",
+            "To create more documentation",
+            "To test the theory again"
+        ],
+        answer: "To ensure the solution is safe, effective, and has minimal impact"
+    },
+    {
+        question: "Which troubleshooting approach BEST describes the structured process?",
+        options: [
+            "Random trial and error",
+            "Systematic elimination of variables",
+            "Asking colleagues for solutions",
+            "Ignoring user reports"
+        ],
+        answer: "Systematic elimination of variables"
+    }
+],
+        networkServiceQuiz:[
+    {
+        question: "What is the most likely cause of a wired connection dropping intermittently?",
+        options: [
+            "Incorrect SSID",
+            "Loose cable connector",
+            "Channel overlap",
+            "DNS server failure"
+        ],
+        answer: "Loose cable connector"
+    },
+    {
+        question: "Which wireless issue is most commonly caused by microwave ovens?",
+        options: [
+            "Wrong security key",
+            "Channel overlap",
+            "Interference",
+            "Range issues"
+        ],
+        answer: "Interference"
+    },
+    {
+        question: "What symptom would you expect from a damaged network cable?",
+        options: [
+            "High latency only",
+            "Complete connection failure or intermittent drops",
+            "DNS resolution failure",
+            "DHCP assignment errors"
+        ],
+        answer: "Complete connection failure or intermittent drops"
+    },
+    {
+        question: "When a device shows 'Connected, no internet' on Wi-Fi, what is the most likely cause?",
+        options: [
+            "Incorrect port on switch",
+            "DHCP not assigning IP",
+            "Damaged cable",
+            "Loose connector"
+        ],
+        answer: "DHCP not assigning IP"
+    },
+    {
+        question: "What should you check first when a wired device can't connect to the network?",
+        options: [
+            "DNS settings",
+            "Wireless channel",
+            "Physical cable connection and port status",
+            "DHCP server logs"
+        ],
+        answer: "Physical cable connection and port status"
+    },
+    {
+        question: "Which issue would cause multiple wireless devices to suddenly lose connectivity?",
+        options: [
+            "Wrong security key on one device",
+            "Switch/router offline",
+            "Damaged cable to one device",
+            "Incorrect port on switch"
+        ],
+        answer: "Switch/router offline"
+    },
+    {
+        question: "What is the primary solution for Wi-Fi channel overlap problems?",
+        options: [
+            "Change the security key",
+            "Move the router closer",
+            "Switch to a less congested channel",
+            "Replace the antenna"
+        ],
+        answer: "Switch to a less congested channel"
+    },
+    {
+        question: "Which error message indicates a DNS resolution failure?",
+        options: [
+            "Invalid IP configuration",
+            "Network cable unplugged",
+            "Server not found / DNS probe failed",
+            "Authentication failed"
+        ],
+        answer: "Server not found / DNS probe failed"
+    },
+    {
+        question: "What is the most common cause of 'Limited connectivity' on a wired connection?",
+        options: [
+            "Wireless interference",
+            "DHCP failure",
+            "Incorrect SSID",
+            "Channel overlap"
+        ],
+        answer: "DHCP failure"
+    },
+    {
+        question: "Which physical structure most commonly causes Wi-Fi signal degradation?",
+        options: [
+            "Glass doors",
+            "Wooden furniture",
+            "Concrete/brick walls",
+            "Plastic partitions"
+        ],
+        answer: "Concrete/brick walls"
+    },
+    {
+        question: "What should you verify when a device can't obtain an IP address via DHCP?",
+        options: [
+            "Wireless channel settings",
+            "DNS server configuration",
+            "DHCP server availability and scope",
+            "Cable type (Cat5 vs Cat6)"
+        ],
+        answer: "DHCP server availability and scope"
+    },
+    {
+        question: "Which symptom would indicate an incorrect port on a network switch?",
+        options: [
+            "All devices losing connectivity",
+            "Single device unable to connect while others work",
+            "Slow speeds on all devices",
+            "DNS resolution failures"
+        ],
+        answer: "Single device unable to connect while others work"
+    },
+    {
+        question: "What is the most likely cause of a device showing 'Wrong security key' on Wi-Fi?",
+        options: [
+            "Router offline",
+            "Channel overlap",
+            "Incorrect password entered",
+            "DHCP failure"
+        ],
+        answer: "Incorrect password entered"
+    },
+    {
+        question: "Which tool would help diagnose Wi-Fi range issues?",
+        options: [
+            "Cable tester",
+            "Wi-Fi analyzer app",
+            "Loopback plug",
+            "Tracert command"
+        ],
+        answer: "Wi-Fi analyzer app"
+    },
+    {
+        question: "What is the first step in troubleshooting DNS resolution failures?",
+        options: [
+            "Replace network cable",
+            "Change wireless channel",
+            "Verify DNS server settings and connectivity",
+            "Reboot the workstation"
+        ],
+        answer: "Verify DNS server settings and connectivity"
+    }
+],
+        serverRolesQuiz:[
+    {
+        question: "What is the primary function of a file server?",
+        options: [
+            "Manages network printing queues",
+            "Hosts websites and web applications",
+            "Provides centralized storage and data sharing",
+            "Verifies user credentials"
+        ],
+        answer: "Provides centralized storage and data sharing"
+    },
+    {
+        question: "Which server type manages printer queues and handles print job processing?",
+        options: [
+            "Web server",
+            "Print server",
+            "Authentication server",
+            "Proxy server"
+        ],
+        answer: "Print server"
+    },
+    {
+        question: "What protocol would an authentication server most likely use for centralized credential management in a Windows environment?",
+        options: [
+            "HTTP",
+            "DHCP",
+            "Active Directory",
+            "SMTP"
+        ],
+        answer: "Active Directory"
+    },
+    {
+        question: "Which server type is responsible for hosting websites and serving web pages to clients?",
+        options: [
+            "File server",
+            "Web server",
+            "DNS server",
+            "Mail server"
+        ],
+        answer: "Web server"
+    },
+    {
+        question: "What is the primary role of a DNS server?",
+        options: [
+            "Assigns IP addresses to devices",
+            "Translates domain names to IP addresses",
+            "Filters internet content",
+            "Stores user files"
+        ],
+        answer: "Translates domain names to IP addresses"
+    },
+    {
+        question: "Which server automatically assigns IP addresses and network configuration to clients?",
+        options: [
+            "DHCP server",
+            "Proxy server",
+            "Authentication server",
+            "Web server"
+        ],
+        answer: "DHCP server"
+    },
+    {
+        question: "What is the main purpose of a proxy server?",
+        options: [
+            "Hosts email services",
+            "Acts as an intermediary for client requests",
+            "Manages network printing",
+            "Provides file storage"
+        ],
+        answer: "Acts as an intermediary for client requests"
+    },
+    {
+        question: "Which server type handles email transmission, storage, and retrieval?",
+        options: [
+            "Web server",
+            "DNS server",
+            "Mail server",
+            "Print server"
+        ],
+        answer: "Mail server"
+    },
+    {
+        question: "Which authentication protocol is commonly used for network access control and VPN authentication?",
+        options: [
+            "FTP",
+            "RADIUS",
+            "HTTP",
+            "SNMP"
+        ],
+        answer: "RADIUS"
+    },
+    {
+        question: "What would be the best server solution for a company needing to store shared documents and provide access to multiple departments?",
+        options: [
+            "Web server",
+            "File server",
+            "Proxy server",
+            "DHCP server"
+        ],
+        answer: "File server"
+    },
+    {
+        question: "Which server would you configure to manage multiple printers and balance print jobs across them?",
+        options: [
+            "Print server",
+            "Mail server",
+            "Authentication server",
+            "DNS server"
+        ],
+        answer: "Print server"
+    },
+    {
+        question: "What protocol is commonly used by directory services for authentication and lookup operations?",
+        options: [
+            "LDAP",
+            "SMTP",
+            "FTP",
+            "DHCP"
+        ],
+        answer: "LDAP"
+    },
+    {
+        question: "Which server type would you implement to improve security by filtering web content and caching frequently accessed pages?",
+        options: [
+            "Mail server",
+            "Proxy server",
+            "File server",
+            "DHCP server"
+        ],
+        answer: "Proxy server"
+    },
+    {
+        question: "What is a key advantage of using centralized authentication servers like Active Directory?",
+        options: [
+            "Faster web hosting",
+            "Improved print quality",
+            "Simplified user management and single sign-on",
+            "Increased file storage capacity"
+        ],
+        answer: "Simplified user management and single sign-on"
+    },
+    {
+        question: "Which server combination would be most essential for setting up a basic network infrastructure?",
+        options: [
+            "Web server and print server",
+            "File server and mail server",
+            "DNS server and DHCP server",
+            "Proxy server and authentication server"
+        ],
+        answer: "DNS server and DHCP server"
+    }
+],
+        serverAccessQuiz:[
+    {
+        question: "What is the most common cause when users can't connect to a file share?",
+        options: [
+            "Printer driver issues",
+            "DNS server failure",
+            "Permission settings or incorrect network path",
+            "Authentication server overload"
+        ],
+        answer: "Permission settings or incorrect network path"
+    },
+    {
+        question: "Which command would help verify if a file server is reachable at the IP level?",
+        options: [
+            "nslookup",
+            "netstat",
+            "ping",
+            "tracert"
+        ],
+        answer: "ping"
+    },
+    {
+        question: "What should you check first when a network printer isn't showing up in the available printers list?",
+        options: [
+            "User login credentials",
+            "Print server status and connectivity",
+            "Website DNS settings",
+            "File share permissions"
+        ],
+        answer: "Print server status and connectivity"
+    },
+    {
+        question: "Which error message typically indicates an authentication server problem?",
+        options: [
+            "'Printer driver is missing'",
+            "'Network path not found'",
+            "'Logon failure: unknown user name or bad password'",
+            "'DNS server not responding'"
+        ],
+        answer: "'Logon failure: unknown user name or bad password'"
+    },
+    {
+        question: "What is the most likely cause when a website is inaccessible by name but works with its IP address?",
+        options: [
+            "HTTP/HTTPS ports blocked",
+            "Print server offline",
+            "File share permissions",
+            "DNS resolution failure"
+        ],
+        answer: "DNS resolution failure"
+    },
+    {
+        question: "Which tool would you use to check if HTTP/HTTPS ports are being blocked?",
+        options: [
+            "ipconfig",
+            "telnet or port scanner",
+            "net use",
+            "ping"
+        ],
+        answer: "telnet or port scanner"
+    },
+    {
+        question: "What does 'Error 5: Access is denied' indicate when accessing a file share?",
+        options: [
+            "Incorrect IP address",
+            "Authentication server down",
+            "Permission restrictions on the share",
+            "Print driver missing"
+        ],
+        answer: "Permission restrictions on the share"
+    },
+    {
+        question: "Which step should you take first when users report login failures?",
+        options: [
+            "Check printer drivers",
+            "Verify authentication server status",
+            "Test file share connectivity",
+            "Check website DNS settings"
+        ],
+        answer: "Verify authentication server status"
+    },
+    {
+        question: "What is the primary purpose of the 'net use' command in Windows?",
+        options: [
+            "Test network connectivity",
+            "Map network drives to file shares",
+            "Check printer status",
+            "Verify DNS resolution"
+        ],
+        answer: "Map network drives to file shares"
+    },
+    {
+        question: "Which symptom would most likely indicate a print driver issue?",
+        options: [
+            "Printer appears offline",
+            "Printer shows but documents fail to print",
+            "Cannot browse to printer share",
+            "Authentication prompt for printer access"
+        ],
+        answer: "Printer shows but documents fail to print"
+    },
+    {
+        question: "What should you check when users can access a file share by IP but not by server name?",
+        options: [
+            "Printer queue status",
+            "HTTP port settings",
+            "DNS name resolution",
+            "Authentication server logs"
+        ],
+        answer: "DNS name resolution"
+    },
+    {
+        question: "Which protocol must be allowed through firewalls for website access?",
+        options: [
+            "SMB/CIFS",
+            "IPP (Internet Printing Protocol)",
+            "HTTP/HTTPS",
+            "LDAP"
+        ],
+        answer: "HTTP/HTTPS"
+    },
+    {
+        question: "What is a common solution for 'The network path was not found' error when accessing a file share?",
+        options: [
+            "Update print drivers",
+            "Check server name spelling and DNS resolution",
+            "Reboot authentication server",
+            "Change website port settings"
+        ],
+        answer: "Check server name spelling and DNS resolution"
+    },
+    {
+        question: "Which scenario would cause a 'Printer not found' error even when the print server is online?",
+        options: [
+            "Incorrect user credentials",
+            "DNS server failure",
+            "Printer driver corruption or missing",
+            "HTTP ports blocked"
+        ],
+        answer: "Printer driver corruption or missing"
+    },
+    {
+        question: "What is the most effective way to test if an authentication server is functioning properly?",
+        options: [
+            "Ping the server IP",
+            "Attempt to log in with known good credentials",
+            "Check file share permissions",
+            "Test website access"
+        ],
+        answer: "Attempt to log in with known good credentials"
+    }
+]
+};
+let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('feedback').style.backgroundColor = "transparent";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "white";
+        feedback.style.backgroundColor = "rgba(100, 100, 100, 0.8)";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="clear-float"></div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'networkQuiz': 'Common Network Issues',
+        'toolsQuiz': 'Troubleshooting Tools & Commands',
+        'troubleshootingProcessQuiz': 'Structured Troubleshooting Process',
+        'networkServiceQuiz': 'Wired & Wireless Network Service Issues',
+        'serverRolesQuiz': 'Network Server Types & Roles',
+        'serverAccessQuiz': 'Troubleshooting Server Access'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
