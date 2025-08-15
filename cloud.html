@@ -319,6 +319,7 @@
   <button class="topic-btn btn-deployment" onclick="startQuiz('deploymentModels')">Deployment Models</button>
   <button class="topic-btn btn-azure" onclick="startQuiz('azure')">Azure</button>
   <button class="topic-btn btn-storage" onclick="startQuiz('cloudStorage')">Cloud Storage</button>
+  <button class="topic-btn btn-storage" onclick="startQuiz('cloudSecurityQuiz')">cloudSecurit</button>
 </div>
 <div class="quiz-container" id="quizBox">
   <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
@@ -471,6 +472,208 @@
                 answer: "The customer is responsible for backing up their data"
             }
         ],
+  cloudSecurityQuiz :[
+  {
+    question: "What is the primary concept of the Shared Responsibility Model in cloud computing?",
+    options: [
+      "Cloud providers handle all security aspects",
+      "Customers manage all infrastructure security",
+      "Security responsibilities are divided between provider and customer",
+      "Third-party auditors manage all compliance"
+    ],
+    answer: "Security responsibilities are divided between provider and customer"
+  },
+  {
+    question: "Which security responsibility typically belongs to the cloud provider in IaaS?",
+    options: [
+      "Application security",
+      "Identity management",
+      "Physical security of data centers",
+      "Data encryption"
+    ],
+    answer: "Physical security of data centers"
+  },
+  {
+    question: "What is the primary purpose of Identity and Access Management (IAM) in cloud services?",
+    options: [
+      "Data backup automation",
+      "Network configuration",
+      "Managing user permissions and access to resources",
+      "Software deployment"
+    ],
+    answer: "Managing user permissions and access to resources"
+  },
+  {
+    question: "Which IAM principle ensures users only have the minimum permissions necessary to perform their job?",
+    options: [
+      "Single sign-on",
+      "Role-based access control",
+      "Least privilege",
+      "Multi-factor authentication"
+    ],
+    answer: "Least privilege"
+  },
+  {
+    question: "What does Multi-factor Authentication (MFA) add to the authentication process?",
+    options: [
+      "Faster login times",
+      "Additional verification beyond username/password",
+      "Automatic password resets",
+      "Biometric data storage"
+    ],
+    answer: "Additional verification beyond username/password"
+  },
+  {
+    question: "Which of these is NOT typically used as an MFA factor?",
+    options: [
+      "Something you know (password)",
+      "Something you have (token)",
+      "Something you are (biometric)",
+      "Something you own (device location)"
+    ],
+    answer: "Something you own (device location)"
+  },
+  {
+    question: "What is the primary focus of GDPR (General Data Protection Regulation)?",
+    options: [
+      "Data center security standards",
+      "Protection of personal data and privacy for EU citizens",
+      "Cloud service provider certifications",
+      "Network encryption protocols"
+    ],
+    answer: "Protection of personal data and privacy for EU citizens"
+  },
+  {
+    question: "Which regulation specifically protects health information in the United States?",
+    options: [
+      "GDPR",
+      "PCI DSS",
+      "HIPAA",
+      "SOX"
+    ],
+    answer: "HIPAA"
+  },
+  {
+    question: "What is a key requirement of HIPAA for cloud services handling healthcare data?",
+    options: [
+      "Data must be stored within EU borders",
+      "Business Associate Agreements (BAAs) must be signed",
+      "All data must be encrypted at rest and in transit",
+      "Annual security audits are mandatory"
+    ],
+    answer: "Business Associate Agreements (BAAs) must be signed"
+  },
+  {
+    question: "What is the primary purpose of cloud monitoring and logging?",
+    options: [
+      "Reducing storage costs",
+    "Detecting and responding to security threats",
+    "Automating software deployment",
+    "Managing user identities"
+    ],
+    answer: "Detecting and responding to security threats"
+  },
+  {
+    question: "Which of these is a key component of cloud logging?",
+    options: [
+      "Real-time performance optimization",
+    "Recording events and activities for auditing",
+    "Automated data backups",
+    "User interface customization"
+    ],
+    answer: "Recording events and activities for auditing"
+  },
+  {
+    question: "In the Shared Responsibility Model, who is typically responsible for patching operating systems in PaaS?",
+    options: [
+      "Cloud provider",
+    "Customer",
+    "Third-party vendor",
+    "Shared equally"
+    ],
+    answer: "Cloud provider"
+  },
+  {
+    question: "What is a common IAM best practice for cloud environments?",
+    options: [
+      "Using root accounts for daily tasks",
+    "Sharing credentials among team members",
+    "Rotating access keys regularly",
+    "Disabling logging for simplicity"
+    ],
+    answer: "Rotating access keys regularly"
+  },
+  {
+    question: "Which MFA method is considered most secure against phishing attacks?",
+    options: [
+      "SMS codes",
+    "Email verification",
+    "Authenticator apps",
+    "Security questions"
+    ],
+    answer: "Authenticator apps"
+  },
+  {
+    question: "What is a key requirement of GDPR regarding data breaches?",
+    options: [
+      "Breaches must be reported within 30 days",
+    "Breaches must be reported within 72 hours",
+    "Only large breaches need to be reported",
+    "Breaches only need to be reported to affected customers"
+    ],
+    answer: "Breaches must be reported within 72 hours"
+  },
+  {
+    question: "Which HIPAA rule specifically addresses the security of electronic health information?",
+    options: [
+      "Privacy Rule",
+    "Security Rule",
+    "Breach Notification Rule",
+    "Enforcement Rule"
+    ],
+    answer: "Security Rule"
+  },
+  {
+    question: "What is a key benefit of centralized cloud logging?",
+    options: [
+      "Eliminates the need for security monitoring",
+    "Provides a unified view of activities across services",
+    "Reduces network bandwidth usage",
+    "Automatically patches vulnerabilities"
+    ],
+    answer: "Provides a unified view of activities across services"
+  },
+  {
+    question: "In the Shared Responsibility Model, who is responsible for data encryption in SaaS?",
+    options: [
+      "Cloud provider only",
+    "Customer only",
+    "Shared responsibility",
+    "Third-party auditor"
+    ],
+    answer: "Shared responsibility"
+  },
+  {
+    question: "What is the primary purpose of conditional access in IAM?",
+    options: [
+      "To automatically create user accounts",
+    "To enforce access policies based on specific conditions",
+    "To reduce licensing costs",
+    "To simplify password requirements"
+    ],
+    answer: "To enforce access policies based on specific conditions"
+  },
+  {
+    question: "Which logging practice is essential for forensic investigations after a security incident?",
+    options: [
+      "Deleting logs after 30 days",
+    "Storing logs in the same region as resources",
+    "Immutable (write-once) log storage",
+    "Compressing logs to save space"
+    ],
+    answer: "Immutable (write-once) log storage"
+  }
+],
         paas: [
             {
                 question: "What does PaaS stand for?",
