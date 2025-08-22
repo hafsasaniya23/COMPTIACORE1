@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IT Specialist Role & Troubleshooting Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.topic-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #90EE90;
+      border-color: #32CD32;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #1E90FF;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF8C00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #FF6347;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #9932CC;
+    }
+  </style>
+</head>
+<body>
+<h1>IT Specialist Role & Troubleshooting Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('PowerIssues')">Power Issues</button>
+  <button class="topic-btn" onclick="startQuiz('HardwareFailures')">Hardware Failures</button>
+  <button class="topic-btn" onclick="startQuiz('ScreenIssues')">Screen Issues</button>
+  <button class="topic-btn" onclick="startQuiz('ConnectivityProblems')">Connectivity Problems</button>
+  <button class="topic-btn" onclick="startQuiz('MalwareSecurity')"> MalwareSecurity</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+       PowerIssues:[
+    {
+        question: "What is the most common reason a mobile device will not power on?",
+        options: ["Dead battery", "Faulty SIM card", "Corrupted app", "Full storage"],
+        answer: "Dead battery"
+    },
+    {
+        question: "If a device does not power on after charging, what should you check first?",
+        options: ["Check the display brightness", "Check charger, cable, and power source", "Check mobile data connection", "Check Bluetooth settings"],
+        answer: "Check charger, cable, and power source"
+    },
+    {
+        question: "Which symptom indicates a battery may need replacement?",
+        options: ["Screen flickering", "Swollen battery", "Wi-Fi dropping", "Slow performance"],
+        answer: "Swollen battery"
+    },
+    {
+        question: "What can cause a mobile device battery to overheat?",
+        options: ["Too many notifications", "Background apps", "Faulty charging components or high temperature environment", "Airplane mode"],
+        answer: "Faulty charging components or high temperature environment"
+    },
+    {
+        question: "What is a safe first step if a mobile device overheats?",
+        options: ["Put it in the freezer", "Turn it off and remove it from heat source", "Install a cooling app", "Replace the SIM card"],
+        answer: "Turn it off and remove it from heat source"
+    },
+    {
+        question: "If a phone's battery life is unusually short, which of the following may be the cause?",
+        options: ["Background apps consuming power", "Good Wi-Fi connection", "Clean storage", "Updated OS"],
+        answer: "Background apps consuming power"
+    },
+    {
+        question: "Which troubleshooting step should you try if a mobile device is unresponsive?",
+        options: ["Install new apps", "Hard reset / force restart", "Format SD card", "Enable airplane mode"],
+        answer: "Hard reset / force restart"
+    },
+    {
+        question: "Why should you avoid using a swollen battery?",
+        options: ["It reduces brightness", "It can be a safety hazard and may explode", "It disables Wi-Fi", "It slows down apps"],
+        answer: "It can be a safety hazard and may explode"
+    },
+    {
+        question: "If a phone does not charge even with a good cable and charger, what should you check?",
+        options: ["Charging port for dust/debris", "Wallpaper settings", "Volume buttons", "SIM tray"],
+        answer: "Charging port for dust/debris"
+    },
+    {
+        question: "Which power issue symptom can indicate a failing battery?",
+        options: ["Overheating during charging", "App crashes", "Bluetooth disconnects", "Camera errors"],
+        answer: "Overheating during charging"
+    },
+    {
+        question: "What should you do before replacing a mobile device battery?",
+        options: ["Update the OS", "Turn off and disconnect from power", "Install antivirus", "Remove the SIM card"],
+        answer: "Turn off and disconnect from power"
+    },
+    {
+        question: "Why might a device fail to power on even with a full battery?",
+        options: ["Faulty power button or motherboard issue", "Outdated contacts app", "Weak Wi-Fi signal", "Too many photos"],
+        answer: "Faulty power button or motherboard issue"
+    },
+    {
+        question: "What is the purpose of booting into Safe Mode during troubleshooting?",
+        options: ["To charge faster", "To disable third-party apps that may cause power issues", "To increase brightness", "To reset network settings"],
+        answer: "To disable third-party apps that may cause power issues"
+    },
+    {
+        question: "Which of these is a common symptom of a bad charging cable?",
+        options: ["Device charges intermittently", "Screen turns blue", "Bluetooth disconnects", "Keyboard not responding"],
+        answer: "Device charges intermittently"
+    },
+    {
+        question: "How can you verify if the wall adapter is causing charging issues?",
+        options: ["Try a different wall adapter", "Update device software", "Check SIM card", "Clear browser cache"],
+        answer: "Try a different wall adapter"
+    },
+    {
+        question: "Which condition may shorten battery lifespan?",
+        options: ["Leaving device on charge overnight occasionally", "Consistent overheating", "Low storage space", "Using Wi-Fi too often"],
+        answer: "Consistent overheating"
+    },
+    {
+        question: "What should you do if a device continues to overheat after troubleshooting?",
+        options: ["Ignore it", "Stop using the device and replace the battery or hardware", "Switch to airplane mode", "Lower brightness"],
+        answer: "Stop using the device and replace the battery or hardware"
+    },
+    {
+        question: "What is a possible reason a device powers off randomly?",
+        options: ["Faulty or weak battery", "Outdated wallpaper", "Too many ringtones", "Disabled notifications"],
+        answer: "Faulty or weak battery"
+    },
+    {
+        question: "What is the first step if a customer complains their phone doesn't power on at all?",
+        options: ["Check if the battery is charged", "Replace the motherboard", "Install an app", "Replace the SIM card"],
+        answer: "Check if the battery is charged"
+    },
+    {
+        question: "What is the recommended solution for a battery that no longer holds a charge?",
+        options: ["Reinstall the OS", "Replace the battery", "Clean the screen", "Replace the SIM card"],
+        answer: "Replace the battery"
+    }
+  ],
+HardwareFailures:[
+    {
+        question: "What is a common symptom of a failing power button on a mobile device?",
+        options: ["Device does not respond to pressing the power button", "Device won't connect to Wi-Fi", "Device randomly restarts", "Device vibrates excessively"],
+        answer: "Device does not respond to pressing the power button"
+    },
+    {
+        question: "If volume buttons stop working, what should you check first?",
+        options: ["Physical damage or debris in the button", "Battery charge", "Wallpaper settings", "Bluetooth pairing"],
+        answer: "Physical damage or debris in the button"
+    },
+    {
+        question: "What is the most likely issue if a mobile camera app does not launch?",
+        options: ["Camera hardware failure or corrupted app", "Outdated ringtone", "Disabled Wi-Fi", "Overheating battery"],
+        answer: "Camera hardware failure or corrupted app"
+    },
+    {
+        question: "Which symptom indicates a failing mobile camera?",
+        options: ["Blurry or distorted images", "Phone won't charge", "Device won't boot", "Screen flickering"],
+        answer: "Blurry or distorted images"
+    },
+    {
+        question: "If a microphone is not working, what's a good first troubleshooting step?",
+        options: ["Check microphone openings for dust or debris", "Replace the screen", "Update wallpaper", "Enable airplane mode"],
+        answer: "Check microphone openings for dust or debris"
+    },
+    {
+        question: "What is a common symptom of failing mobile speakers?",
+        options: ["No sound or distorted sound during calls/media", "Blurry images", "Overheating", "Random shutdowns"],
+        answer: "No sound or distorted sound during calls/media"
+    },
+    {
+        question: "Which sensor failure could prevent screen auto-rotation?",
+        options: ["Accelerometer", "Fingerprint sensor", "Microphone", "Camera sensor"],
+        answer: "Accelerometer"
+    },
+    {
+        question: "If a fingerprint sensor fails repeatedly, what should you try first?",
+        options: ["Re-register fingerprints and clean the sensor", "Replace SIM card", "Update wallpaper", "Disable Bluetooth"],
+        answer: "Re-register fingerprints and clean the sensor"
+    },
+    {
+        question: "Which built-in tool can help diagnose hardware failures on Android devices?",
+        options: ["Dialing specific test codes", "Clearing cache", "Changing themes", "Installing wallpapers"],
+        answer: "Dialing specific test codes"
+    },
+    {
+        question: "How can you access diagnostic tools on many iOS devices?",
+        options: ["Use built-in diagnostics or Apple's support tools", "Replace the battery", "Install Android apps", "Change wallpaper"],
+        answer: "Use built-in diagnostics or Apple's support tools"
+    },
+    {
+        question: "Which type of app can help test sensors like accelerometers and gyroscopes?",
+        options: ["External diagnostic apps", "Music streaming apps", "Wallpaper apps", "Messaging apps"],
+        answer: "External diagnostic apps"
+    },
+    {
+        question: "If a camera produces blurry images after cleaning the lens, what's the likely cause?",
+        options: ["Camera module hardware failure", "Corrupted ringtone", "Bluetooth interference", "Battery overheating"],
+        answer: "Camera module hardware failure"
+    },
+    {
+        question: "When should you recommend replacing the entire device instead of repairing?",
+        options: ["When repair cost is higher than device value", "When wallpaper cannot be changed", "When ringtones stop working", "When device storage is full"],
+        answer: "When repair cost is higher than device value"
+    },
+    {
+        question: "What should you check if a proximity sensor fails to turn off the screen during calls?",
+        options: ["Sensor calibration and cleanliness", "Wi-Fi password", "SIM tray", "Airplane mode"],
+        answer: "Sensor calibration and cleanliness"
+    },
+    {
+        question: "If a customer's home button is not working, what is a temporary workaround?",
+        options: ["Enable on-screen navigation buttons", "Replace the SIM card", "Update the OS", "Use headphone buttons"],
+        answer: "Enable on-screen navigation buttons"
+    },
+    {
+        question: "Which failure may cause users to hear echo during calls?",
+        options: ["Microphone or speaker malfunction", "Low battery", "Faulty SIM card", "Outdated OS"],
+        answer: "Microphone or speaker malfunction"
+    },
+    {
+        question: "What is the best practice before recommending hardware replacement?",
+        options: ["Test with built-in or external diagnostic tools", "Change the device wallpaper", "Clear call history", "Update ringtones"],
+        answer: "Test with built-in or external diagnostic tools"
+    },
+    {
+        question: "If a mobile speaker works with headphones but not without, what is most likely failing?",
+        options: ["Built-in speaker hardware", "Bluetooth driver", "Microphone", "Display backlight"],
+        answer: "Built-in speaker hardware"
+    },
+    {
+        question: "Which sensor issue could prevent a device from waking up with face unlock?",
+        options: ["Front camera or proximity sensor failure", "Accelerometer issue", "Fingerprint mismatch", "Weak Wi-Fi"],
+        answer: "Front camera or proximity sensor failure"
+    },
+    {
+        question: "What is an important factor in deciding between repair or replacement?",
+        options: ["Device age and repair cost compared to replacement", "Wallpaper preference", "Number of ringtones installed", "Wi-Fi speed"],
+        answer: "Device age and repair cost compared to replacement"
+    }
+],
+  ScreenIssues :[
+    {
+        question: "What is the best description of a dead pixel on a mobile display?",
+        options: ["A pixel that stays black or fixed in one color", "A flickering entire screen", "The touchscreen not responding", "The device not powering on"],
+        answer: "A pixel that stays black or fixed in one color"
+    },
+    {
+        question: "What are ghost touches?",
+        options: ["Unintended touches registered on the screen", "Dead pixels", "Screen flickering", "Loss of backlight"],
+        answer: "Unintended touches registered on the screen"
+    },
+    {
+        question: "What is the most likely issue if the screen is cracked and unresponsive?",
+        options: ["Damaged digitizer", "Faulty SIM card", "Low battery", "Corrupted ringtone"],
+        answer: "Damaged digitizer"
+    },
+    {
+        question: "Which symptom may indicate a loose display connector?",
+        options: ["Screen flickering or discoloration", "Bluetooth disconnecting", "Wi-Fi not working", "Camera blurry"],
+        answer: "Screen flickering or discoloration"
+    },
+    {
+        question: "What should you check first if a screen appears too dark to see?",
+        options: ["Brightness settings", "SIM tray", "Ringtone settings", "Microphone input"],
+        answer: "Brightness settings"
+    },
+    {
+        question: "Which issue is often resolved by screen calibration?",
+        options: ["Touch not responding correctly", "Dead pixels", "Battery overheating", "Bluetooth error"],
+        answer: "Touch not responding correctly"
+    },
+    {
+        question: "How can you test if a third-party app is causing screen issues?",
+        options: ["Boot the device in Safe Mode", "Replace the battery", "Format the SIM card", "Change wallpaper"],
+        answer: "Boot the device in Safe Mode"
+    },
+    {
+        question: "What does a discolored patch on the screen usually indicate?",
+        options: ["Damaged LCD or display connector", "Low ringtone", "Full storage", "Disabled GPS"],
+        answer: "Damaged LCD or display connector"
+    },
+    {
+        question: "If only part of the touchscreen responds, what is most likely failing?",
+        options: ["Digitizer", "Battery", "SIM card", "Camera"],
+        answer: "Digitizer"
+    },
+    {
+        question: "When should a display be replaced instead of repairing connectors?",
+        options: ["When the glass is cracked or digitizer is damaged", "When Wi-Fi is weak", "When SIM is faulty", "When ringtone doesn't play"],
+        answer: "When the glass is cracked or digitizer is damaged"
+    },
+    {
+        question: "What tool is useful to remove dust before reseating display connectors?",
+        options: ["Compressed air or soft brush", "SIM ejector", "Magnet", "Paper clip"],
+        answer: "Compressed air or soft brush"
+    },
+    {
+        question: "What is a temporary solution for a cracked but still functional screen?",
+        options: ["Apply a screen protector or tape until replacement", "Update the OS", "Disable Wi-Fi", "Clear storage"],
+        answer: "Apply a screen protector or tape until replacement"
+    },
+    {
+        question: "What is the best way to confirm if flickering is hardware or software related?",
+        options: ["Test in Safe Mode", "Replace the SIM", "Reset Wi-Fi", "Install ringtones"],
+        answer: "Test in Safe Mode"
+    },
+    {
+        question: "What failure can cause vertical or horizontal lines on the screen?",
+        options: ["Loose display connector or failing LCD", "Corrupted ringtone", "Weak Bluetooth", "Battery draining"],
+        answer: "Loose display connector or failing LCD"
+    },
+    {
+        question: "Which symptom would most likely require a full screen replacement?",
+        options: ["Cracked glass with unresponsive touch", "Dust in charging port", "Low speaker volume", "Disabled Bluetooth"],
+        answer: "Cracked glass with unresponsive touch"
+    },
+    {
+        question: "What is the best practice before replacing a screen?",
+        options: ["Power off and disconnect the battery", "Update the OS", "Remove SIM card", "Check Wi-Fi password"],
+        answer: "Power off and disconnect the battery"
+    },
+    {
+        question: "Why is using manufacturer-approved replacement screens recommended?",
+        options: ["Ensures compatibility and quality", "Makes Wi-Fi stronger", "Improves battery life", "Reduces ringtone volume"],
+        answer: "Ensures compatibility and quality"
+    },
+    {
+        question: "If a touchscreen is unresponsive after replacement, what should be checked?",
+        options: ["Connector seating and cable damage", "Bluetooth settings", "Wallpaper", "Microphone input"],
+        answer: "Connector seating and cable damage"
+    },
+    {
+        question: "What condition can cause screen burn-in?",
+        options: ["Leaving static images displayed for long periods", "Low battery", "Bluetooth enabled", "High ringtone volume"],
+        answer: "Leaving static images displayed for long periods"
+    },
+    {
+        question: "What's the main difference between a connector issue and a damaged display?",
+        options: ["Connector issues may cause intermittent display, damaged display causes permanent faults", "Connector issues affect Wi-Fi only", "Damaged display fixes itself", "Connector issues drain battery"],
+        answer: "Connector issues may cause intermittent display, damaged display causes permanent faults"
+    }
+],
+ConnectivityProblems: [
+    {
+        question: "What is the first step to try when a phone cannot connect to Wi-Fi?",
+        options: ["Replace SIM card", "Toggle Airplane Mode", "Increase brightness", "Reinstall OS"],
+        answer: "Toggle Airplane Mode"
+    },
+    {
+        question: "What can cause weak Wi-Fi signal in certain rooms?",
+        options: ["Microwave interference or thick walls", "Faulty SIM card", "Damaged camera", "Low storage"],
+        answer: "Microwave interference or thick walls"
+    },
+    {
+        question: "Which step often resolves Bluetooth pairing failures?",
+        options: ["Reboot and re-pair the device", "Replace SIM card", "Increase brightness", "Clear storage"],
+        answer: "Reboot and re-pair the device"
+    },
+    {
+        question: "Why might GPS be inaccurate indoors?",
+        options: ["Weak satellite signals blocked by structures", "Dead pixels on screen", "Low battery", "Corrupted SIM"],
+        answer: "Weak satellite signals blocked by structures"
+    },
+    {
+        question: "Which setting disables Wi-Fi, Bluetooth, and cellular connections at once?",
+        options: ["Airplane Mode", "Safe Mode", "Battery Saver", "Do Not Disturb"],
+        answer: "Airplane Mode"
+    },
+    {
+        question: "What should be checked first if a phone displays 'No SIM Card'?",
+        options: ["SIM card seating in the tray", "Wi-Fi password", "Bluetooth pairing", "Screen calibration"],
+        answer: "SIM card seating in the tray"
+    },
+    {
+        question: "A user can use mobile data but cannot make phone calls. Which setting should you check?",
+        options: ["Carrier and call settings", "Bluetooth settings", "Wallpaper", "Brightness"],
+        answer: "Carrier and call settings"
+    },
+    {
+        question: "What does 'Emergency Calls Only' usually indicate?",
+        options: ["SIM not activated or no carrier network", "Weak Wi-Fi signal", "Low storage", "Faulty speaker"],
+        answer: "SIM not activated or no carrier network"
+    },
+    {
+        question: "What should travelers check if they lose mobile service abroad?",
+        options: ["International roaming settings", "Wallpaper", "Bluetooth mode", "Screen protector"],
+        answer: "International roaming settings"
+    },
+    {
+        question: "What is a likely cause of frequent cellular signal drops?",
+        options: ["Distance from tower or network congestion", "Low ringtone volume", "Dirty charging port", "Full storage"],
+        answer: "Distance from tower or network congestion"
+    },
+    {
+        question: "Which step can often fix Wi-Fi disconnections?",
+        options: ["Forget and reconnect to the network", "Reset ringtone", "Clean SIM tray", "Update wallpaper"],
+        answer: "Forget and reconnect to the network"
+    },
+    {
+        question: "What is the next step if Bluetooth issues persist after a restart?",
+        options: ["Check Bluetooth version compatibility", "Replace SIM", "Factory reset device", "Change theme"],
+        answer: "Check Bluetooth version compatibility"
+    },
+    {
+        question: "Which option restores Wi-Fi, Bluetooth, and cellular without erasing data?",
+        options: ["Reset network settings", "Replace SIM card", "Enable dark mode", "Update ringtone"],
+        answer: "Reset network settings"
+    },
+    {
+        question: "What is the term for GPS errors in cities with tall buildings?",
+        options: ["Multipath interference", "Screen flickering", "Low storage", "Dead pixels"],
+        answer: "Multipath interference"
+    },
+    {
+        question: "What causes a phone to lose signal inside concrete buildings?",
+        options: ["Physical interference", "Bluetooth disabled", "Corrupted wallpaper", "Dead battery"],
+        answer: "Physical interference"
+    },
+    {
+        question: "If Wi-Fi works on a laptop but not on a phone, what should you try first?",
+        options: ["Forget and reconnect Wi-Fi on the phone", "Replace router", "Replace SIM card", "Clean screen"],
+        answer: "Forget and reconnect Wi-Fi on the phone"
+    },
+    {
+        question: "What should be tested if a phone repeatedly shows SIM card errors?",
+        options: ["Try another SIM in the phone", "Change ringtone", "Update wallpaper", "Adjust brightness"],
+        answer: "Try another SIM in the phone"
+    },
+    {
+        question: "What is the most likely cause if Bluetooth audio cuts out when moving away from the phone?",
+        options: ["Out of Bluetooth range or interference", "SIM not activated", "Screen flickering", "Dead pixel"],
+        answer: "Out of Bluetooth range or interference"
+    },
+    {
+        question: "A user cannot connect to home Wi-Fi but can at cafés. What does this suggest?",
+        options: ["Home router issue", "SIM card damage", "Phone hardware failure", "GPS inaccuracy"],
+        answer: "Home router issue"
+    },
+    {
+        question: "After an update, a phone cannot connect to mobile data. What should be reset?",
+        options: ["APN (Access Point Name) settings", "Wallpaper", "Display brightness", "Bluetooth"],
+        answer: "APN (Access Point Name) settings"
+    }
+],
+MalwareSecurity:[
+    {
+        question: "Which symptom is commonly associated with malware on a mobile device?",
+        options: ["Slow performance and overheating", "Cracked screen", "Dead pixels", "Loose SIM tray"],
+        answer: "Slow performance and overheating"
+    },
+    {
+        question: "What do frequent pop-ups on a device usually indicate?",
+        options: ["Adware infection", "Weak Wi-Fi", "Damaged speaker", "Low battery"],
+        answer: "Adware infection"
+    },
+    {
+        question: "Why might malware cause unusual data usage?",
+        options: ["It sends information in the background", "It reduces screen brightness", "It changes wallpapers", "It disables ringtones"],
+        answer: "It sends information in the background"
+    },
+    {
+        question: "What is a sign of unauthorized app installations?",
+        options: ["Apps appearing without user action", "Battery charging faster", "Improved performance", "Better signal strength"],
+        answer: "Apps appearing without user action"
+    },
+    {
+        question: "Which step isolates third-party apps to check if malware is present?",
+        options: ["Booting into Safe Mode", "Updating wallpaper", "Replacing SIM card", "Calibrating the screen"],
+        answer: "Booting into Safe Mode"
+    },
+    {
+        question: "Which tool helps detect and remove malware?",
+        options: ["Anti-malware apps", "SIM ejector", "Screen calibration tool", "Volume buttons"],
+        answer: "Anti-malware apps"
+    },
+    {
+        question: "When is a factory reset recommended?",
+        options: ["When malware cannot be removed by other means", "When Wi-Fi is weak", "When Bluetooth won't pair", "When the battery is low"],
+        answer: "When malware cannot be removed by other means"
+    },
+    {
+        question: "Why is downloading apps only from official app stores important?",
+        options: ["They are scanned for malware and safer", "They use less battery", "They reduce Wi-Fi interference", "They prevent cracked screens"],
+        answer: "They are scanned for malware and safer"
+    },
+    {
+        question: "What should be checked if a simple app requests microphone or camera access?",
+        options: ["App permissions", "SIM card tray", "Wallpaper settings", "Ringtone volume"],
+        answer: "App permissions"
+    },
+    {
+        question: "What can malware cause besides slow performance?",
+        options: ["Battery drain", "Screen scratches", "Bluetooth errors", "Dead pixels"],
+        answer: "Battery drain"
+    },
+    {
+        question: "Which symptom is NOT typical of malware?",
+        options: ["Ghost touches on screen", "Pop-up ads", "Overheating", "Unusual data usage"],
+        answer: "Ghost touches on screen"
+    },
+    {
+        question: "What is the safest way to remove persistent malware?",
+        options: ["Perform a factory reset", "Change wallpaper", "Replace SIM card", "Update ringtone"],
+        answer: "Perform a factory reset"
+    },
+    {
+        question: "Which feature of anti-malware apps helps protect devices in real time?",
+        options: ["Background scanning", "Changing wallpaper", "Improving screen brightness", "Lowering ringtone volume"],
+        answer: "Background scanning"
+    },
+    {
+        question: "If malware prevents normal booting, what should you try?",
+        options: ["Boot into Safe Mode", "Reinstall SIM card", "Replace the battery", "Clean the charging port"],
+        answer: "Boot into Safe Mode"
+    },
+    {
+        question: "Which action helps prevent malware infections?",
+        options: ["Avoid sideloading apps", "Use max screen brightness", "Disable airplane mode", "Clean SIM contacts"],
+        answer: "Avoid sideloading apps"
+    },
+    {
+        question: "What might cause a sudden spike in mobile data usage?",
+        options: ["Spyware transmitting user data", "Low battery", "Faulty screen", "Disabled GPS"],
+        answer: "Spyware transmitting user data"
+    },
+    {
+        question: "What is the first step if you suspect malware?",
+        options: ["Check running apps and performance", "Replace SIM card", "Adjust screen brightness", "Enable airplane mode"],
+        answer: "Check running apps and performance"
+    },
+    {
+        question: "Why should permissions be reviewed before installing apps?",
+        options: ["To avoid granting unnecessary access", "To make the screen brighter", "To fix Bluetooth issues", "To improve speaker quality"],
+        answer: "To avoid granting unnecessary access"
+    },
+    {
+        question: "What is a common effect of cryptocurrency-mining malware?",
+        options: ["Overheating and battery drain", "Weak Wi-Fi", "Blurry camera", "Dead pixels"],
+        answer: "Overheating and battery drain"
+    },
+    {
+        question: "What is the best ongoing practice to keep a device secure?",
+        options: ["Install updates and use official app stores", "Replace SIM frequently", "Reset wallpaper weekly", "Disable ringtones"],
+        answer: "Install updates and use official app stores"
+    }
+],
+  }
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'itSpecialistRole': 'Role of IT Specialist',
+        'troubleshootingMethodology': 'Troubleshooting Methodology'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
