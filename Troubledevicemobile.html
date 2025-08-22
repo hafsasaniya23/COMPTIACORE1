@@ -683,6 +683,16 @@ MalwareSecurity:[
     let currentQuestion = 0;
     let attempts = 0;
     
+    // Function to shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
     function startQuiz(topic) {
       currentTopic = topic;
       currentQuestion = 0;
@@ -705,7 +715,10 @@ MalwareSecurity:[
       const optionsDiv = document.getElementById('optionButtons');
       optionsDiv.innerHTML = "";
       
-      q.options.forEach((opt, idx) => {
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(q.options);
+      
+      shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.innerText = opt;
         btn.onclick = () => checkAnswer(opt);
@@ -782,8 +795,11 @@ MalwareSecurity:[
     
     function getTopicName(topic) {
       const topicNames = {
-        'itSpecialistRole': 'Role of IT Specialist',
-        'troubleshootingMethodology': 'Troubleshooting Methodology'
+        'PowerIssues': 'Power Issues',
+        'HardwareFailures': 'Hardware Failures',
+        'ScreenIssues': 'Screen Issues',
+        'ConnectivityProblems': 'Connectivity Problems',
+        'MalwareSecurity': 'Malware & Security'
       };
       return topicNames[topic] || topic;
     }
