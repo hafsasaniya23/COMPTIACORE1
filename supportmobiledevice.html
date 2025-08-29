@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mobile Devices Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.topic-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #90EE90;
+      border-color: #32CD32;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #1E90FF;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF8C00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #FF6347;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #9932CC;
+    }
+  </style>
+</head>
+<body>
+<h1>Mobile Devices Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('IntroRole')">Introduction & Role of Mobile Devices</button>
+  <button class="topic-btn" onclick="startQuiz('Accessories')">Mobile Device Accessories</button>
+  <button class="topic-btn" onclick="startQuiz('WiredConnections')">Wired Connections</button>
+  <button class="topic-btn" onclick="startQuiz('DockingPort')">Docking & Port Replicators</button>
+  <button class="topic-btn" onclick="startQuiz('WirelessConnectivity')">Wireless Connectivity (Wi-Fi & Bluetooth)</button>
+  <button class="topic-btn" onclick="startQuiz('TetheringHotspots')">Tethering & Mobile Hotspots</button>
+  <button class="topic-btn" onclick="startQuiz('NFCPayments')">NFC & Mobile Payments</button>
+  <button class="topic-btn" onclick="startQuiz('WrapUpBestPractices')">Wrap-Up & Best Practices</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+       IntroRole:[
+    {
+        question: "What is the primary role of mobile devices in modern computing?",
+        options: ["Portability and connectivity", "High-performance gaming", "Server management", "Data center operations"],
+        answer: "Portability and connectivity"
+    },
+    {
+        question: "Which of the following is NOT typically considered a mobile device?",
+        options: ["Desktop workstation", "Smartphone", "Tablet", "Wearable device"],
+        answer: "Desktop workstation"
+    },
+    {
+        question: "What is BYOD?",
+        options: ["Bring Your Own Device", "Buy Your Own Device", "Before You Operate Device", "Basic Yearly Operation Device"],
+        answer: "Bring Your Own Device"
+    },
+    {
+        question: "Which mobile operating system is developed by Google?",
+        options: ["Android", "iOS", "Windows Mobile", "BlackBerry OS"],
+        answer: "Android"
+    },
+    {
+        question: "What is the primary advantage of mobile devices in business environments?",
+        options: ["Increased productivity and flexibility", "Lower hardware costs", "Better security", "Longer battery life"],
+        answer: "Increased productivity and flexibility"
+    },
+    {
+        question: "Which form factor is characterized by a physical keyboard that slides out?",
+        options: ["Slider phone", "Candy bar", "Flip phone", "Phablet"],
+        answer: "Slider phone"
+    },
+    {
+        question: "What is MDM?",
+        options: ["Mobile Device Management", "Mobile Data Management", "Mobile Display Management", "Mobile Device Maintenance"],
+        answer: "Mobile Device Management"
+    },
+    {
+        question: "Which of the following is a key challenge in mobile device security?",
+        options: ["Device loss or theft", "High processing power", "Limited storage", "Large screen size"],
+        answer: "Device loss or theft"
+    },
+    {
+        question: "What is the primary function of a smartphone?",
+        options: ["Communication and computing", "Gaming only", "Data storage only", "Navigation only"],
+        answer: "Communication and computing"
+    },
+    {
+        question: "Which mobile device category includes devices like the Apple Watch and Fitbit?",
+        options: ["Wearables", "Tablets", "E-readers", "Smartphones"],
+        answer: "Wearables"
+    },
+    {
+        question: "What is the primary difference between a smartphone and a feature phone?",
+        options: ["Smartphones have advanced computing capabilities and internet connectivity", "Feature phones have larger screens", "Smartphones are more durable", "Feature phones have better cameras"],
+        answer: "Smartphones have advanced computing capabilities and internet connectivity"
+    },
+    {
+        question: "Which mobile operating system is exclusive to Apple devices?",
+        options: ["iOS", "Android", "Windows", "BlackBerry"],
+        answer: "iOS"
+    },
+    {
+        question: "What is the primary benefit of mobile device virtualization?",
+        options: ["Running multiple operating systems on a single device", "Extending battery life", "Increasing screen size", "Improving camera quality"],
+        answer: "Running multiple operating systems on a single device"
+    },
+    {
+        question: "Which of the following is a common use case for tablets?",
+        options: ["Content consumption and light productivity", "High-end gaming", "Server administration", "Video editing"],
+        answer: "Content consumption and light productivity"
+    },
+    {
+        question: "What is the primary challenge of mobile device management in enterprises?",
+        options: ["Device diversity and security", "Limited functionality", "High cost", "Short battery life"],
+        answer: "Device diversity and security"
+    },
+    {
+        question: "Which mobile device form factor is larger than a smartphone but smaller than a laptop?",
+        options: ["Tablet", "Phablet", "Wearable", "E-reader"],
+        answer: "Tablet"
+    },
+    {
+        question: "What is the primary purpose of mobile device encryption?",
+        options: ["Protecting data if the device is lost or stolen", "Increasing processing speed", "Extending battery life", "Improving signal reception"],
+        answer: "Protecting data if the device is lost or stolen"
+    },
+    {
+        question: "Which of the following is NOT a typical mobile device category?",
+        options: ["Mainframe computer", "Smartphone", "Tablet", "Wearable"],
+        answer: "Mainframe computer"
+    },
+    {
+        question: "What is the primary advantage of mobile devices for field workers?",
+        options: ["Real-time data access and communication", "Higher processing power", "Larger storage capacity", "Better graphics"],
+        answer: "Real-time data access and communication"
+    },
+    {
+        question: "Which of the following is a key characteristic of mobile computing?",
+        options: ["Mobility and wireless connectivity", "Fixed location", "Wired connections only", "Large physical size"],
+        answer: "Mobility and wireless connectivity"
+    }
+  ],
+Accessories:[
+    {
+        question: "What is the primary function of a screen protector?",
+        options: ["To protect the screen from scratches and damage", "To increase screen brightness", "To extend battery life", "To improve wireless reception"],
+        answer: "To protect the screen from scratches and damage"
+    },
+    {
+        question: "Which type of mobile device accessory allows for additional storage?",
+        options: ["Memory card", "Screen protector", "Phone case", "Car mount"],
+        answer: "Memory card"
+    },
+    {
+        question: "What is the primary purpose of a mobile device case?",
+        options: ["To protect the device from physical damage", "To increase battery life", "To improve wireless connectivity", "To enhance screen visibility"],
+        answer: "To protect the device from physical damage"
+    },
+    {
+        question: "Which accessory allows a mobile device to be charged without a cable?",
+        options: ["Wireless charger", "Power bank", "Car charger", "Wall adapter"],
+        answer: "Wireless charger"
+    },
+    {
+        question: "What is the primary function of a power bank?",
+        options: ["To provide portable power for charging devices", "To protect the screen", "To enhance audio quality", "To improve wireless reception"],
+        answer: "To provide portable power for charging devices"
+    },
+    {
+        question: "Which type of accessory is used to improve audio quality during calls?",
+        options: ["Headset with microphone", "Screen protector", "Phone case", "Memory card"],
+        answer: "Headset with microphone"
+    },
+    {
+        question: "What is the primary purpose of a mobile device stylus?",
+        options: ["To provide precise input on touchscreens", "To protect the screen", "To extend battery life", "To improve wireless connectivity"],
+        answer: "To provide precise input on touchscreens"
+    },
+    {
+        question: "Which accessory allows a mobile device to be mounted in a vehicle?",
+        options: ["Car mount", "Screen protector", "Power bank", "Memory card"],
+        answer: "Car mount"
+    },
+    {
+        question: "What is the primary function of a mobile device lens attachment?",
+        options: ["To enhance camera capabilities", "To protect the screen", "To extend battery life", "To improve wireless reception"],
+        answer: "To enhance camera capabilities"
+    },
+    {
+        question: "Which type of accessory is used to connect mobile devices to external displays?",
+        options: ["HDMI adapter", "Screen protector", "Phone case", "Car mount"],
+        answer: "HDMI adapter"
+    },
+    {
+        question: "What is the primary purpose of a mobile device grip?",
+        options: ["To improve handling and prevent drops", "To increase battery life", "To enhance audio quality", "To improve wireless reception"],
+        answer: "To improve handling and prevent drops"
+    },
+    {
+        question: "Which accessory allows multiple mobile devices to be charged simultaneously?",
+        options: ["Multi-port charging station", "Screen protector", "Phone case", "Car mount"],
+        answer: "Multi-port charging station"
+    },
+    {
+        question: "What is the primary function of a mobile device armband?",
+        options: ["To secure the device during physical activity", "To protect the screen", "To extend battery life", "To improve wireless connectivity"],
+        answer: "To secure the device during physical activity"
+    },
+    {
+        question: "Which type of accessory is used to protect mobile devices from water damage?",
+        options: ["Waterproof case", "Screen protector", "Power bank", "Memory card"],
+        answer: "Waterproof case"
+    },
+    {
+        question: "What is the primary purpose of a mobile device stand?",
+        options: ["To prop up the device for hands-free use", "To protect the screen", "To extend battery life", "To improve wireless reception"],
+        answer: "To prop up the device for hands-free use"
+    },
+    {
+        question: "Which accessory allows mobile devices to be connected to wired networks?",
+        options: ["Ethernet adapter", "Screen protector", "Phone case", "Car mount"],
+        answer: "Ethernet adapter"
+    },
+    {
+        question: "What is the primary function of a mobile device external battery case?",
+        options: ["To provide both protection and extended battery life", "To enhance camera capabilities", "To improve audio quality", "To increase storage capacity"],
+        answer: "To provide both protection and extended battery life"
+    },
+    {
+        question: "Which type of accessory is used to improve mobile device audio output?",
+        options: ["Portable speaker", "Screen protector", "Phone case", "Memory card"],
+        answer: "Portable speaker"
+    },
+    {
+        question: "What is the primary purpose of a mobile device keyboard attachment?",
+        options: ["To provide physical keys for typing", "To protect the screen", "To extend battery life", "To improve wireless connectivity"],
+        answer: "To provide physical keys for typing"
+    },
+    {
+        question: "Which accessory allows mobile devices to be connected to USB peripherals?",
+        options: ["USB OTG adapter", "Screen protector", "Phone case", "Car mount"],
+        answer: "USB OTG adapter"
+    }
+  ],
+WiredConnections:[
+    {
+        question: "Which connector type is commonly used for charging modern smartphones?",
+        options: ["USB-C", "Micro-USB", "Lightning", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary advantage of USB-C over previous USB connectors?",
+        options: ["Reversible design and higher data transfer speeds", "Lower cost", "Smaller size", "Better durability"],
+        answer: "Reversible design and higher data transfer speeds"
+    },
+    {
+        question: "Which connector type is exclusive to Apple devices?",
+        options: ["Lightning", "USB-C", "Micro-USB", "Mini-USB"],
+        answer: "Lightning"
+    },
+    {
+        question: "What is the maximum data transfer speed of USB 3.1 Gen 2?",
+        options: ["10 Gbps", "5 Gbps", "480 Mbps", "20 Gbps"],
+        answer: "10 Gbps"
+    },
+    {
+        question: "Which connector type was commonly used for older Android devices before USB-C?",
+        options: ["Micro-USB", "Lightning", "Mini-USB", "USB-B"],
+        answer: "Micro-USB"
+    },
+    {
+        question: "What is the primary function of a USB OTG (On-The-Go) adapter?",
+        options: ["To connect USB peripherals to mobile devices", "To extend cable length", "To improve charging speed", "To protect connectors"],
+        answer: "To connect USB peripherals to mobile devices"
+    },
+    {
+        question: "Which connector type is commonly used for audio connections on mobile devices?",
+        options: ["3.5mm headphone jack", "USB-C", "Lightning", "HDMI"],
+        answer: "3.5mm headphone jack"
+    },
+    {
+        question: "What is the primary advantage of MHL (Mobile High-Definition Link)?",
+        options: ["To connect mobile devices to HDMI displays", "To improve charging speed", "To extend battery life", "To enhance audio quality"],
+        answer: "To connect mobile devices to HDMI displays"
+    },
+    {
+        question: "Which connector type is commonly used for connecting mobile devices to computers for data transfer?",
+        options: ["USB", "HDMI", "Ethernet", "DisplayPort"],
+        answer: "USB"
+    },
+    {
+        question: "What is the primary function of a dock connector?",
+        options: ["To provide multiple connection options through a single port", "To extend cable length", "To improve charging speed", "To protect connectors"],
+        answer: "To provide multiple connection options through a single port"
+    },
+    {
+        question: "Which connector type is commonly used for external displays on mobile devices?",
+        options: ["HDMI", "USB-C", "Lightning", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary advantage of a braided cable over a standard cable?",
+        options: ["Increased durability", "Faster charging", "Better data transfer", "Lower cost"],
+        answer: "Increased durability"
+    },
+    {
+        question: "Which connector type is commonly used for Ethernet connections on mobile devices?",
+        options: ["USB to Ethernet adapter", "HDMI", "Lightning", "3.5mm headphone jack"],
+        answer: "USB to Ethernet adapter"
+    },
+    {
+        question: "What is the primary function of a magnetic cable?",
+        options: ["To provide easy detachment to prevent damage", "To improve charging speed", "To extend cable length", "To enhance data transfer"],
+        answer: "To provide easy detachment to prevent damage"
+    },
+    {
+        question: "Which connector type is commonly used for charging older feature phones?",
+        options: [" Barrel connector", "USB-C", "Lightning", "Micro-USB"],
+        answer: " Barrel connector"
+    },
+    {
+        question: "What is the primary advantage of a retractable cable?",
+        options: ["Portability and reduced tangling", "Faster charging", "Better data transfer", "Lower cost"],
+        answer: "Portability and reduced tangling"
+    },
+    {
+        question: "Which connector type is commonly used for connecting mobile devices to car audio systems?",
+        options: ["3.5mm headphone jack", "USB", "Lightning", "HDMI"],
+        answer: "3.5mm headphone jack"
+    },
+    {
+        question: "What is the primary function of a cable with multiple connectors?",
+        options: ["To provide compatibility with different devices", "To improve charging speed", "To extend cable length", "To protect connectors"],
+        answer: "To provide compatibility with different devices"
+    },
+    {
+        question: "Which connector type is commonly used for external storage devices on mobile devices?",
+        options: ["USB", "HDMI", "Lightning", "3.5mm headphone jack"],
+        answer: "USB"
+    },
+    {
+        question: "What is the primary advantage of a fast charging cable?",
+        options: ["To reduce charging time", "To extend cable length", "To improve data transfer", "To protect connectors"],
+        answer: "To reduce charging time"
+    }
+  ],
+DockingPort:[
+    {
+        question: "What is the primary function of a docking station?",
+        options: ["To expand connectivity options for mobile devices", "To protect the device from physical damage", "To extend battery life", "To improve wireless connectivity"],
+        answer: "To expand connectivity options for mobile devices"
+    },
+    {
+        question: "Which of the following is a key difference between a docking station and a port replicator?",
+        options: ["Docking stations typically provide more functionality and power", "Port replicators are more expensive", "Docking stations are only for laptops", "Port replicators provide wireless connectivity"],
+        answer: "Docking stations typically provide more functionality and power"
+    },
+    {
+        question: "What is the primary advantage of using a docking station with a mobile device?",
+        options: ["Convenient transition between mobile and desktop use", "Improved device security", "Extended battery life", "Enhanced wireless reception"],
+        answer: "Convenient transition between mobile and desktop use"
+    },
+    {
+        question: "Which type of connection is commonly used for docking stations?",
+        options: ["USB-C/Thunderbolt", "HDMI", "3.5mm audio", "Ethernet"],
+        answer: "USB-C/Thunderbolt"
+    },
+    {
+        question: "What is the primary function of a port replicator?",
+        options: ["To provide additional ports for a mobile device", "To protect the device from physical damage", "To extend battery life", "To improve wireless connectivity"],
+        answer: "To provide additional ports for a mobile device"
+    },
+    {
+        question: "Which of the following is a common feature of docking stations?",
+        options: ["Multiple video outputs", "Device encryption", "Extended battery life", "Improved wireless reception"],
+        answer: "Multiple video outputs"
+    },
+    {
+        question: "What is the primary advantage of a Thunderbolt docking station over a USB docking station?",
+        options: ["Higher data transfer speeds and more bandwidth", "Lower cost", "Better compatibility", "Smaller size"],
+        answer: "Higher data transfer speeds and more bandwidth"
+    },
+    {
+        question: "Which type of device is most commonly used with docking stations?",
+        options: ["Laptops", "Smartphones", "Tablets", "Wearables"],
+        answer: "Laptops"
+    },
+    {
+        question: "What is the primary function of a vertical dock?",
+        options: ["To save desk space by holding the device upright", "To improve cooling", "To extend battery life", "To enhance security"],
+        answer: "To save desk space by holding the device upright"
+    },
+    {
+        question: "Which of the following is a common feature of modern docking stations?",
+        options: ["Power delivery to charge the connected device", "Built-in printer", "Extended battery life", "Improved wireless reception"],
+        answer: "Power delivery to charge the connected device"
+    },
+    {
+        question: "What is the primary advantage of a universal docking station?",
+        options: ["Compatibility with multiple devices and brands", "Lower cost", "Smaller size", "Better security"],
+        answer: "Compatibility with multiple devices and brands"
+    },
+    {
+        question: "Which type of connection is typically required for video output through a docking station?",
+        options: ["DisplayPort, HDMI, or USB-C with DisplayPort Alternate Mode", "USB 2.0", "Ethernet", "3.5mm audio"],
+        answer: "DisplayPort, HDMI, or USB-C with DisplayPort Alternate Mode"
+    },
+    {
+        question: "What is the primary function of a car dock?",
+        options: ["To securely hold a mobile device in a vehicle", "To extend battery life", "To improve wireless connectivity", "To enhance audio quality"],
+        answer: "To securely hold a mobile device in a vehicle"
+    },
+    {
+        question: "Which of the following is a common feature of enterprise docking stations?",
+        options: ["Network connectivity and security features", "Extended battery life", "Improved wireless reception", "Built-in speakers"],
+        answer: "Network connectivity and security features"
+    },
+    {
+        question: "What is the primary advantage of a wireless docking station?",
+        options: ["Reduced cable clutter", "Faster data transfer", "Better security", "Lower cost"],
+        answer: "Reduced cable clutter"
+    },
+    {
+        question: "Which type of docking station is designed for tablets?",
+        options: ["Tablet dock with keyboard and stand", "Laptop dock", "Smartphone dock", "Wearable dock"],
+        answer: "Tablet dock with keyboard and stand"
+    },
+    {
+        question: "What is the primary function of a display dock?",
+        options: ["To connect a mobile device to external displays", "To extend battery life", "To improve wireless connectivity", "To enhance audio quality"],
+        answer: "To connect a mobile device to external displays"
+    },
+    {
+        question: "Which of the following is a common feature of gaming docking stations?",
+        options: ["Enhanced graphics capabilities and additional ports", "Extended battery life", "Improved wireless reception", "Built-in speakers"],
+        answer: "Enhanced graphics capabilities and additional ports"
+    },
+    {
+        question: "What is the primary advantage of a powered docking station over an unpowered one?",
+        options: ["Ability to charge the connected device and support more peripherals", "Lower cost", "Smaller size", "Better compatibility"],
+        answer: "Ability to charge the connected device and support more peripherals"
+    },
+    {
+        question: "Which type of docking station is designed for smartphones?",
+        options: ["Cradle dock", "Laptop dock", "Tablet dock", "Wearable dock"],
+        answer: "Cradle dock"
+    }
+  ],
+WirelessConnectivity:[
+    {
+        question: "Which frequency band is commonly used by Wi-Fi networks?",
+        options: ["2.4 GHz and 5 GHz", "900 MHz", "3.5 GHz", "60 GHz"],
+        answer: "2.4 GHz and 5 GHz"
+    },
+    {
+        question: "What is the maximum theoretical speed of Wi-Fi 6 (802.11ax)?",
+        options: ["9.6 Gbps", "3.5 Gbps", "600 Mbps", "1.3 Gbps"],
+        answer: "9.6 Gbps"
+    },
+    {
+        question: "Which Wi-Fi security protocol is currently considered the most secure?",
+        options: ["WPA3", "WPA2", "WEP", "WPA"],
+        answer: "WPA3"
+    },
+    {
+        question: "What is the primary advantage of the 5 GHz Wi-Fi band over the 2.4 GHz band?",
+        options: ["Less interference and faster speeds", "Longer range", "Better penetration through walls", "Lower power consumption"],
+        answer: "Less interference and faster speeds"
+    },
+    {
+        question: "Which Bluetooth version introduced Low Energy (LE) technology?",
+        options: ["Bluetooth 4.0", "Bluetooth 3.0", "Bluetooth 5.0", "Bluetooth 2.1"],
+        answer: "Bluetooth 4.0"
+    },
+    {
+        question: "What is the maximum range of Bluetooth Class 2 devices?",
+        options: ["10 meters (33 feet)", "1 meter (3 feet)", "100 meters (328 feet)", "30 meters (98 feet)"],
+        answer: "10 meters (33 feet)"
+    },
+    {
+        question: "Which Wi-Fi standard introduced beamforming technology?",
+        options: ["802.11ac", "802.11n", "802.11g", "802.11b"],
+        answer: "802.11ac"
+    },
+    {
+        question: "What is the primary function of Bluetooth pairing?",
+        options: ["To establish a secure connection between devices", "To extend battery life", "To improve signal strength", "To increase data transfer speed"],
+        answer: "To establish a secure connection between devices"
+    },
+    {
+        question: "Which Wi-Fi security protocol should be avoided due to known vulnerabilities?",
+        options: ["WEP", "WPA2", "WPA3", "WPA"],
+        answer: "WEP"
+    },
+    {
+        question: "What is the maximum theoretical speed of Bluetooth 5.0?",
+        options: ["2 Mbps", "1 Mbps", "3 Mbps", "24 Mbps"],
+        answer: "2 Mbps"
+    },
+    {
+        question: "Which Wi-Fi standard operates exclusively in the 5 GHz band?",
+        options: ["802.11a", "802.11b", "802.11g", "802.11n"],
+        answer: "802.11a"
+    },
+    {
+        question: "What is the primary advantage of Wi-Fi Direct?",
+        options: ["Direct device-to-device connections without a router", "Faster internet access", "Longer range", "Better security"],
+        answer: "Direct device-to-device connections without a router"
+    },
+    {
+        question: "Which Bluetooth version introduced mesh networking capability?",
+        options: ["Bluetooth 5.0", "Bluetooth 4.0", "Bluetooth 4.2", "Bluetooth 3.0"],
+        answer: "Bluetooth 5.0"
+    },
+    {
+        question: "What is the primary function of a Wi-Fi extender?",
+        options: ["To increase the range of a Wi-Fi network", "To improve security", "To increase speed", "To reduce interference"],
+        answer: "To increase the range of a Wi-Fi network"
+    },
+    {
+        question: "Which Wi-Fi standard introduced MIMO (Multiple Input Multiple Output) technology?",
+        options: ["802.11n", "802.11ac", "802.11g", "802.11a"],
+        answer: "802.11n"
+    },
+    {
+        question: "What is the primary advantage of Bluetooth Low Energy (LE)?",
+        options: ["Reduced power consumption for IoT devices", "Faster data transfer", "Longer range", "Better security"],
+        answer: "Reduced power consumption for IoT devices"
+    },
+    {
+        question: "Which Wi-Fi security protocol uses AES encryption?",
+        options: ["WPA2 and WPA3", "WEP", "WPA", "WEP and WPA"],
+        answer: "WPA2 and WPA3"
+    },
+    {
+        question: "What is the maximum theoretical speed of Wi-Fi 5 (802.11ac)?",
+        options: ["3.5 Gbps", "600 Mbps", "1.3 Gbps", "9.6 Gbps"],
+        answer: "3.5 Gbps"
+    },
+    {
+        question: "Which Bluetooth profile is used for streaming audio?",
+        options: ["A2DP", "HFP", "HSP", "OPP"],
+        answer: "A2DP"
+    },
+    {
+        question: "What is the primary function of a Wi-Fi mesh network?",
+        options: ["To provide seamless coverage over a large area", "To improve security", "To increase speed", "To reduce power consumption"],
+        answer: "To provide seamless coverage over a large area"
+    }
+  ],
+TetheringHotspots:[
+    {
+        question: "What is the primary function of mobile tethering?",
+        options: ["Sharing a mobile device's internet connection with other devices", "Extending battery life", "Improving signal strength", "Enhancing security"],
+        answer: "Sharing a mobile device's internet connection with other devices"
+    },
+    {
+        question: "Which of the following is NOT a method of mobile tethering?",
+        options: ["Satellite connection", "USB tethering", "Bluetooth tethering", "Wi-Fi hotspot"],
+        answer: "Satellite connection"
+    },
+    {
+        question: "What is the primary advantage of USB tethering over Wi-Fi tethering?",
+        options: ["Faster connection and charging the connected device", "Longer range", "Better security", "Lower power consumption"],
+        answer: "Faster connection and charging the connected device"
+    },
+    {
+        question: "Which of the following is a potential disadvantage of using a mobile hotspot?",
+        options: ["Increased data usage and battery drain", "Slower connection speeds", "Reduced security", "Limited compatibility"],
+        answer: "Increased data usage and battery drain"
+    },
+    {
+        question: "What is the primary function of a dedicated mobile hotspot device?",
+        options: ["To provide internet access to multiple devices using cellular data", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To provide internet access to multiple devices using cellular data"
+    },
+    {
+        question: "Which technology is commonly used for mobile tethering?",
+        options: ["Cellular data (3G, 4G, 5G)", "Satellite", "Wi-Fi Direct", "Bluetooth only"],
+        answer: "Cellular data (3G, 4G, 5G)"
+    },
+    {
+        question: "What is the primary advantage of Wi-Fi tethering over USB tethering?",
+        options: ["Ability to connect multiple devices without cables", "Faster connection speeds", "Better security", "Lower power consumption"],
+        answer: "Ability to connect multiple devices without cables"
+    },
+    {
+        question: "Which of the following is a potential security risk when using a mobile hotspot?",
+        options: ["Unauthorized access to the hotspot", "Data overage charges", "Battery drain", "Slow connection speeds"],
+        answer: "Unauthorized access to the hotspot"
+    },
+    {
+        question: "What is the primary function of Bluetooth tethering?",
+        options: ["Sharing internet connection with a single device over Bluetooth", "Extending battery life", "Improving signal strength", "Enhancing security"],
+        answer: "Sharing internet connection with a single device over Bluetooth"
+    },
+    {
+        question: "Which of the following is a common limitation of mobile tethering?",
+        options: ["Data caps imposed by carriers", "Limited device compatibility", "Complex setup process", "Poor signal quality"],
+        answer: "Data caps imposed by carriers"
+    },
+    {
+        question: "What is the primary advantage of a dedicated mobile hotspot over using a smartphone as a hotspot?",
+        options: ["Longer battery life and potentially better signal", "Faster connection speeds", "Better security", "Lower cost"],
+        answer: "Longer battery life and potentially better signal"
+    },
+    {
+        question: "Which of the following is a potential solution for improving mobile hotspot security?",
+        options: ["Using a strong password and WPA2/WPA3 encryption", "Disabling the hotspot when not in use", "Limiting the number of connected devices", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary function of tethering in the context of mobile devices?",
+        options: ["Sharing internet connection with other devices", "Connecting peripherals", "Charging other devices", "Transferring files"],
+        answer: "Sharing internet connection with other devices"
+    },
+    {
+        question: "Which of the following is a potential disadvantage of Bluetooth tethering?",
+        options: ["Slower speeds and limited range", "Higher power consumption", "Complex setup process", "Limited compatibility"],
+        answer: "Slower speeds and limited range"
+    },
+    {
+        question: "What is the primary advantage of using a 5G connection for mobile tethering?",
+        options: ["Faster speeds and lower latency", "Longer battery life", "Better security", "Lower cost"],
+        answer: "Faster speeds and lower latency"
+    },
+    {
+        question: "Which of the following is a common feature of mobile hotspot management?",
+        options: ["Viewing connected devices and data usage", "Extending battery life", "Improving signal strength", "Enhancing security"],
+        answer: "Viewing connected devices and data usage"
+    },
+    {
+        question: "What is the primary function of a mobile hotspot app?",
+        options: ["To manage hotspot settings and monitor usage", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To manage hotspot settings and monitor usage"
+    },
+    {
+        question: "Which of the following is a potential solution for reducing battery drain when using a mobile hotspot?",
+        options: ["Connecting the device to a power source", "Reducing the number of connected devices", "Lowering the hotspot's transmit power", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary advantage of Wi-Fi 6 for mobile hotspots?",
+        options: ["Better performance in crowded areas with many connected devices", "Longer range", "Better security", "Lower power consumption"],
+        answer: "Better performance in crowded areas with many connected devices"
+    },
+    {
+        question: "Which of the following is a common limitation of USB tethering?",
+        options: ["Limited to one connected device", "Slower speeds", "Higher power consumption", "Complex setup process"],
+        answer: "Limited to one connected device"
+    }
+  ],
+NFCPayments:[
+    {
+        question: "What does NFC stand for?",
+        options: ["Near Field Communication", "Network Frequency Control", "Near Frequency Connection", "Network Field Communication"],
+        answer: "Near Field Communication"
+    },
+    {
+        question: "What is the maximum range of NFC communication?",
+        options: ["4 cm (1.6 inches)", "1 meter (3 feet)", "10 meters (33 feet)", "100 meters (328 feet)"],
+        answer: "4 cm (1.6 inches)"
+    },
+    {
+        question: "Which of the following is a common use case for NFC technology?",
+        options: ["Contactless payments", "Long-range data transfer", "High-speed internet access", "Extended battery life"],
+        answer: "Contactless payments"
+    },
+    {
+        question: "What is the primary advantage of NFC for mobile payments?",
+        options: ["Convenience and security", "Faster than credit cards", "Works without internet", "Lower transaction fees"],
+        answer: "Convenience and security"
+    },
+    {
+        question: "Which mobile payment service uses NFC technology?",
+        options: ["Apple Pay, Google Pay, and Samsung Pay", "PayPal", "Venmo", "Zelle"],
+        answer: "Apple Pay, Google Pay, and Samsung Pay"
+    },
+    {
+        question: "What is the primary function of an NFC tag?",
+        options: ["To store small amounts of data that can be read by NFC-enabled devices", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To store small amounts of data that can be read by NFC-enabled devices"
+    },
+    {
+        question: "Which of the following is a security feature of NFC payments?",
+        options: ["Tokenization", "Biometric authentication", "Device encryption", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary advantage of tokenization in mobile payments?",
+        options: ["Replacing sensitive card data with a unique digital identifier", "Faster transaction processing", "Lower power consumption", "Extended battery life"],
+        answer: "Replacing sensitive card data with a unique digital identifier"
+    },
+    {
+        question: "Which of the following is a common use case for NFC besides payments?",
+        options: ["Access control and public transit", "Long-range file sharing", "High-speed internet access", "Extended battery life"],
+        answer: "Access control and public transit"
+    },
+    {
+        question: "What is the primary function of NFC in public transit systems?",
+        options: ["To enable contactless fare payment", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To enable contactless fare payment"
+    },
+    {
+        question: "Which of the following is a potential disadvantage of NFC payments?",
+        options: ["Limited range and potential security concerns", "Slow transaction processing", "High power consumption", "Limited compatibility"],
+        answer: "Limited range and potential security concerns"
+    },
+    {
+        question: "What is the primary function of an NFC reader?",
+        options: ["To read data from NFC tags or devices", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To read data from NFC tags or devices"
+    },
+    {
+        question: "Which of the following is a security measure for NFC payments?",
+        options: ["Requiring device unlock or biometric authentication", "Using strong passwords", "Regular software updates", "All of the above"],
+        answer: "Requiring device unlock or biometric authentication"
+    },
+    {
+        question: "What is the primary advantage of NFC for data transfer?",
+        options: ["Simplicity and ease of use", "High speed", "Long range", "Low power consumption"],
+        answer: "Simplicity and ease of use"
+    },
+    {
+        question: "Which of the following is a common application of NFC in marketing?",
+        options: ["Smart posters with embedded NFC tags", "Long-range advertising", "High-speed internet access", "Extended battery life"],
+        answer: "Smart posters with embedded NFC tags"
+    },
+    {
+        question: "What is the primary function of NFC in access control systems?",
+        options: ["To grant access to secure areas using NFC-enabled devices", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To grant access to secure areas using NFC-enabled devices"
+    },
+    {
+        question: "Which of the following is a potential security risk of NFC?",
+        options: ["Eavesdropping and data theft", "Battery drain", "Slow data transfer", "Limited compatibility"],
+        answer: "Eavesdropping and data theft"
+    },
+    {
+        question: "What is the primary function of NFC in peer-to-peer mode?",
+        options: ["To exchange data between two NFC-enabled devices", "To extend battery life", "To improve signal strength", "To enhance security"],
+        answer: "To exchange data between two NFC-enabled devices"
+    },
+    {
+        question: "Which of the following is a common use case for NFC in healthcare?",
+        options: ["Patient identification and medical record access", "Long-range monitoring", "High-speed internet access", "Extended battery life"],
+        answer: "Patient identification and medical record access"
+    },
+    {
+        question: "What is the primary advantage of NFC over other wireless technologies?",
+        options: ["Simplicity, low power consumption, and ease of use", "Faster data transfer", "Longer range", "Better security"],
+        answer: "Simplicity, low power consumption, and ease of use"
+    }
+  ],
+WrapUpBestPractices:[
+    {
+        question: "What is the primary purpose of regularly updating mobile device operating systems?",
+        options: ["To patch security vulnerabilities and improve functionality", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To patch security vulnerabilities and improve functionality"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device security?",
+        options: ["Using strong passwords or biometric authentication", "Disabling all wireless connections", "Keeping the device constantly charging", "Using public Wi-Fi networks"],
+        answer: "Using strong passwords or biometric authentication"
+    },
+    {
+        question: "What is the primary function of mobile device encryption?",
+        options: ["To protect data if the device is lost or stolen", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To protect data if the device is lost or stolen"
+    },
+    {
+        question: "Which of the following is a best practice for conserving mobile device battery life?",
+        options: ["Reducing screen brightness and closing unused apps", "Keeping all apps open for quick access", "Using maximum brightness for better visibility", "Disabling all security features"],
+        answer: "Reducing screen brightness and closing unused apps"
+    },
+    {
+        question: "What is the primary purpose of regularly backing up mobile device data?",
+        options: ["To prevent data loss in case of device failure or loss", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To prevent data loss in case of device failure or loss"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device privacy?",
+        options: ["Reviewing and managing app permissions", "Sharing device passwords with trusted friends", "Using public Wi-Fi networks for sensitive transactions", "Disabling all security features"],
+        answer: "Reviewing and managing app permissions"
+    },
+    {
+        question: "What is the primary function of two-factor authentication on mobile devices?",
+        options: ["To provide an additional layer of security beyond passwords", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To provide an additional layer of security beyond passwords"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device physical security?",
+        options: ["Using a case and screen protector", "Keeping the device constantly charging", "Disabling all security features", "Sharing device passwords with trusted friends"],
+        answer: "Using a case and screen protector"
+    },
+    {
+        question: "What is the primary purpose of enabling 'Find My Device' features?",
+        options: ["To locate, lock, or erase a lost or stolen device", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To locate, lock, or erase a lost or stolen device"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device network security?",
+        options: ["Using a VPN on public Wi-Fi networks", "Disabling all security features", "Sharing device passwords with trusted friends", "Keeping all apps open for quick access"],
+        answer: "Using a VPN on public Wi-Fi networks"
+    },
+    {
+        question: "What is the primary function of mobile device factory reset?",
+        options: ["To erase all data and return the device to its original state", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To erase all data and return the device to its original state"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device app security?",
+        options: ["Downloading apps only from official app stores", "Sharing device passwords with trusted friends", "Disabling all security features", "Using public Wi-Fi networks for sensitive transactions"],
+        answer: "Downloading apps only from official app stores"
+    },
+    {
+        question: "What is the primary purpose of mobile device remote wipe capabilities?",
+        options: ["To erase data on a lost or stolen device remotely", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To erase data on a lost or stolen device remotely"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device storage management?",
+        options: ["Regularly deleting unnecessary files and apps", "Keeping all apps open for quick access", "Using public Wi-Fi networks for sensitive transactions", "Disabling all security features"],
+        answer: "Regularly deleting unnecessary files and apps"
+    },
+    {
+        question: "What is the primary function of mobile device antivirus software?",
+        options: ["To detect and remove malware and other security threats", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To detect and remove malware and other security threats"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device charging?",
+        options: ["Using manufacturer-approved chargers and avoiding extreme temperatures", "Keeping the device constantly charging", "Using damaged cables", "Charging in extreme temperatures"],
+        answer: "Using manufacturer-approved chargers and avoiding extreme temperatures"
+    },
+    {
+        question: "What is the primary purpose of mobile device passcodes or passwords?",
+        options: ["To prevent unauthorized access to the device", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To prevent unauthorized access to the device"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device privacy settings?",
+        options: ["Regularly reviewing and adjusting privacy settings", "Sharing device passwords with trusted friends", "Disabling all security features", "Using public Wi-Fi networks for sensitive transactions"],
+        answer: "Regularly reviewing and adjusting privacy settings"
+    },
+    {
+        question: "What is the primary function of mobile device automatic app updates?",
+        options: ["To ensure apps have the latest security patches and features", "To extend battery life", "To improve signal strength", "To enhance performance"],
+        answer: "To ensure apps have the latest security patches and features"
+    },
+    {
+        question: "Which of the following is a best practice for mobile device disposal?",
+        options: ["Performing a factory reset and removing all accounts", "Throwing the device in the trash", "Keeping all personal data on the device", "Sharing device passwords with trusted friends"],
+        answer: "Performing a factory reset and removing all accounts"
+    }
+],
+  }
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    // Function to shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(q.options);
+      
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'IntroRole': 'Introduction & Role of Mobile Devices',
+        'Accessories': 'Mobile Device Accessories',
+        'WiredConnections': 'Wired Connections',
+        'DockingPort': 'Docking & Port Replicators',
+        'WirelessConnectivity': 'Wireless Connectivity (Wi-Fi & Bluetooth)',
+        'TetheringHotspots': 'Tethering & Mobile Hotspots',
+        'NFCPayments': 'NFC & Mobile Payments',
+        'WrapUpBestPractices': 'Wrap-Up & Best Practices'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
