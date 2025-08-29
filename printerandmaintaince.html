@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Printer Maintenance & Troubleshooting Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.topic-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #90EE90;
+      border-color: #32CD32;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #1E90FF;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF8C00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #FF6347;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #9932CC;
+    }
+  </style>
+</head>
+<body>
+<h1>Printer Maintenance & Troubleshooting Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('IntroMaintenance')">Introduction to Printer Maintenance & Troubleshooting</button>
+  <button class="topic-btn" onclick="startQuiz('LaserPrinters')">Laser Printers</button>
+  <button class="topic-btn" onclick="startQuiz('InkjetPrinters')">Inkjet Printers</button>
+  <button class="topic-btn" onclick="startQuiz('ThermalPrinters')">Thermal Printers</button>
+  <button class="topic-btn" onclick="startQuiz('ImpactPrinters')">Impact Printers (Dot-Matrix)</button>
+  <button class="topic-btn" onclick="startQuiz('GeneralMaintenance')">General Maintenance & Issue Resolution</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+       IntroMaintenance:[
+    {
+        question: "What is the primary purpose of printer maintenance?",
+        options: ["To ensure optimal performance and extend printer lifespan", "To increase printing speed", "To improve print quality only", "To reduce paper usage"],
+        answer: "To ensure optimal performance and extend printer lifespan"
+    },
+    {
+        question: "Which of the following is a common printer troubleshooting step?",
+        options: ["Checking connections and restarting the printer", "Increasing paper size", "Changing font settings", "Adjusting monitor brightness"],
+        answer: "Checking connections and restarting the printer"
+    },
+    {
+        question: "What is the first thing you should check when a printer is not working?",
+        options: ["Power and connection status", "Ink/toner levels", "Paper tray", "Print queue"],
+        answer: "Power and connection status"
+    },
+    {
+        question: "Which of the following is a preventive maintenance task for printers?",
+        options: ["Regular cleaning and inspection", "Increasing print resolution", "Using more expensive paper", "Printing test pages daily"],
+        answer: "Regular cleaning and inspection"
+    },
+    {
+        question: "What is the purpose of a printer's self-test page?",
+        options: ["To diagnose printer problems and check functionality", "To clean print heads", "To align cartridges", "To update firmware"],
+        answer: "To diagnose printer problems and check functionality"
+    },
+    {
+        question: "Which of the following is a common symptom of printer maintenance needs?",
+        options: ["Decreased print quality", "Increased printing speed", "Better color accuracy", "Quieter operation"],
+        answer: "Decreased print quality"
+    },
+    {
+        question: "What is the primary benefit of regular printer maintenance?",
+        options: ["Extended printer life and reduced repair costs", "Faster printing", "Lower ink consumption", "Wireless connectivity"],
+        answer: "Extended printer life and reduced repair costs"
+    },
+    {
+        question: "Which of the following is a common printer troubleshooting tool?",
+        options: ["Printer diagnostic software", "Antivirus program", "Disk defragmenter", "Video editor"],
+        answer: "Printer diagnostic software"
+    },
+    {
+        question: "What is the primary purpose of printer firmware updates?",
+        options: ["To fix bugs and improve functionality", "To increase printing speed", "To improve print quality only", "To reduce paper usage"],
+        answer: "To fix bugs and improve functionality"
+    },
+    {
+        question: "Which of the following is a common cause of printer paper jams?",
+        options: ["Worn rollers, misaligned paper guides, or damaged paper", "Low ink/toner levels", "Outdated drivers", "Network connectivity issues"],
+        answer: "Worn rollers, misaligned paper guides, or damaged paper"
+    },
+    {
+        question: "What is the primary function of a printer's maintenance kit?",
+        options: ["To replace consumable parts that wear out over time", "To increase printing speed", "To improve print quality only", "To reduce paper usage"],
+        answer: "To replace consumable parts that wear out over time"
+    },
+    {
+        question: "Which of the following is a common printer troubleshooting approach?",
+        options: ["Process of elimination", "Random part replacement", "Increasing print resolution", "Changing paper type"],
+        answer: "Process of elimination"
+    },
+    {
+        question: "What is the primary purpose of printer cleaning?",
+        options: ["To prevent print quality issues and extend component life", "To increase printing speed", "To improve wireless connectivity", "To reduce power consumption"],
+        answer: "To prevent print quality issues and extend component life"
+    },
+    {
+        question: "Which of the following is a common printer error that requires troubleshooting?",
+        options: ["Paper jams, print quality issues, and connectivity problems", "High printing speed", "Excellent print quality", "Low power consumption"],
+        answer: "Paper jams, print quality issues, and connectivity problems"
+    },
+    {
+        question: "What is the primary benefit of following a printer maintenance schedule?",
+        options: ["Preventive care reduces the likelihood of major failures", "Increased printing speed", "Lower ink consumption", "Better wireless connectivity"],
+        answer: "Preventive care reduces the likelihood of major failures"
+    },
+    {
+        question: "Which of the following is a common printer maintenance task for laser printers?",
+        options: ["Cleaning the corona wire and replacing the toner cartridge", "Refilling ink cartridges", "Aligning print heads", "Cleaning thermal print heads"],
+        answer: "Cleaning the corona wire and replacing the toner cartridge"
+    },
+    {
+        question: "What is the primary purpose of printer calibration?",
+        options: ["To ensure accurate color reproduction and alignment", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To ensure accurate color reproduction and alignment"
+    },
+    {
+        question: "Which of the following is a common printer troubleshooting step for print quality issues?",
+        options: ["Running cleaning cycles and checking consumables", "Increasing print resolution", "Changing paper type", "Adjusting monitor settings"],
+        answer: "Running cleaning cycles and checking consumables"
+    },
+    {
+        question: "What is the primary function of a printer's diagnostic utility?",
+        options: ["To identify and resolve printer problems", "To increase printing speed", "To improve print quality only", "To reduce paper usage"],
+        answer: "To identify and resolve printer problems"
+    },
+    {
+        question: "Which of the following is a common printer maintenance best practice?",
+        options: ["Following manufacturer's maintenance recommendations", "Using third-party consumables exclusively", "Ignoring minor issues", "Increasing print resolution"],
+        answer: "Following manufacturer's maintenance recommendations"
+    }
+  ],
+LaserPrinters:[
+    {
+        question: "Which component in a laser printer is responsible for charging the drum?",
+        options: ["Primary corona wire", "Fuser assembly", "Transfer roller", "Toner cartridge"],
+        answer: "Primary corona wire"
+    },
+    {
+        question: "What is the primary function of the fuser assembly in a laser printer?",
+        options: ["To melt and fuse toner onto the paper", "To charge the drum", "To clean excess toner", "To transfer the image to the paper"],
+        answer: "To melt and fuse toner onto the paper"
+    },
+    {
+        question: "Which component in a laser printer is responsible for creating the image?",
+        options: ["Drum unit", "Fuser assembly", "Transfer roller", "Toner cartridge"],
+        answer: "Drum unit"
+    },
+    {
+        question: "What is the primary cause of ghosting in laser printers?",
+        options: ["Worn drum unit or cleaning blade", "Low toner levels", "Paper jams", "Network connectivity issues"],
+        answer: "Worn drum unit or cleaning blade"
+    },
+    {
+        question: "Which component in a laser printer is responsible for transferring toner to the paper?",
+        options: ["Transfer roller", "Fuser assembly", "Primary corona wire", "Toner cartridge"],
+        answer: "Transfer roller"
+    },
+    {
+        question: "What is the primary function of the ozone filter in a laser printer?",
+        options: ["To neutralize ozone produced by the corona wire", "To clean the drum", "To collect excess toner", "To cool the fuser assembly"],
+        answer: "To neutralize ozone produced by the corona wire"
+    },
+    {
+        question: "Which of the following is a common maintenance task for laser printers?",
+        options: ["Cleaning the corona wire and replacing the toner cartridge", "Refilling ink cartridges", "Aligning print heads", "Cleaning thermal print heads"],
+        answer: "Cleaning the corona wire and replacing the toner cartridge"
+    },
+    {
+        question: "What is the primary cause of white streaks on laser-printed pages?",
+        options: ["Empty toner cartridge or damaged drum", "Paper jams", "Fuser overheating", "Network connectivity issues"],
+        answer: "Empty toner cartridge or damaged drum"
+    },
+    {
+        question: "Which component in a laser printer is responsible for cleaning excess toner from the drum?",
+        options: ["Cleaning blade", "Fuser assembly", "Primary corona wire", "Transfer roller"],
+        answer: "Cleaning blade"
+    },
+    {
+        question: "What is the primary function of the transfer corona wire in a laser printer?",
+        options: ["To transfer the toner image from the drum to the paper", "To charge the drum", "To clean excess toner", "To fuse toner to the paper"],
+        answer: "To transfer the toner image from the drum to the paper"
+    },
+    {
+        question: "Which of the following is a common symptom of a failing fuser assembly in a laser printer?",
+        options: ["Toner not adhering to the paper", "White streaks on pages", "Paper jams", "Network connectivity issues"],
+        answer: "Toner not adhering to the paper"
+    },
+    {
+        question: "What is the primary cause of black pages in laser printers?",
+        options: ["Damaged primary corona wire", "Empty toner cartridge", "Paper jams", "Network connectivity issues"],
+        answer: "Damaged primary corona wire"
+    },
+    {
+        question: "Which component in a laser printer is responsible for distributing toner evenly?",
+        options: ["Developer roller", "Fuser assembly", "Primary corona wire", "Transfer roller"],
+        answer: "Developer roller"
+    },
+    {
+        question: "What is the primary function of the waste toner container in a laser printer?",
+        options: ["To collect excess toner removed during cleaning", "To store new toner", "To cool the fuser assembly", "To charge the drum"],
+        answer: "To collect excess toner removed during cleaning"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for a laser printer that won't power on?",
+        options: ["Checking power connections and power supply", "Replacing the toner cartridge", "Cleaning the corona wire", "Resetting the printer"],
+        answer: "Checking power connections and power supply"
+    },
+    {
+        question: "What is the primary cause of repetitive defects at regular intervals on laser-printed pages?",
+        options: ["Damaged drum unit or fuser rollers", "Low toner levels", "Paper jams", "Network connectivity issues"],
+        answer: "Damaged drum unit or fuser rollers"
+    },
+    {
+        question: "Which component in a laser printer is responsible for cooling the fuser assembly?",
+        options: ["Cooling fan", "Primary corona wire", "Transfer roller", "Toner cartridge"],
+        answer: "Cooling fan"
+    },
+    {
+        question: "What is the primary function of the registration assembly in a laser printer?",
+        options: ["To ensure proper paper alignment with the image", "To charge the drum", "To clean excess toner", "To fuse toner to the paper"],
+        answer: "To ensure proper paper alignment with the image"
+    },
+    {
+        question: "Which of the following is a common maintenance task for the fuser assembly in a laser printer?",
+        options: ["Cleaning the fuser rollers and replacing the fuser film sleeve", "Refilling toner", "Aligning print heads", "Cleaning thermal print heads"],
+        answer: "Cleaning the fuser rollers and replacing the fuser film sleeve"
+    },
+    {
+        question: "What is the primary cause of wrinkled pages in laser printers?",
+        options: ["Worn or damaged fuser rollers", "Low toner levels", "Paper jams", "Network connectivity issues"],
+        answer: "Worn or damaged fuser rollers"
+    }
+  ],
+InkjetPrinters:[
+    {
+        question: "Which component in an inkjet printer is responsible for spraying ink onto the paper?",
+        options: ["Print head", "Ink cartridge", "Paper feed roller", "Belt assembly"],
+        answer: "Print head"
+    },
+    {
+        question: "What is the primary function of the ink cartridge in an inkjet printer?",
+        options: ["To store and supply ink to the print head", "To clean the print head", "To move the print head", "To feed paper"],
+        answer: "To store and supply ink to the print head"
+    },
+    {
+        question: "Which of the following is a common maintenance task for inkjet printers?",
+        options: ["Cleaning the print head and aligning cartridges", "Replacing the fuser assembly", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the print head and aligning cartridges"
+    },
+    {
+        question: "What is the primary cause of streaks or lines on inkjet-printed pages?",
+        options: ["Clogged print head nozzles", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Clogged print head nozzles"
+    },
+    {
+        question: "Which component in an inkjet printer is responsible for moving the print head?",
+        options: ["Belt assembly or carriage rod", "Ink cartridge", "Paper feed roller", "Maintenance station"],
+        answer: "Belt assembly or carriage rod"
+    },
+    {
+        question: "What is the primary function of the maintenance station in an inkjet printer?",
+        options: ["To clean and cap the print head when not in use", "To store ink", "To move the print head", "To feed paper"],
+        answer: "To clean and cap the print head when not in use"
+    },
+    {
+        question: "Which of the following is a common symptom of a failing ink cartridge in an inkjet printer?",
+        options: ["Missing colors or poor print quality", "Paper jams", "Slow printing", "Network connectivity issues"],
+        answer: "Missing colors or poor print quality"
+    },
+    {
+        question: "What is the primary cause of smudged ink on inkjet-printed pages?",
+        options: ["Incorrect paper type or print settings", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Incorrect paper type or print settings"
+    },
+    {
+        question: "Which component in an inkjet printer is responsible for feeding paper?",
+        options: ["Paper feed rollers", "Print head", "Ink cartridge", "Belt assembly"],
+        answer: "Paper feed rollers"
+    },
+    {
+        question: "What is the primary function of the print head alignment process in inkjet printers?",
+        options: ["To ensure precise ink placement and accurate colors", "To clean the print head", "To extend cartridge life", "To improve printing speed"],
+        answer: "To ensure precise ink placement and accurate colors"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for an inkjet printer that won't print?",
+        options: ["Checking ink levels and running a print head cleaning cycle", "Replacing the fuser assembly", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Checking ink levels and running a print head cleaning cycle"
+    },
+    {
+        question: "What is the primary cause of white lines across inkjet-printed pages?",
+        options: ["Clogged print head nozzles", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Clogged print head nozzles"
+    },
+    {
+        question: "Which component in an inkjet printer is responsible for absorbing excess ink during cleaning cycles?",
+        options: ["Waste ink absorber or maintenance station", "Ink cartridge", "Paper feed roller", "Belt assembly"],
+        answer: "Waste ink absorber or maintenance station"
+    },
+    {
+        question: "What is the primary function of the print head cleaning cycle in inkjet printers?",
+        options: ["To clear clogged nozzles and maintain print quality", "To align cartridges", "To extend cartridge life", "To improve printing speed"],
+        answer: "To clear clogged nozzles and maintain print quality"
+    },
+    {
+        question: "Which of the following is a common maintenance task for the paper feed system in inkjet printers?",
+        options: ["Cleaning the paper feed rollers", "Replacing the fuser assembly", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the paper feed rollers"
+    },
+    {
+        question: "What is the primary cause of paper jams in inkjet printers?",
+        options: ["Worn paper feed rollers, misaligned paper guides, or damaged paper", "Low ink levels", "Clogged print head", "Network connectivity issues"],
+        answer: "Worn paper feed rollers, misaligned paper guides, or damaged paper"
+    },
+    {
+        question: "Which component in an inkjet printer is responsible for detecting paper type and size?",
+        options: ["Paper sensors", "Print head", "Ink cartridge", "Belt assembly"],
+        answer: "Paper sensors"
+    },
+    {
+        question: "What is the primary function of the print head nozzle check pattern in inkjet printers?",
+        options: ["To identify clogged nozzles and print quality issues", "To align cartridges", "To extend cartridge life", "To improve printing speed"],
+        answer: "To identify clogged nozzles and print quality issues"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for poor color accuracy in inkjet printers?",
+        options: ["Running a print head alignment and color calibration", "Replacing the fuser assembly", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Running a print head alignment and color calibration"
+    },
+    {
+        question: "What is the primary cause of ink smearing on inkjet-printed pages?",
+        options: ["Incorrect paper type or print settings", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Incorrect paper type or print settings"
+    }
+  ],
+ThermalPrinters:[
+    {
+        question: "Which type of thermal printer uses heat-sensitive paper that darkens when heated?",
+        options: ["Direct thermal printer", "Thermal transfer printer", "Inkjet printer", "Laser printer"],
+        answer: "Direct thermal printer"
+    },
+    {
+        question: "Which type of thermal printer uses a heated ribbon to transfer ink onto paper?",
+        options: ["Thermal transfer printer", "Direct thermal printer", "Inkjet printer", "Laser printer"],
+        answer: "Thermal transfer printer"
+    },
+    {
+        question: "What is the primary component responsible for generating heat in thermal printers?",
+        options: ["Thermal print head", "Ink ribbon", "Paper feed roller", "Platen roller"],
+        answer: "Thermal print head"
+    },
+    {
+        question: "Which of the following is a common application for direct thermal printers?",
+        options: ["Receipt printing and shipping labels", "High-quality photo printing", "Document printing", "Large-format printing"],
+        answer: "Receipt printing and shipping labels"
+    },
+    {
+        question: "What is the primary advantage of thermal transfer printers over direct thermal printers?",
+        options: ["More durable and long-lasting prints", "Faster printing speed", "Lower cost", "No need for consumables"],
+        answer: "More durable and long-lasting prints"
+    },
+    {
+        question: "Which component in a thermal printer is responsible for pressing the paper against the print head?",
+        options: ["Platen roller", "Thermal print head", "Ink ribbon", "Paper feed roller"],
+        answer: "Platen roller"
+    },
+    {
+        question: "What is the primary cause of faded prints in direct thermal printers?",
+        options: ["Expired or low-quality thermal paper", "Worn print head", "Incorrect print settings", "Paper jams"],
+        answer: "Expired or low-quality thermal paper"
+    },
+    {
+        question: "Which of the following is a common maintenance task for thermal printers?",
+        options: ["Cleaning the thermal print head and platen roller", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the thermal print head and platen roller"
+    },
+    {
+        question: "What is the primary function of the ink ribbon in thermal transfer printers?",
+        options: ["To transfer ink onto the paper when heated", "To clean the print head", "To feed paper", "To cool the print head"],
+        answer: "To transfer ink onto the paper when heated"
+    },
+    {
+        question: "Which of the following is a common symptom of a failing thermal print head?",
+        options: ["Incomplete or missing print areas", "Paper jams", "Slow printing", "Network connectivity issues"],
+        answer: "Incomplete or missing print areas"
+    },
+    {
+        question: "What is the primary cause of paper jams in thermal printers?",
+        options: ["Worn paper feed rollers, misaligned paper guides, or damaged paper", "Low ink levels", "Clogged print head", "Network connectivity issues"],
+        answer: "Worn paper feed rollers, misaligned paper guides, or damaged paper"
+    },
+    {
+        question: "Which component in a thermal printer is responsible for detecting paper type and size?",
+        options: ["Paper sensors", "Thermal print head", "Ink ribbon", "Platen roller"],
+        answer: "Paper sensors"
+    },
+    {
+        question: "What is the primary function of the print head calibration in thermal printers?",
+        options: ["To ensure proper heat distribution and print quality", "To clean the print head", "To extend ribbon life", "To improve printing speed"],
+        answer: "To ensure proper heat distribution and print quality"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for poor print quality in thermal printers?",
+        options: ["Cleaning the thermal print head and checking paper/ribbon quality", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the thermal print head and checking paper/ribbon quality"
+    },
+    {
+        question: "What is the primary cause of wrinkled or distorted prints in thermal printers?",
+        options: ["Incorrect heat settings or paper tension", "Low ink levels", "Clogged print head", "Network connectivity issues"],
+        answer: "Incorrect heat settings or paper tension"
+    },
+    {
+        question: "Which component in a thermal printer is responsible for moving the paper?",
+        options: ["Paper feed rollers", "Thermal print head", "Ink ribbon", "Platen roller"],
+        answer: "Paper feed rollers"
+    },
+    {
+        question: "What is the primary function of the print head temperature control in thermal printers?",
+        options: ["To maintain optimal printing temperature and prevent damage", "To clean the print head", "To extend ribbon life", "To improve printing speed"],
+        answer: "To maintain optimal printing temperature and prevent damage"
+    },
+    {
+        question: "Which of the following is a common maintenance task for the paper feed system in thermal printers?",
+        options: ["Cleaning the paper feed rollers and platen roller", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the paper feed rollers and platen roller"
+    },
+    {
+        question: "What is the primary cause of vertical lines or streaks in thermal prints?",
+        options: ["Damaged or dirty thermal print head elements", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Damaged or dirty thermal print head elements"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for a thermal printer that won't power on?",
+        options: ["Checking power connections and power supply", "Replacing the ink ribbon", "Cleaning the print head", "Resetting the printer"],
+        answer: "Checking power connections and power supply"
+    }
+  ],
+ImpactPrinters:[
+    {
+        question: "Which type of impact printer uses a print head with pins that strike an inked ribbon?",
+        options: ["Dot-matrix printer", "Daisy-wheel printer", "Line printer", "Thermal printer"],
+        answer: "Dot-matrix printer"
+    },
+    {
+        question: "What is the primary advantage of dot-matrix printers?",
+        options: ["Ability to create carbon copies and print on multipart forms", "High print quality", "Quiet operation", "Color printing capability"],
+        answer: "Ability to create carbon copies and print on multipart forms"
+    },
+    {
+        question: "Which component in a dot-matrix printer is responsible for striking the ribbon?",
+        options: ["Print head with pins", "Platen roller", "Ribbon cartridge", "Paper feed roller"],
+        answer: "Print head with pins"
+    },
+    {
+        question: "What is the primary function of the platen roller in dot-matrix printers?",
+        options: ["To provide a firm backing surface for printing", "To move the print head", "To hold the ink ribbon", "To feed paper"],
+        answer: "To provide a firm backing surface for printing"
+    },
+    {
+        question: "Which of the following is a common maintenance task for dot-matrix printers?",
+        options: ["Cleaning the print head and replacing the ribbon", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the print head and replacing the ribbon"
+    },
+    {
+        question: "What is the primary cause of faint or light printing in dot-matrix printers?",
+        options: ["Worn or dried-out ink ribbon", "Misaligned print head", "Paper jams", "Network connectivity issues"],
+        answer: "Worn or dried-out ink ribbon"
+    },
+    {
+        question: "Which component in a dot-matrix printer is responsible for moving the print head?",
+        options: ["Carriage assembly or belt", "Platen roller", "Ribbon cartridge", "Paper feed roller"],
+        answer: "Carriage assembly or belt"
+    },
+    {
+        question: "What is the primary function of the print head alignment in dot-matrix printers?",
+        options: ["To ensure proper pin strike alignment and print quality", "To clean the print head", "To extend ribbon life", "To improve printing speed"],
+        answer: "To ensure proper pin strike alignment and print quality"
+    },
+    {
+        question: "Which of the following is a common symptom of a failing print head in dot-matrix printers?",
+        options: ["Missing or broken characters", "Paper jams", "Slow printing", "Network connectivity issues"],
+        answer: "Missing or broken characters"
+    },
+    {
+        question: "What is the primary cause of paper jams in dot-matrix printers?",
+        options: ["Worn paper feed rollers, misaligned paper guides, or damaged paper", "Low ink levels", "Clogged print head", "Network connectivity issues"],
+        answer: "Worn paper feed rollers, misaligned paper guides, or damaged paper"
+    },
+    {
+        question: "Which component in a dot-matrix printer is responsible for advancing the paper?",
+        options: ["Paper feed rollers and tractor feed", "Print head", "Ribbon cartridge", "Platen roller"],
+        answer: "Paper feed rollers and tractor feed"
+    },
+    {
+        question: "What is the primary function of the tractor feed mechanism in dot-matrix printers?",
+        options: ["To precisely move continuous form paper using sprockets", "To clean the print head", "To extend ribbon life", "To improve printing speed"],
+        answer: "To precisely move continuous form paper using sprockets"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for poor print quality in dot-matrix printers?",
+        options: ["Cleaning the print head and replacing the ribbon", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the print head and replacing the ribbon"
+    },
+    {
+        question: "What is the primary cause of excessive noise in dot-matrix printers?",
+        options: ["Loose components or worn print head pins", "Low ink levels", "Paper jams", "Network connectivity issues"],
+        answer: "Loose components or worn print head pins"
+    },
+    {
+        question: "Which component in a dot-matrix printer is responsible for holding the ink ribbon?",
+        options: ["Ribbon cartridge or spools", "Print head", "Paper feed roller", "Platen roller"],
+        answer: "Ribbon cartridge or spools"
+    },
+    {
+        question: "What is the primary function of the print head gap adjustment in dot-matrix printers?",
+        options: ["To set the optimal distance between print head and paper", "To clean the print head", "To extend ribbon life", "To improve printing speed"],
+        answer: "To set the optimal distance between print head and paper"
+    },
+    {
+        question: "Which of the following is a common maintenance task for the paper feed system in dot-matrix printers?",
+        options: ["Cleaning the paper feed rollers and tractor feed sprockets", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning the paper feed rollers and tractor feed sprockets"
+    },
+    {
+        question: "What is the primary cause of skewed printing in dot-matrix printers?",
+        options: ["Misaligned paper guides or worn tractor feed", "Low ink levels", "Clogged print head", "Network connectivity issues"],
+        answer: "Misaligned paper guides or worn tractor feed"
+    },
+    {
+        question: "Which component in a dot-matrix printer is responsible for detecting paper type and size?",
+        options: ["Paper sensors", "Print head", "Ribbon cartridge", "Platen roller"],
+        answer: "Paper sensors"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for a dot-matrix printer that won't power on?",
+        options: ["Checking power connections and power supply", "Replacing the ink ribbon", "Cleaning the print head", "Resetting the printer"],
+        answer: "Checking power connections and power supply"
+    }
+  ],
+GeneralMaintenance:[
+    {
+        question: "What is the primary purpose of regular printer cleaning?",
+        options: ["To prevent print quality issues and extend component life", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To prevent print quality issues and extend component life"
+    },
+    {
+        question: "Which of the following is a common printer maintenance tool?",
+        options: ["Compressed air, lint-free cloths, and isopropyl alcohol", "Screwdriver and hammer", "Antivirus software", "Video editing software"],
+        answer: "Compressed air, lint-free cloths, and isopropyl alcohol"
+    },
+    {
+        question: "What is the primary function of printer calibration?",
+        options: ["To ensure accurate color reproduction and alignment", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To ensure accurate color reproduction and alignment"
+    },
+    {
+        question: "Which of the following is a common preventive maintenance task for all printers?",
+        options: ["Keeping the printer clean and free of dust", "Increasing print resolution", "Using more expensive paper", "Printing test pages daily"],
+        answer: "Keeping the printer clean and free of dust"
+    },
+    {
+        question: "What is the primary purpose of a printer's maintenance schedule?",
+        options: ["To ensure regular servicing and prevent major failures", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To ensure regular servicing and prevent major failures"
+    },
+    {
+        question: "Which of the following is a common sign that printer maintenance is needed?",
+        options: ["Decreased print quality, unusual noises, or frequent paper jams", "Increased printing speed", "Better color accuracy", "Quieter operation"],
+        answer: "Decreased print quality, unusual noises, or frequent paper jams"
+    },
+    {
+        question: "What is the primary benefit of using manufacturer-recommended consumables?",
+        options: ["Better print quality and reduced risk of damage", "Lower cost", "Faster printing", "Easier installation"],
+        answer: "Better print quality and reduced risk of damage"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for all printer types?",
+        options: ["Checking connections, restarting the printer, and updating drivers", "Increasing print resolution", "Changing paper type", "Adjusting monitor settings"],
+        answer: "Checking connections, restarting the printer, and updating drivers"
+    },
+    {
+        question: "What is the primary function of printer firmware updates?",
+        options: ["To fix bugs, improve functionality, and add features", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To fix bugs, improve functionality, and add features"
+    },
+    {
+        question: "Which of the following is a common maintenance task for printer paper paths?",
+        options: ["Cleaning paper feed rollers and removing debris", "Replacing toner cartridges", "Cleaning the corona wire", "Replacing the drum unit"],
+        answer: "Cleaning paper feed rollers and removing debris"
+    },
+    {
+        question: "What is the primary purpose of printer diagnostic tools?",
+        options: ["To identify and resolve printer problems", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To identify and resolve printer problems"
+    },
+    {
+        question: "Which of the following is a common best practice for printer placement?",
+        options: ["In a well-ventilated area away from direct sunlight and heat sources", "In a closed cabinet", "Near a window", "On the floor"],
+        answer: "In a well-ventilated area away from direct sunlight and heat sources"
+    },
+    {
+        question: "What is the primary cause of printer connectivity issues?",
+        options: ["Loose cables, network problems, or incorrect settings", "Low ink/toner levels", "Paper jams", "Print quality issues"],
+        answer: "Loose cables, network problems, or incorrect settings"
+    },
+    {
+        question: "Which of the following is a common maintenance task for printer exterior surfaces?",
+        options: ["Wiping with a damp, lint-free cloth", "Using abrasive cleaners", "Spraying directly with water", "Ignoring dust buildup"],
+        answer: "Wiping with a damp, lint-free cloth"
+    },
+    {
+        question: "What is the primary purpose of printer documentation?",
+        options: ["To provide maintenance instructions and troubleshooting guidance", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To provide maintenance instructions and troubleshooting guidance"
+    },
+    {
+        question: "Which of the following is a common sign that a printer component needs replacement?",
+        options: ["Visible wear, damage, or consistent failure", "Increased printing speed", "Better color accuracy", "Quieter operation"],
+        answer: "Visible wear, damage, or consistent failure"
+    },
+    {
+        question: "What is the primary function of a printer's self-test or diagnostic page?",
+        options: ["To assess printer functionality and identify problems", "To increase printing speed", "To reduce paper usage", "To improve wireless connectivity"],
+        answer: "To assess printer functionality and identify problems"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for print quality issues?",
+        options: ["Running cleaning cycles and checking consumables", "Increasing print resolution", "Changing paper type", "Adjusting monitor settings"],
+        answer: "Running cleaning cycles and checking consumables"
+    },
+    {
+        question: "What is the primary benefit of following a regular printer maintenance schedule?",
+        options: ["Extended printer life and reduced repair costs", "Increased printing speed", "Lower ink consumption", "Better wireless connectivity"],
+        answer: "Extended printer life and reduced repair costs"
+    },
+    {
+        question: "Which of the following is a common best practice for printer maintenance?",
+        options: ["Following manufacturer's recommendations and using genuine consumables", "Ignoring minor issues", "Using third-party consumables exclusively", "Increasing print resolution"],
+        answer: "Following manufacturer's recommendations and using genuine consumables"
+    }
+],
+  }
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    // Function to shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(q.options);
+      
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'IntroMaintenance': 'Introduction to Printer Maintenance & Troubleshooting',
+        'LaserPrinters': 'Laser Printers',
+        'InkjetPrinters': 'Inkjet Printers',
+        'ThermalPrinters': 'Thermal Printers',
+        'ImpactPrinters': 'Impact Printers (Dot-Matrix)',
+        'GeneralMaintenance': 'General Maintenance & Issue Resolution'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
