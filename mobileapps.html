@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mobile Apps & Data Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.topic-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #90EE90;
+      border-color: #32CD32;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #1E90FF;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF8C00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #FF6347;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #9932CC;
+    }
+  </style>
+</head>
+<body>
+<h1>Mobile Apps & Data Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('IntroMobileAppsData')">Introduction to Mobile Apps & Data</button>
+  <button class="topic-btn" onclick="startQuiz('MobileApps')">Mobile Apps</button>
+  <button class="topic-btn" onclick="startQuiz('EmailConfig')">Email Configuration</button>
+  <button class="topic-btn" onclick="startQuiz('DataSync')">Data Synchronization</button>
+  <button class="topic-btn" onclick="startQuiz('EnterpriseMobility')">Enterprise Mobility</button>
+  <button class="topic-btn" onclick="startQuiz('LocationServices')">Location Services</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+       IntroMobileAppsData:[
+    {
+        question: "What is the primary purpose of mobile applications?",
+        options: ["To provide specific functionality and services on mobile devices", "To replace desktop computers", "To extend battery life", "To improve signal strength"],
+        answer: "To provide specific functionality and services on mobile devices"
+    },
+    {
+        question: "Which of the following is NOT a common type of mobile app?",
+        options: ["Mainframe application", "Native app", "Web app", "Hybrid app"],
+        answer: "Mainframe application"
+    },
+    {
+        question: "What is the primary difference between native and web apps?",
+        options: ["Native apps are installed on the device, web apps run in browsers", "Native apps require internet, web apps work offline", "Web apps are faster than native apps", "Native apps are cheaper to develop"],
+        answer: "Native apps are installed on the device, web apps run in browsers"
+    },
+    {
+        question: "What is the primary function of mobile data management?",
+        options: ["To organize, store, and protect data on mobile devices", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To organize, store, and protect data on mobile devices"
+    },
+    {
+        question: "Which of the following is a common mobile data storage option?",
+        options: ["Cloud storage", "Floppy disks", "CD-ROMs", "DVDs"],
+        answer: "Cloud storage"
+    },
+    {
+        question: "What is the primary advantage of cloud-based mobile apps?",
+        options: ["Data accessibility from multiple devices", "Faster processing", "Better battery life", "Improved signal strength"],
+        answer: "Data accessibility from multiple devices"
+    },
+    {
+        question: "Which of the following is a key consideration for mobile app development?",
+        options: ["Device compatibility and user experience", "Cost only", "Development speed only", "App size only"],
+        answer: "Device compatibility and user experience"
+    },
+    {
+        question: "What is the primary purpose of mobile app permissions?",
+        options: ["To control access to device features and user data", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To control access to device features and user data"
+    },
+    {
+        question: "Which of the following is a common mobile app monetization strategy?",
+        options: ["Freemium model", "Free distribution only", "Open source only", "Non-profit only"],
+        answer: "Freemium model"
+    },
+    {
+        question: "What is the primary function of mobile app stores?",
+        options: ["To distribute and manage mobile applications", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To distribute and manage mobile applications"
+    },
+    {
+        question: "Which of the following is a common mobile app security concern?",
+        options: ["Data leakage and unauthorized access", "Slow performance", "Poor user interface", "Large app size"],
+        answer: "Data leakage and unauthorized access"
+    },
+    {
+        question: "What is the primary advantage of hybrid mobile apps?",
+        options: ["Cross-platform compatibility with single codebase", "Better performance than native apps", "Smaller app size", "Lower battery consumption"],
+        answer: "Cross-platform compatibility with single codebase"
+    },
+    {
+        question: "Which of the following is a common mobile data backup method?",
+        options: ["Cloud backup", "Local printing", "Email attachment", "SMS transfer"],
+        answer: "Cloud backup"
+    },
+    {
+        question: "What is the primary purpose of mobile app analytics?",
+        options: ["To track user behavior and app performance", "To extend battery life", "To improve signal strength", "To enhance app security"],
+        answer: "To track user behavior and app performance"
+    },
+    {
+        question: "Which of the following is a common mobile data security measure?",
+        options: ["Encryption", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Encryption"
+    },
+    {
+        question: "What is the primary function of mobile app updates?",
+        options: ["To fix bugs and add new features", "To extend battery life", "To improve signal strength", "To enhance app security"],
+        answer: "To fix bugs and add new features"
+    },
+    {
+        question: "Which of the following is a common mobile data synchronization method?",
+        options: ["Cloud sync", "Manual transfer via cable", "SMS transfer", "Email attachment"],
+        answer: "Cloud sync"
+    },
+    {
+        question: "What is the primary purpose of mobile app testing?",
+        options: ["To ensure functionality, usability, and performance", "To extend battery life", "To improve signal strength", "To enhance app security"],
+        answer: "To ensure functionality, usability, and performance"
+    },
+    {
+        question: "Which of the following is a common mobile data storage format?",
+        options: ["SQLite", "FAT32", "NTFS", "HFS+"],
+        answer: "SQLite"
+    },
+    {
+        question: "What is the primary advantage of progressive web apps (PWAs)?",
+        options: ["Web-like experience with app-like features", "Better performance than native apps", "Smaller app size", "Lower battery consumption"],
+        answer: "Web-like experience with app-like features"
+    }
+  ],
+MobileApps:[
+    {
+        question: "Which mobile app development approach uses platform-specific languages?",
+        options: ["Native development", "Hybrid development", "Web development", "Progressive web apps"],
+        answer: "Native development"
+    },
+    {
+        question: "What is the primary programming language for iOS native app development?",
+        options: ["Swift or Objective-C", "Java", "JavaScript", "C#"],
+        answer: "Swift or Objective-C"
+    },
+    {
+        question: "What is the primary programming language for Android native app development?",
+        options: ["Java or Kotlin", "Swift", "JavaScript", "C#"],
+        answer: "Java or Kotlin"
+    },
+    {
+        question: "Which framework is commonly used for hybrid mobile app development?",
+        options: ["React Native or Flutter", "Xcode", "Android Studio", "Visual Studio"],
+        answer: "React Native or Flutter"
+    },
+    {
+        question: "What is the primary advantage of native mobile apps?",
+        options: ["Optimal performance and access to device features", "Cross-platform compatibility", "Faster development", "Lower cost"],
+        answer: "Optimal performance and access to device features"
+    },
+    {
+        question: "Which of the following is a common mobile app distribution platform?",
+        options: ["App Store and Google Play Store", "GitHub", "WordPress", "Amazon"],
+        answer: "App Store and Google Play Store"
+    },
+    {
+        question: "What is the primary purpose of mobile app sandboxing?",
+        options: ["To isolate apps and protect system resources", "To improve app performance", "To extend battery life", "To enhance user experience"],
+        answer: "To isolate apps and protect system resources"
+    },
+    {
+        question: "Which of the following is a common mobile app testing method?",
+        options: ["Emulator and real device testing", "Code review only", "User surveys only", "Market analysis only"],
+        answer: "Emulator and real device testing"
+    },
+    {
+        question: "What is the primary function of mobile app APIs?",
+        options: ["To enable communication between apps and services", "To improve app performance", "To extend battery life", "To enhance user interface"],
+        answer: "To enable communication between apps and services"
+    },
+    {
+        question: "Which of the following is a common mobile app monetization model?",
+        options: ["In-app purchases", "Free distribution only", "Open source only", "Non-profit only"],
+        answer: "In-app purchases"
+    },
+    {
+        question: "What is the primary purpose of mobile app user interface (UI) design?",
+        options: ["To create an intuitive and visually appealing interaction", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To create an intuitive and visually appealing interaction"
+    },
+    {
+        question: "Which of the following is a common mobile app development tool?",
+        options: ["Android Studio and Xcode", "Microsoft Word", "Adobe Photoshop", "AutoCAD"],
+        answer: "Android Studio and Xcode"
+    },
+    {
+        question: "What is the primary function of mobile app push notifications?",
+        options: ["To deliver timely information to users", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To deliver timely information to users"
+    },
+    {
+        question: "Which of the following is a common mobile app security measure?",
+        options: ["Code obfuscation and encryption", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Code obfuscation and encryption"
+    },
+    {
+        question: "What is the primary purpose of mobile app user experience (UX) design?",
+        options: ["To ensure the app is easy and enjoyable to use", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To ensure the app is easy and enjoyable to use"
+    },
+    {
+        question: "Which of the following is a common mobile app optimization technique?",
+        options: ["Reducing app size and resource usage", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Reducing app size and resource usage"
+    },
+    {
+        question: "What is the primary function of mobile app analytics tools?",
+        options: ["To track user behavior and app performance", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To track user behavior and app performance"
+    },
+    {
+        question: "Which of the following is a common mobile app debugging technique?",
+        options: ["Logging and breakpoints", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Logging and breakpoints"
+    },
+    {
+        question: "What is the primary purpose of mobile app version control?",
+        options: ["To manage changes to app code over time", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To manage changes to app code over time"
+    },
+    {
+        question: "Which of the following is a common mobile app deployment method?",
+        options: ["App store distribution and enterprise distribution", "Email attachment only", "SMS transfer only", "Physical media only"],
+        answer: "App store distribution and enterprise distribution"
+    }
+  ],
+EmailConfig:[
+    {
+        question: "Which protocol is commonly used for receiving email on mobile devices?",
+        options: ["IMAP or POP3", "SMTP", "HTTP", "FTP"],
+        answer: "IMAP or POP3"
+    },
+    {
+        question: "What is the primary function of the SMTP protocol?",
+        options: ["Sending email", "Receiving email", "Synchronizing contacts", "Managing calendars"],
+        answer: "Sending email"
+    },
+    {
+        question: "Which email protocol synchronizes emails across multiple devices?",
+        options: ["IMAP", "POP3", "SMTP", "HTTP"],
+        answer: "IMAP"
+    },
+    {
+        question: "What is the primary advantage of IMAP over POP3?",
+        options: ["Emails remain on the server and can be accessed from multiple devices", "Faster email retrieval", "Better security", "Lower bandwidth usage"],
+        answer: "Emails remain on the server and can be accessed from multiple devices"
+    },
+    {
+        question: "Which of the following is a common mobile email client?",
+        options: ["Gmail, Outlook, and Apple Mail", "Microsoft Word", "Adobe Photoshop", "AutoCAD"],
+        answer: "Gmail, Outlook, and Apple Mail"
+    },
+    {
+        question: "What is the primary purpose of email server settings?",
+        options: ["To configure incoming and outgoing mail servers", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To configure incoming and outgoing mail servers"
+    },
+    {
+        question: "Which of the following is a common email security protocol?",
+        options: ["SSL/TLS", "HTTP", "FTP", "SSH"],
+        answer: "SSL/TLS"
+    },
+    {
+        question: "What is the primary function of email encryption?",
+        options: ["To protect email content from unauthorized access", "To improve email delivery speed", "To extend battery life", "To enhance app performance"],
+        answer: "To protect email content from unauthorized access"
+    },
+    {
+        question: "Which of the following is a common email authentication method?",
+        options: ["Username and password", "Biometric authentication only", "Two-factor authentication only", "Single sign-on only"],
+        answer: "Username and password"
+    },
+    {
+        question: "What is the primary purpose of email synchronization settings?",
+        options: ["To control how and when emails are updated", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To control how and when emails are updated"
+    },
+    {
+        question: "Which of the following is a common mobile email configuration issue?",
+        options: ["Incorrect server settings", "Slow app performance", "Poor battery life", "Weak signal strength"],
+        answer: "Incorrect server settings"
+    },
+    {
+        question: "What is the primary function of email push notifications?",
+        options: ["To alert users of new emails in real-time", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To alert users of new emails in real-time"
+    },
+    {
+        question: "Which of the following is a common email attachment format?",
+        options: ["PDF, DOC, and JPG", "EXE", "DLL", "SYS"],
+        answer: "PDF, DOC, and JPG"
+    },
+    {
+        question: "What is the primary purpose of email signature settings?",
+        options: ["To add personal information to outgoing emails", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To add personal information to outgoing emails"
+    },
+    {
+        question: "Which of the following is a common email filtering feature?",
+        options: ["Spam filtering", "Image enhancement", "Text formatting", "Video editing"],
+        answer: "Spam filtering"
+    },
+    {
+        question: "What is the primary function of email auto-reply settings?",
+        options: ["To automatically respond to incoming emails", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To automatically respond to incoming emails"
+    },
+    {
+        question: "Which of the following is a common email troubleshooting step?",
+        options: ["Checking server settings and internet connection", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Checking server settings and internet connection"
+    },
+    {
+        question: "What is the primary purpose of email folder management?",
+        options: ["To organize emails for easier access", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To organize emails for easier access"
+    },
+    {
+        question: "Which of the following is a common email search feature?",
+        options: ["Keyword search and filtering", "Image enhancement", "Text formatting", "Video editing"],
+        answer: "Keyword search and filtering"
+    },
+    {
+        question: "What is the primary function of email account synchronization?",
+        options: ["To ensure emails are consistent across devices", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To ensure emails are consistent across devices"
+    }
+  ],
+DataSync:[
+    {
+        question: "What is the primary purpose of data synchronization?",
+        options: ["To ensure data consistency across multiple devices", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To ensure data consistency across multiple devices"
+    },
+    {
+        question: "Which of the following is a common data synchronization method?",
+        options: ["Cloud sync", "Local printing", "Email attachment", "SMS transfer"],
+        answer: "Cloud sync"
+    },
+    {
+        question: "What is the primary advantage of automatic data synchronization?",
+        options: ["Data is always up-to-date without manual intervention", "Faster processing", "Better battery life", "Improved signal strength"],
+        answer: "Data is always up-to-date without manual intervention"
+    },
+    {
+        question: "Which of the following is a common data synchronization protocol?",
+        options: ["SyncML", "HTTP", "FTP", "SSH"],
+        answer: "SyncML"
+    },
+    {
+        question: "What is the primary function of data conflict resolution in synchronization?",
+        options: ["To handle inconsistencies between data versions", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To handle inconsistencies between data versions"
+    },
+    {
+        question: "Which of the following is a common data synchronization service?",
+        options: ["Google Sync, iCloud, and Microsoft OneDrive", "Microsoft Word", "Adobe Photoshop", "AutoCAD"],
+        answer: "Google Sync, iCloud, and Microsoft OneDrive"
+    },
+    {
+        question: "What is the primary purpose of selective data synchronization?",
+        options: ["To sync only specific data types or folders", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To sync only specific data types or folders"
+    },
+    {
+        question: "Which of the following is a common data synchronization issue?",
+        options: ["Data conflicts and sync errors", "Slow app performance", "Poor battery life", "Weak signal strength"],
+        answer: "Data conflicts and sync errors"
+    },
+    {
+        question: "What is the primary function of background data synchronization?",
+        options: ["To sync data without user interaction", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To sync data without user interaction"
+    },
+    {
+        question: "Which of the following is a common data synchronization setting?",
+        options: ["Sync frequency and data types", "Screen brightness", "Volume level", "Notification preferences"],
+        answer: "Sync frequency and data types"
+    },
+    {
+        question: "What is the primary advantage of real-time data synchronization?",
+        options: ["Immediate data updates across all devices", "Faster processing", "Better battery life", "Improved signal strength"],
+        answer: "Immediate data updates across all devices"
+    },
+    {
+        question: "Which of the following is a common data synchronization troubleshooting step?",
+        options: ["Checking internet connection and sync settings", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Checking internet connection and sync settings"
+    },
+    {
+        question: "What is the primary purpose of data synchronization in enterprise environments?",
+        options: ["To ensure employees have access to up-to-date information", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To ensure employees have access to up-to-date information"
+    },
+    {
+        question: "Which of the following is a common data synchronization security measure?",
+        options: ["Encryption and authentication", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Encryption and authentication"
+    },
+    {
+        question: "What is the primary function of offline data synchronization?",
+        options: ["To sync data when internet connection is restored", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To sync data when internet connection is restored"
+    },
+    {
+        question: "Which of the following is a common data synchronization optimization technique?",
+        options: ["Delta sync (only syncing changes)", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Delta sync (only syncing changes)"
+    },
+    {
+        question: "What is the primary purpose of data synchronization in mobile apps?",
+        options: ["To provide consistent user experience across devices", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To provide consistent user experience across devices"
+    },
+    {
+        question: "Which of the following is a common data synchronization conflict resolution strategy?",
+        options: ["Last write wins, manual resolution, or versioning", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Last write wins, manual resolution, or versioning"
+    },
+    {
+        question: "What is the primary function of data synchronization scheduling?",
+        options: ["To control when sync operations occur", "To improve app performance", "To extend battery life", "To enhance app security"],
+        answer: "To control when sync operations occur"
+    },
+    {
+        question: "Which of the following is a common data synchronization bandwidth optimization technique?",
+        options: ["Data compression and throttling", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Data compression and throttling"
+    }
+  ],
+EnterpriseMobility:[
+    {
+        question: "What is the primary purpose of Enterprise Mobility Management (EMM)?",
+        options: ["To secure and manage mobile devices in an enterprise environment", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To secure and manage mobile devices in an enterprise environment"
+    },
+    {
+        question: "Which of the following is a common EMM component?",
+        options: ["Mobile Device Management (MDM)", "Mobile App Management (MAM)", "Mobile Content Management (MCM)", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary function of Mobile Device Management (MDM)?",
+        options: ["To manage and secure mobile devices", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To manage and secure mobile devices"
+    },
+    {
+        question: "Which of the following is a common MDM capability?",
+        options: ["Remote wipe and device locking", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Remote wipe and device locking"
+    },
+    {
+        question: "What is the primary purpose of Mobile Application Management (MAM)?",
+        options: ["To manage and secure enterprise applications", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To manage and secure enterprise applications"
+    },
+    {
+        question: "Which of the following is a common MAM feature?",
+        options: ["App wrapping and containerization", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "App wrapping and containerization"
+    },
+    {
+        question: "What is the primary function of Mobile Content Management (MCM)?",
+        options: ["To manage and secure enterprise data", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To manage and secure enterprise data"
+    },
+    {
+        question: "Which of the following is a common MCM feature?",
+        options: ["Document encryption and access control", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Document encryption and access control"
+    },
+    {
+        question: "What is the primary purpose of Bring Your Own Device (BYOD) policies?",
+        options: ["To allow employees to use personal devices for work", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To allow employees to use personal devices for work"
+    },
+    {
+        question: "Which of the following is a common BYOD security measure?",
+        options: ["Containerization and separation of work and personal data", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Containerization and separation of work and personal data"
+    },
+    {
+        question: "What is the primary function of Enterprise Mobility Security?",
+        options: ["To protect enterprise data and systems on mobile devices", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To protect enterprise data and systems on mobile devices"
+    },
+    {
+        question: "Which of the following is a common enterprise mobility security measure?",
+        options: ["Multi-factor authentication and encryption", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Multi-factor authentication and encryption"
+    },
+    {
+        question: "What is the primary purpose of Corporate-Owned Personally Enabled (COPE) devices?",
+        options: ["To provide employees with company-owned devices that can also be used personally", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To provide employees with company-owned devices that can also be used personally"
+    },
+    {
+        question: "Which of the following is a common COPE management feature?",
+        options: ["Device enrollment and policy enforcement", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Device enrollment and policy enforcement"
+    },
+    {
+        question: "What is the primary function of Mobile Identity Management?",
+        options: ["To manage user identities and access across mobile devices", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To manage user identities and access across mobile devices"
+    },
+    {
+        question: "Which of the following is a common mobile identity management feature?",
+        options: ["Single sign-on (SSO) and federated identity", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Single sign-on (SSO) and federated identity"
+    },
+    {
+        question: "What is the primary purpose of Enterprise Mobility Analytics?",
+        options: ["To monitor and analyze mobile device and app usage", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To monitor and analyze mobile device and app usage"
+    },
+    {
+        question: "Which of the following is a common enterprise mobility analytics metric?",
+        options: ["Device compliance and app usage", "Screen brightness", "Volume level", "Notification preferences"],
+        answer: "Device compliance and app usage"
+    },
+    {
+        question: "What is the primary function of Mobile Threat Defense (MTD)?",
+        options: ["To detect and prevent mobile security threats", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To detect and prevent mobile security threats"
+    },
+    {
+        question: "Which of the following is a common MTD capability?",
+        options: ["Malware detection and network security", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Malware detection and network security"
+    }
+  ],
+LocationServices:[
+    {
+        question: "What is the primary function of location services on mobile devices?",
+        options: ["To determine the geographical position of the device", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To determine the geographical position of the device"
+    },
+    {
+        question: "Which of the following is a common location technology used in mobile devices?",
+        options: ["GPS, Wi-Fi, and cellular triangulation", "Bluetooth only", "NFC only", "Infrared only"],
+        answer: "GPS, Wi-Fi, and cellular triangulation"
+    },
+    {
+        question: "What is the primary advantage of GPS for location services?",
+        options: ["High accuracy in outdoor environments", "Low power consumption", "Indoor functionality", "No need for internet connection"],
+        answer: "High accuracy in outdoor environments"
+    },
+    {
+        question: "Which of the following is a common use case for location services?",
+        options: ["Navigation and mapping", "Battery optimization", "Signal enhancement", "App performance improvement"],
+        answer: "Navigation and mapping"
+    },
+    {
+        question: "What is the primary function of Wi-Fi positioning for location services?",
+        options: ["To determine location based on nearby Wi-Fi networks", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To determine location based on nearby Wi-Fi networks"
+    },
+    {
+        question: "Which of the following is a common location services privacy setting?",
+        options: ["App-specific location permissions", "Screen brightness", "Volume level", "Notification preferences"],
+        answer: "App-specific location permissions"
+    },
+    {
+        question: "What is the primary purpose of geofencing in location services?",
+        options: ["To trigger actions when a device enters or leaves a defined area", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To trigger actions when a device enters or leaves a defined area"
+    },
+    {
+        question: "Which of the following is a common geofencing application?",
+        options: ["Location-based reminders and marketing", "Battery optimization", "Signal enhancement", "App performance improvement"],
+        answer: "Location-based reminders and marketing"
+    },
+    {
+        question: "What is the primary function of beacon technology in location services?",
+        options: ["To provide precise indoor positioning", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To provide precise indoor positioning"
+    },
+    {
+        question: "Which of the following is a common beacon technology?",
+        options: ["Bluetooth Low Energy (BLE) beacons", "Wi-Fi beacons", "NFC beacons", "GPS beacons"],
+        answer: "Bluetooth Low Energy (BLE) beacons"
+    },
+    {
+        question: "What is the primary purpose of location history in mobile devices?",
+        options: ["To track and store past locations", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To track and store past locations"
+    },
+    {
+        question: "Which of the following is a common location services security concern?",
+        options: ["Unauthorized location tracking", "Slow app performance", "Poor battery life", "Weak signal strength"],
+        answer: "Unauthorized location tracking"
+    },
+    {
+        question: "What is the primary function of location-based services (LBS)?",
+        options: ["To provide information and services based on location", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To provide information and services based on location"
+    },
+    {
+        question: "Which of the following is a common LBS application?",
+        options: ["Local search and recommendations", "Battery optimization", "Signal enhancement", "App performance improvement"],
+        answer: "Local search and recommendations"
+    },
+    {
+        question: "What is the primary advantage of hybrid location technologies?",
+        options: ["Improved accuracy and reliability in various environments", "Lower power consumption", "Faster positioning", "Better privacy"],
+        answer: "Improved accuracy and reliability in various environments"
+    },
+    {
+        question: "Which of the following is a common location services optimization technique?",
+        options: ["Adaptive location updates based on usage", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Adaptive location updates based on usage"
+    },
+    {
+        question: "What is the primary purpose of location accuracy settings?",
+        options: ["To balance location precision with battery consumption", "To improve app performance", "To enhance app security", "To increase signal strength"],
+        answer: "To balance location precision with battery consumption"
+    },
+    {
+        question: "Which of the following is a common location services troubleshooting step?",
+        options: ["Checking location settings and GPS signal", "Increasing screen brightness", "Disabling notifications", "Using public Wi-Fi"],
+        answer: "Checking location settings and GPS signal"
+    },
+    {
+        question: "What is the primary function of location analytics?",
+        options: ["To analyze location data for insights and patterns", "To extend battery life", "To improve signal strength", "To enhance app performance"],
+        answer: "To analyze location data for insights and patterns"
+    },
+    {
+        question: "Which of the following is a common location analytics application?",
+        options: ["Foot traffic analysis and location-based marketing", "Battery optimization", "Signal enhancement", "App performance improvement"],
+        answer: "Foot traffic analysis and location-based marketing"
+    }
+],
+  }
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    // Function to shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(q.options);
+      
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'IntroMobileAppsData': 'Introduction to Mobile Apps & Data',
+        'MobileApps': 'Mobile Apps',
+        'EmailConfig': 'Email Configuration',
+        'DataSync': 'Data Synchronization',
+        'EnterpriseMobility': 'Enterprise Mobility',
+        'LocationServices': 'Location Services'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
