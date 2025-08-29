@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CompTIA Core A+ Printer Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    .topic-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 0 auto 30px auto;
+      max-width: 900px;
+    }
+    button.topic-btn {
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button.topic-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+    .question-count {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .options button.correct {
+      background-color: #90EE90;
+      border-color: #32CD32;
+    }
+    .feedback {
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+      min-height: 24px;
+    }
+    .next-btn {
+      display: none;
+      margin: 20px auto 0 auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .next-btn:hover {
+      background-color: #1E90FF;
+    }
+    .quiz-complete {
+      text-align: center;
+    }
+    .quiz-complete button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #4169E1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .quiz-complete button:hover {
+      background-color: #1E90FF;
+    }
+    .back-btn {
+      display: block;
+      margin: 15px auto;
+      padding: 8px 16px;
+      background-color: #FF8C00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .back-btn:hover {
+      background-color: #FF6347;
+    }
+    .attempts {
+      text-align: right;
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .home-btn:hover {
+      background-color: #9932CC;
+    }
+  </style>
+</head>
+<body>
+<h1>CompTIA Core A+ Printer Quiz</h1>
+<div class="topic-buttons" id="topicButtons">
+  <button class="topic-btn" onclick="startQuiz('PrinterOverview')">Printer Overview & Interfaces</button>
+  <button class="topic-btn" onclick="startQuiz('PrinterTypes')">Printer Types & Technologies</button>
+  <button class="topic-btn" onclick="startQuiz('InstallationConfig')">Installation & Configuration</button>
+  <button class="topic-btn" onclick="startQuiz('DriversTroubleshooting')">Printer Drivers & Troubleshooting</button>
+  <button class="topic-btn" onclick="startQuiz('NetworkPrinting')">Network Printing & Print Servers</button>
+  <button class="topic-btn" onclick="startQuiz('PrinterSecurity')">Printer Security</button>
+</div>
+<div class="quiz-container" id="quizBox">
+  <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+  <div class="question" id="questionText"></div>
+  <div class="question-count" id="questionCount"></div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="options" id="optionButtons"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+</div>
+<a href="index.html" class="home-btn">← Back to Main Quiz</a>
+<script>
+    const quizData = {
+       PrinterOverview:[
+    {
+        question: "Which printer interface is most commonly used for direct connections to modern computers?",
+        options: ["USB", "Serial", "Parallel", "SCSI"],
+        answer: "USB"
+    },
+    {
+        question: "What is the maximum theoretical speed of USB 3.0?",
+        options: ["5 Gbps", "480 Mbps", "1.5 Gbps", "10 Gbps"],
+        answer: "5 Gbps"
+    },
+    {
+        question: "Which wireless technology is commonly used for printers?",
+        options: ["Wi-Fi", "Bluetooth", "NFC", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "What is the primary advantage of network printers over local printers?",
+        options: ["They can be shared among multiple users", "They print faster", "They use less ink", "They are cheaper to maintain"],
+        answer: "They can be shared among multiple users"
+    },
+    {
+        question: "Which interface was commonly used for printers before USB became popular?",
+        options: ["Parallel port", "HDMI", "DVI", "VGA"],
+        answer: "Parallel port"
+    },
+    {
+        question: "What does the term 'duplex printing' refer to?",
+        options: ["Printing on both sides of the paper", "Printing in color", "Printing at high speed", "Printing wirelessly"],
+        answer: "Printing on both sides of the paper"
+    },
+    {
+        question: "Which of the following is NOT a common printer interface?",
+        options: ["PS/2", "USB", "Ethernet", "Wireless"],
+        answer: "PS/2"
+    },
+    {
+        question: "What is the maximum cable length for USB 2.0 without signal degradation?",
+        options: ["5 meters (16 feet)", "2 meters (6.5 feet)", "10 meters (33 feet)", "15 meters (49 feet)"],
+        answer: "5 meters (16 feet)"
+    },
+    {
+        question: "Which printer interface uses a 25-pin connector?",
+        options: ["Parallel port", "USB", "Ethernet", "FireWire"],
+        answer: "Parallel port"
+    },
+    {
+        question: "What is the primary purpose of a print spooler?",
+        options: ["To hold print jobs in a queue before sending them to the printer", "To clean printer heads", "To align printer cartridges", "To reduce paper jams"],
+        answer: "To hold print jobs in a queue before sending them to the printer"
+    },
+    {
+        question: "Which of the following is a cloud-based printing service?",
+        options: ["Google Cloud Print", "Print Manager", "Print Spooler", "Printer Control Language"],
+        answer: "Google Cloud Print"
+    },
+    {
+        question: "What is the primary advantage of Wi-Fi Direct for printers?",
+        options: ["It allows devices to connect directly to the printer without a network", "It increases printing speed", "It improves print quality", "It reduces ink consumption"],
+        answer: "It allows devices to connect directly to the printer without a network"
+    },
+    {
+        question: "Which type of cable is typically used for Ethernet connections to printers?",
+        options: ["Twisted pair", "Coaxial", "Fiber optic", "HDMI"],
+        answer: "Twisted pair"
+    },
+    {
+        question: "What is the purpose of DHCP in network printing?",
+        options: ["To automatically assign IP addresses to printers", "To manage print queues", "To control printer drivers", "To monitor ink levels"],
+        answer: "To automatically assign IP addresses to printers"
+    },
+    {
+        question: "Which of the following is a disadvantage of wireless printing?",
+        options: ["Potential security risks", "Slower printing speed", "Lower print quality", "Higher cost"],
+        answer: "Potential security risks"
+    },
+    {
+        question: "What does PCL stand for in printer terminology?",
+        options: ["Printer Control Language", "Page Control Logic", "Print Command Language", "Printer Configuration Language"],
+        answer: "Printer Control Language"
+    },
+    {
+        question: "Which interface provides the fastest data transfer for printers?",
+        options: ["Thunderbolt", "USB 3.0", "Ethernet", "Wi-Fi"],
+        answer: "Thunderbolt"
+    },
+    {
+        question: "What is the primary advantage of Bluetooth for mobile printing?",
+        options: ["Low power consumption", "High printing speed", "Long range", "High security"],
+        answer: "Low power consumption"
+    },
+    {
+        question: "Which type of printer interface uses a 36-pin connector?",
+        options: ["Centronics parallel", "USB", "Serial", "Ethernet"],
+        answer: "Centronics parallel"
+    },
+    {
+        question: "What is the maximum speed of Gigabit Ethernet?",
+        options: ["1 Gbps", "100 Mbps", "10 Mbps", "10 Gbps"],
+        answer: "1 Gbps"
+    }
+  ],
+PrinterTypes:[
+    {
+        question: "Which printer type uses a print head that moves back and forth and strikes an inked ribbon?",
+        options: ["Impact (Dot-matrix)", "Inkjet", "Laser", "Thermal"],
+        answer: "Impact (Dot-matrix)"
+    },
+    {
+        question: "Which printer technology is most suitable for printing multipart forms?",
+        options: ["Dot-matrix", "Inkjet", "Laser", "Thermal"],
+        answer: "Dot-matrix"
+    },
+    {
+        question: "Which printer type uses toner powder and a fuser unit?",
+        options: ["Laser", "Inkjet", "Dot-matrix", "Thermal"],
+        answer: "Laser"
+    },
+    {
+        question: "What is the primary component that can cause ozone emissions in laser printers?",
+        options: ["Corona wire", "Fuser unit", "Toner cartridge", "Transfer roller"],
+        answer: "Corona wire"
+    },
+    {
+        question: "Which printer technology is commonly used for receipt printing?",
+        options: ["Thermal", "Inkjet", "Laser", "Dot-matrix"],
+        answer: "Thermal"
+    },
+    {
+        question: "Which printer type creates images by heating thermal paper?",
+        options: ["Direct thermal", "Thermal transfer", "Inkjet", "Laser"],
+        answer: "Direct thermal"
+    },
+    {
+        question: "Which printer technology uses liquid ink sprayed through microscopic nozzles?",
+        options: ["Inkjet", "Laser", "Dot-matrix", "Thermal"],
+        answer: "Inkjet"
+    },
+    {
+        question: "What is the primary advantage of laser printers over inkjet printers?",
+        options: ["Faster printing speed", "Lower cost per page", "Better photo quality", "Quieter operation"],
+        answer: "Faster printing speed"
+    },
+    {
+        question: "Which component in a laser printer is responsible for charging the drum?",
+        options: ["Primary corona wire", "Fuser assembly", "Transfer roller", "Toner cartridge"],
+        answer: "Primary corona wire"
+    },
+    {
+        question: "Which printer type is most suitable for high-volume document printing?",
+        options: ["Laser", "Inkjet", "Dot-matrix", "Thermal"],
+        answer: "Laser"
+    },
+    {
+        question: "What is the primary advantage of inkjet printers over laser printers?",
+        options: ["Better photo quality", "Faster printing speed", "Lower cost per page", "More durable output"],
+        answer: "Better photo quality"
+    },
+    {
+        question: "Which component in an inkjet printer contains the nozzles that spray ink?",
+        options: ["Print head", "Ink cartridge", "Paper tray", "Duplexer"],
+        answer: "Print head"
+    },
+    {
+        question: "Which printer technology uses a heated element to melt ink from a ribbon onto paper?",
+        options: ["Thermal transfer", "Direct thermal", "Inkjet", "Laser"],
+        answer: "Thermal transfer"
+    },
+    {
+        question: "What is the primary disadvantage of dot-matrix printers?",
+        options: ["Noise level", "Print quality", "Printing speed", "All of the above"],
+        answer: "All of the above"
+    },
+    {
+        question: "Which printer type is most commonly used for printing shipping labels?",
+        options: ["Thermal transfer", "Inkjet", "Laser", "Dot-matrix"],
+        answer: "Thermal transfer"
+    },
+    {
+        question: "Which component in a laser printer melts the toner onto the paper?",
+        options: ["Fuser assembly", "Transfer roller", "Drum unit", "Corona wire"],
+        answer: "Fuser assembly"
+    },
+    {
+        question: "Which printer technology is most suitable for printing on irregular surfaces?",
+        options: ["Dot-matrix", "Inkjet", "Laser", "Thermal"],
+        answer: "Dot-matrix"
+    },
+    {
+        question: "What is the primary advantage of 3D printing technology?",
+        options: ["Ability to create three-dimensional objects", "High printing speed", "Low cost", "High resolution"],
+        answer: "Ability to create three-dimensional objects"
+    },
+    {
+        question: "Which 3D printing technology uses a laser to cure liquid resin?",
+        options: ["SLA (Stereolithography)", "FDM (Fused Deposition Modeling)", "SLS (Selective Laser Sintering)", "DLP (Digital Light Processing)"],
+        answer: "SLA (Stereolithography)"
+    },
+    {
+        question: "Which printer type is most susceptible to print head clogging if not used regularly?",
+        options: ["Inkjet", "Laser", "Dot-matrix", "Thermal"],
+        answer: "Inkjet"
+    }
+  ],
+InstallationConfig:[
+    {
+        question: "What is the first step when installing a new printer?",
+        options: ["Unpack and connect the printer", "Install the printer drivers", "Configure network settings", "Print a test page"],
+        answer: "Unpack and connect the printer"
+    },
+    {
+        question: "Which Windows feature allows you to add a printer manually?",
+        options: ["Add Printer wizard", "Device Manager", "Control Panel", "Print Management"],
+        answer: "Add Printer wizard"
+    },
+    {
+        question: "What should you do before installing new printer drivers?",
+        options: ["Remove any existing drivers for the same printer", "Connect the printer to the network", "Install additional software", "Restart the computer"],
+        answer: "Remove any existing drivers for the same printer"
+    },
+    {
+        question: "Which of the following is NOT a typical step in printer installation?",
+        options: ["Defragmenting the hard drive", "Connecting the printer", "Installing drivers", "Printing a test page"],
+        answer: "Defragmenting the hard drive"
+    },
+    {
+        question: "What is the purpose of a printer configuration page?",
+        options: ["To display printer settings and status", "To clean the print heads", "To align the cartridges", "To calibrate the printer"],
+        answer: "To display printer settings and status"
+    },
+    {
+        question: "Which tool in Windows can be used to manage printers and print servers?",
+        options: ["Print Management", "Device Manager", "Services", "Task Manager"],
+        answer: "Print Management"
+    },
+    {
+        question: "What is the primary purpose of printer calibration?",
+        options: ["To ensure accurate color reproduction", "To increase printing speed", "To reduce ink consumption", "To prevent paper jams"],
+        answer: "To ensure accurate color reproduction"
+    },
+    {
+        question: "Which setting should be configured when setting up a network printer?",
+        options: ["IP address", "Paper size", "Print quality", "Duplex printing"],
+        answer: "IP address"
+    },
+    {
+        question: "What is the purpose of printer alignment?",
+        options: ["To ensure print heads are properly positioned", "To configure network settings", "To install printer drivers", "To update firmware"],
+        answer: "To ensure print heads are properly positioned"
+    },
+    {
+        question: "Which of the following is a common method for connecting a printer to a wireless network?",
+        options: ["WPS (Wi-Fi Protected Setup)", "Bluetooth pairing", "USB connection", "Serial connection"],
+        answer: "WPS (Wi-Fi Protected Setup)"
+    },
+    {
+        question: "What should you do if a printer is not recognized after connecting it to a computer?",
+        options: ["Check the cable and connection", "Reinstall the operating system", "Replace the printer", "Update the BIOS"],
+        answer: "Check the cable and connection"
+    },
+    {
+        question: "Which component must be installed for a computer to communicate with a printer?",
+        options: ["Printer driver", "Firmware", "Operating system update", "Antivirus software"],
+        answer: "Printer driver"
+    },
+    {
+        question: "What is the purpose of printer firmware updates?",
+        options: ["To fix bugs and add features", "To clean print heads", "To replace ink cartridges", "To calibrate colors"],
+        answer: "To fix bugs and add features"
+    },
+    {
+        question: "Which setting allows you to specify default paper size for a printer?",
+        options: ["Printing preferences", "Printer properties", "Device manager", "Network settings"],
+        answer: "Printing preferences"
+    },
+    {
+        question: "What is the purpose of a printer port configuration?",
+        options: ["To specify how the printer connects to the computer", "To set up network sharing", "To configure color settings", "To manage print queues"],
+        answer: "To specify how the printer connects to the computer"
+    },
+    {
+        question: "Which of the following is a common step in setting up a shared printer?",
+        options: ["Enabling printer sharing", "Installing additional memory", "Configuring duplex printing", "Updating firmware"],
+        answer: "Enabling printer sharing"
+    },
+    {
+        question: "What is the purpose of a printer test page?",
+        options: ["To verify that the printer is working correctly", "To clean the print heads", "To align the cartridges", "To configure network settings"],
+        answer: "To verify that the printer is working correctly"
+    },
+    {
+        question: "Which tool can be used to automatically find and install drivers for a new printer?",
+        options: ["Windows Update", "Device Manager", "Control Panel", "Task Manager"],
+        answer: "Windows Update"
+    },
+    {
+        question: "What should you do after installing a new printer driver?",
+        options: ["Print a test page", "Restart the computer", "Update the operating system", "Run a virus scan"],
+        answer: "Print a test page"
+    },
+    {
+        question: "Which of the following is NOT a typical printer configuration option?",
+        options: ["Screen resolution", "Paper size", "Print quality", "Duplex printing"],
+        answer: "Screen resolution"
+    }
+  ],
+DriversTroubleshooting:[
+    {
+        question: "What is the primary function of a printer driver?",
+        options: ["To act as a translator between the computer and printer", "To clean the print heads", "To replace ink cartridges", "To manage paper jams"],
+        answer: "To act as a translator between the computer and printer"
+    },
+    {
+        question: "Which of the following is a common symptom of a corrupt printer driver?",
+        options: ["Garbled output", "Paper jams", "Low ink warnings", "Slow printing"],
+        answer: "Garbled output"
+    },
+    {
+        question: "What is the first step in troubleshooting a printer that won't print?",
+        options: ["Check that the printer is powered on and connected", "Reinstall the printer driver", "Replace the ink cartridge", "Clean the print heads"],
+        answer: "Check that the printer is powered on and connected"
+    },
+    {
+        question: "Which tool in Windows can be used to troubleshoot printer problems?",
+        options: ["Windows Troubleshooter", "Device Manager", "Task Manager", "Disk Cleanup"],
+        answer: "Windows Troubleshooter"
+    },
+    {
+        question: "What should you do if a printer is printing blank pages?",
+        options: ["Check ink/toner levels", "Reinstall the driver", "Restart the computer", "Check paper alignment"],
+        answer: "Check ink/toner levels"
+    },
+    {
+        question: "Which of the following can cause streaks or lines on printed pages?",
+        options: ["Dirty print heads or drum", "Outdated driver", "Network connectivity issues", "Incorrect paper size"],
+        answer: "Dirty print heads or drum"
+    },
+    {
+        question: "What is the purpose of the printer spooler service?",
+        options: ["To manage print jobs in a queue", "To clean print heads", "To update printer drivers", "To configure network settings"],
+        answer: "To manage print jobs in a queue"
+    },
+    {
+        question: "Which of the following is a solution for a printer that is offline?",
+        options: ["Check network connection and restart the printer", "Replace the ink cartridge", "Reinstall the driver", "Clean the print heads"],
+        answer: "Check network connection and restart the printer"
+    },
+    {
+        question: "What should you do if a printer driver is incompatible with the operating system?",
+        options: ["Install a compatible driver or run in compatibility mode", "Update the operating system", "Replace the printer", "Reinstall the driver"],
+        answer: "Install a compatible driver or run in compatibility mode"
+    },
+    {
+        question: "Which of the following can cause paper jams in a printer?",
+        options: ["Worn rollers, misaligned paper guides, or damaged paper", "Outdated driver", "Low ink levels", "Network connectivity issues"],
+        answer: "Worn rollers, misaligned paper guides, or damaged paper"
+    },
+    {
+        question: "What is the purpose of printing a nozzle check pattern?",
+        options: ["To check for clogged nozzles in an inkjet printer", "To test network connectivity", "To verify driver installation", "To check paper alignment"],
+        answer: "To check for clogged nozzles in an inkjet printer"
+    },
+    {
+        question: "Which of the following is a common cause of poor print quality?",
+        options: ["Low ink/toner levels, dirty print heads, or incorrect paper type", "Outdated operating system", "Network connectivity issues", "Incorrect driver version"],
+        answer: "Low ink/toner levels, dirty print heads, or incorrect paper type"
+    },
+    {
+        question: "What should you do if a printer is displaying an error code?",
+        options: ["Refer to the printer manual or manufacturer's website", "Restart the computer", "Reinstall the driver", "Replace the printer"],
+        answer: "Refer to the printer manual or manufacturer's website"
+    },
+    {
+        question: "Which of the following can cause a printer to print slowly?",
+        options: ["High-resolution print settings, large files, or insufficient memory", "Outdated driver", "Network connectivity issues", "Low ink levels"],
+        answer: "High-resolution print settings, large files, or insufficient memory"
+    },
+    {
+        question: "What is the purpose of the printer's self-test page?",
+        options: ["To verify that the printer is functioning correctly without a computer", "To test network connectivity", "To check driver installation", "To verify paper alignment"],
+        answer: "To verify that the printer is functioning correctly without a computer"
+    },
+    {
+        question: "Which of the following is a solution for a printer that is not recognized by the computer?",
+        options: ["Check cable connections and try a different USB port", "Replace the ink cartridge", "Clean the print heads", "Reinstall the operating system"],
+        answer: "Check cable connections and try a different USB port"
+    },
+    {
+        question: "What should you do if a printer is producing faded prints?",
+        options: ["Check ink/toner levels and replace if necessary", "Reinstall the driver", "Restart the computer", "Check paper alignment"],
+        answer: "Check ink/toner levels and replace if necessary"
+    },
+    {
+        question: "Which of the following can cause a printer to make unusual noises?",
+        options: ["Foreign objects, worn gears, or paper jams", "Outdated driver", "Low ink levels", "Network connectivity issues"],
+        answer: "Foreign objects, worn gears, or paper jams"
+    },
+    {
+        question: "What is the purpose of the printer's maintenance mode?",
+        options: ["To perform cleaning and calibration tasks", "To update the driver", "To configure network settings", "To manage print queues"],
+        answer: "To perform cleaning and calibration tasks"
+    },
+    {
+        question: "Which of the following is a common solution for printer communication errors?",
+        options: ["Restart both the printer and the computer", "Replace the ink cartridge", "Clean the print heads", "Update the operating system"],
+        answer: "Restart both the printer and the computer"
+    }
+  ],
+NetworkPrinting:[
+    {
+        question: "What is the primary advantage of network printing over local printing?",
+        options: ["Multiple users can share the same printer", "Faster printing speed", "Better print quality", "Lower cost"],
+        answer: "Multiple users can share the same printer"
+    },
+    {
+        question: "Which protocol is commonly used for network printing?",
+        options: ["IPP (Internet Printing Protocol)", "FTP (File Transfer Protocol)", "HTTP (Hypertext Transfer Protocol)", "SMTP (Simple Mail Transfer Protocol)"],
+        answer: "IPP (Internet Printing Protocol)"
+    },
+    {
+        question: "What is a print server?",
+        options: ["A device or computer that manages print jobs for multiple printers", "A physical server that stores print drivers", "A website for ordering printer supplies", "A technician who services printers"],
+        answer: "A device or computer that manages print jobs for multiple printers"
+    },
+    {
+        question: "Which of the following is required to set up a network printer?",
+        options: ["IP address", "USB cable", "Serial port", "Parallel port"],
+        answer: "IP address"
+    },
+    {
+        question: "What is the purpose of DHCP in network printing?",
+        options: ["To automatically assign IP addresses to printers", "To manage print queues", "To control printer drivers", "To monitor ink levels"],
+        answer: "To automatically assign IP addresses to printers"
+    },
+    {
+        question: "Which of the following is a disadvantage of using a dynamic IP address for a network printer?",
+        options: ["The IP address may change, causing connection issues", "Slower printing speed", "Lower print quality", "Higher cost"],
+        answer: "The IP address may change, causing connection issues"
+    },
+    {
+        question: "What is the purpose of a printer's embedded web server?",
+        options: ["To configure and manage the printer settings through a web browser", "To update printer drivers", "To order printer supplies", "To clean print heads"],
+        answer: "To configure and manage the printer settings through a web browser"
+    },
+    {
+        question: "Which of the following is a common method for connecting a printer to a wireless network?",
+        options: ["WPS (Wi-Fi Protected Setup)", "Bluetooth pairing", "USB connection", "Serial connection"],
+        answer: "WPS (Wi-Fi Protected Setup)"
+    },
+    {
+        question: "What is the primary function of a print queue?",
+        options: ["To hold print jobs in the order they were received", "To clean print heads", "To replace ink cartridges", "To manage paper jams"],
+        answer: "To hold print jobs in the order they were received"
+    },
+    {
+        question: "Which of the following can cause a network printer to go offline?",
+        options: ["Network connectivity issues, IP address conflicts, or printer being powered off", "Outdated driver", "Low ink levels", "Paper jams"],
+        answer: "Network connectivity issues, IP address conflicts, or printer being powered off"
+    },
+    {
+        question: "What is the purpose of port forwarding in network printing?",
+        options: ["To allow external access to a printer on a private network", "To increase printing speed", "To improve print quality", "To reduce ink consumption"],
+        answer: "To allow external access to a printer on a private network"
+    },
+    {
+        question: "Which of the following is a benefit of using a dedicated print server?",
+        options: ["Centralized management of printers and print jobs", "Faster printing speed", "Better print quality", "Lower cost"],
+        answer: "Centralized management of printers and print jobs"
+    },
+    {
+        question: "What is the purpose of SNMP (Simple Network Management Protocol) in network printing?",
+        options: ["To monitor and manage network devices, including printers", "To update printer drivers", "To configure print queues", "To manage ink levels"],
+        answer: "To monitor and manage network devices, including printers"
+    },
+    {
+        question: "Which of the following is a common troubleshooting step for a network printer that won't print?",
+        options: ["Ping the printer's IP address to verify connectivity", "Replace the ink cartridge", "Clean the print heads", "Reinstall the operating system"],
+        answer: "Ping the printer's IP address to verify connectivity"
+    },
+    {
+        question: "What is the purpose of a printer's MAC address in network printing?",
+        options: ["To uniquely identify the printer on a network", "To specify the printer model", "To determine print quality settings", "To manage paper trays"],
+        answer: "To uniquely identify the printer on a network"
+    },
+    {
+        question: "Which of the following is a common method for sharing a printer on a network?",
+        options: ["Through a computer with printer sharing enabled", "Direct USB connection to each computer", "Serial connection to a server", "Parallel connection to a router"],
+        answer: "Through a computer with printer sharing enabled"
+    },
+    {
+        question: "What is the purpose of a print job priority setting?",
+        options: ["To determine the order in which print jobs are processed", "To specify print quality", "To set paper size", "To configure duplex printing"],
+        answer: "To determine the order in which print jobs are processed"
+    },
+    {
+        question: "Which of the following can cause delays in network printing?",
+        options: ["Network congestion, large file sizes, or high-resolution printing", "Outdated driver", "Low ink levels", "Paper jams"],
+        answer: "Network congestion, large file sizes, or high-resolution printing"
+    },
+    {
+        question: "What is the purpose of a printer's network configuration page?",
+        options: ["To display network settings such as IP address, subnet mask, and gateway", "To clean print heads", "To replace ink cartridges", "To manage paper jams"],
+        answer: "To display network settings such as IP address, subnet mask, and gateway"
+    },
+    {
+        question: "Which of the following is a common security measure for network printers?",
+        options: ["Changing default passwords and enabling encryption", "Using dynamic IP addresses", "Disabling SNMP", "All of the above"],
+        answer: "All of the above"
+    }
+  ],
+PrinterSecurity:[
+    {
+        question: "Which of the following is a security risk associated with network printers?",
+        options: ["Unauthorized access to sensitive documents", "Paper jams", "Low ink levels", "Slow printing"],
+        answer: "Unauthorized access to sensitive documents"
+    },
+    {
+        question: "What is the purpose of printer access control?",
+        options: ["To restrict who can use the printer and its functions", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To restrict who can use the printer and its functions"
+    },
+    {
+        question: "Which of the following is a common security measure for network printers?",
+        options: ["Changing default administrator passwords", "Using dynamic IP addresses", "Disabling SNMP", "Increasing print resolution"],
+        answer: "Changing default administrator passwords"
+    },
+    {
+        question: "What is the purpose of secure printing or pull printing?",
+        options: ["To require user authentication at the printer before releasing a print job", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To require user authentication at the printer before releasing a print job"
+    },
+    {
+        question: "Which of the following is a potential security vulnerability of printers?",
+        options: ["Unsecured hard drives that store copies of printed documents", "Low ink levels", "Paper jams", "Slow printing"],
+        answer: "Unsecured hard drives that store copies of printed documents"
+    },
+    {
+        question: "What is the purpose of printer firmware updates in relation to security?",
+        options: ["To fix security vulnerabilities", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To fix security vulnerabilities"
+    },
+    {
+        question: "Which of the following is a best practice for securing a network printer?",
+        options: ["Disabling unused services and ports", "Using dynamic IP addresses", "Increasing print resolution", "Decreasing print quality"],
+        answer: "Disabling unused services and ports"
+    },
+    {
+        question: "What is the purpose of encryption in network printing?",
+        options: ["To protect print jobs from being intercepted", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To protect print jobs from being intercepted"
+    },
+    {
+        question: "Which of the following is a potential security risk of printer default settings?",
+        options: ["Default administrator passwords and open network ports", "Low ink levels", "Paper jams", "Slow printing"],
+        answer: "Default administrator passwords and open network ports"
+    },
+    {
+        question: "What is the purpose of audit logs in printer security?",
+        options: ["To track printer usage and identify potential security breaches", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To track printer usage and identify potential security breaches"
+    },
+    {
+        question: "Which of the following is a common method for securing a printer's hard drive?",
+        options: ["Encryption or data overwrite", "Increasing storage capacity", "Defragmenting the drive", "Formatting the drive"],
+        answer: "Encryption or data overwrite"
+    },
+    {
+        question: "What is the purpose of user authentication in printer security?",
+        options: ["To verify the identity of users before allowing them to print", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To verify the identity of users before allowing them to print"
+    },
+    {
+        question: "Which of the following is a potential security risk of wireless printing?",
+        options: ["Unauthorized access to the network through the printer", "Low ink levels", "Paper jams", "Slow printing"],
+        answer: "Unauthorized access to the network through the printer"
+    },
+    {
+        question: "What is the purpose of a firewall in printer security?",
+        options: ["To block unauthorized access to the printer", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To block unauthorized access to the printer"
+    },
+    {
+        question: "Which of the following is a best practice for disposing of a printer with a hard drive?",
+        options: ["Securely erase or destroy the hard drive", "Donate it as-is", "Sell it online", "Throw it in the trash"],
+        answer: "Securely erase or destroy the hard drive"
+    },
+    {
+        question: "What is the purpose of IP filtering in printer security?",
+        options: ["To restrict which devices can access the printer based on IP address", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To restrict which devices can access the printer based on IP address"
+    },
+    {
+        question: "Which of the following is a potential security risk of printer protocols?",
+        options: ["Unencrypted protocols that transmit data in plain text", "Low ink levels", "Paper jams", "Slow printing"],
+        answer: "Unencrypted protocols that transmit data in plain text"
+    },
+    {
+        question: "What is the purpose of a print job retention policy in printer security?",
+        options: ["To specify how long print jobs are stored on the printer's hard drive", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To specify how long print jobs are stored on the printer's hard drive"
+    },
+    {
+        question: "Which of the following is a common method for securing a printer's embedded web server?",
+        options: ["Using HTTPS and strong passwords", "Disabling the web server", "Increasing print resolution", "Decreasing print quality"],
+        answer: "Using HTTPS and strong passwords"
+    },
+    {
+        question: "What is the purpose of physical security measures for printers?",
+        options: ["To prevent unauthorized physical access to the printer", "To improve print quality", "To increase printing speed", "To reduce ink consumption"],
+        answer: "To prevent unauthorized physical access to the printer"
+    }
+],
+  }
+    let currentTopic = "";
+    let currentQuestion = 0;
+    let attempts = 0;
+    
+    // Function to shuffle an array using Fisher-Yates algorithm
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+      }
+      return newArray;
+    }
+    
+    function startQuiz(topic) {
+      currentTopic = topic;
+      currentQuestion = 0;
+      attempts = 0;
+      document.getElementById('topicButtons').style.display = 'none';
+      document.getElementById('quizBox').style.display = 'block';
+      showQuestion();
+    }
+    
+    function backToTopics() {
+      document.getElementById('quizBox').style.display = 'none';
+      document.getElementById('topicButtons').style.display = 'grid';
+    }
+    
+    function showQuestion() {
+      const q = quizData[currentTopic][currentQuestion];
+      document.getElementById('questionText').innerText = q.question;
+      document.getElementById('questionCount').innerText = `Question ${currentQuestion + 1} of ${quizData[currentTopic].length}`;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      const optionsDiv = document.getElementById('optionButtons');
+      optionsDiv.innerHTML = "";
+      
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(q.options);
+      
+      shuffledOptions.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(opt);
+        optionsDiv.appendChild(btn);
+      });
+      
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('nextBtn').style.display = 'none';
+    }
+    
+    function checkAnswer(selectedOption) {
+      const correct = quizData[currentTopic][currentQuestion].answer;
+      const feedback = document.getElementById('feedback');
+      const buttons = document.querySelectorAll('.options button');
+      
+      attempts++;
+      document.getElementById('attempts').innerText = `Attempts: ${attempts}`;
+      
+      if (selectedOption === correct) {
+        feedback.innerText = "✅ Correct!";
+        feedback.style.color = "green";
+        // Highlight the correct answer
+        buttons.forEach(btn => {
+          if (btn.innerText === correct) {
+            btn.classList.add('correct');
+          }
+        });
+        // Show the next button
+        document.getElementById('nextBtn').style.display = 'block';
+      } else {
+        feedback.innerText = "❌ Incorrect. Try again!";
+        feedback.style.color = "red";
+        // Don't show next button, let user try again
+      }
+    }
+    
+    function nextQuestion() {
+      currentQuestion++;
+      attempts = 0; // Reset attempts for the next question
+      if (currentQuestion < quizData[currentTopic].length) {
+        showQuestion();
+      } else {
+        showQuizComplete();
+      }
+    }
+    
+    function showQuizComplete() {
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <div class="quiz-complete">
+          <h2>🎉 You have completed the quiz!</h2>
+          <p>Great job on finishing the ${getTopicName(currentTopic)} quiz.</p>
+          <button onclick="restartQuiz()">Restart Quiz</button>
+          <button onclick="backToTopics()">Back to Topics</button>
+        </div>
+      `;
+    }
+    
+    function restartQuiz() {
+      currentQuestion = 0;
+      attempts = 0;
+      const quizBox = document.getElementById('quizBox');
+      quizBox.innerHTML = `
+        <button class="back-btn" onclick="backToTopics()">← Back to Topics</button>
+        <div class="question" id="questionText"></div>
+        <div class="question-count" id="questionCount"></div>
+        <div class="attempts" id="attempts">Attempts: 0</div>
+        <div class="options" id="optionButtons"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      `;
+      showQuestion();
+    }
+    
+    function getTopicName(topic) {
+      const topicNames = {
+        'PrinterOverview': 'Printer Overview & Interfaces',
+        'PrinterTypes': 'Printer Types & Technologies',
+        'InstallationConfig': 'Installation & Configuration',
+        'DriversTroubleshooting': 'Printer Drivers & Troubleshooting',
+        'NetworkPrinting': 'Network Printing & Print Servers',
+        'PrinterSecurity': 'Printer Security'
+      };
+      return topicNames[topic] || topic;
+    }
+  </script>
+</body>
+</html>
